@@ -14,7 +14,7 @@ The surrounding public research repositories are intentionally being narrowed in
 | `oracle` | provenance-aware current-world context ingestion | evidence/context plane | evidence ledger + canonical digest implemented; digest can be bound to execution evidence |
 | `spectraflow` | behavior + authority-drift observability | observability plane | KCC correlation + observational authority-drift evaluator implemented |
 | `phantom` | provider-agnostic browser extraction verification | tool/data plane | extraction contracts + drift reports + evidence fingerprints implemented |
-| `nephilim` | evidence-first on-chain pattern detection lab | domain research/data plane | independent; detector output is evidence, not trading authority |
+| `nephilim` | evidence-first on-chain pattern detection lab | domain research/data plane | detector evidence artifact + normalized input fingerprint implemented; never trading authority |
 | `taxflow-crm` | vertical SaaS portfolio/demo | application demo | intentionally outside the KCC core path |
 
 ## Implemented handoff: AXIOM -> KCC
