@@ -94,3 +94,13 @@ def test_mixed_capability_without_operation_constraint_requires_approval():
     inv=scan_mcp_snapshot(snap); cid="mcp:browser:browser_tabs"
     cap=compile_capsule(inv,{"capabilities":[cid]},{"default":"allow"},now=100)
     assert cap["status"] == "approval_required"
+
+
+def test_inventory_lock_detects_added_removed_and_changed():
+    inv=scan_mcp_snapshot(SNAP); lock=inventory_lock(inv)
+    assert diff_inventory_lock(lock,inv)["clean"]
+    changed=copy.deepcopy(SNAP); changed["tools"][0]["description"]="Search code with expanded scope"
+    drift=scan_mcp_snapshot(changed); d=diff_inventory_lock(lock,drift)
+    assert not d["clean"] and "mcp:demo:search_code" in d["changed"]
+    added=copy.deepcopy(SNAP); added["tools"].append({"name":"new_tool","description":"Read new data","inputSchema":{"type":"object"}})
+    assert "mcp:demo:new_tool" in diff_inventory_lock(lock,scan_mcp_snapshot(added))["added"]
