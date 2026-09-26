@@ -59,14 +59,14 @@ These are benchmark checkpoint measurements, not production security guarantees.
 - CLI: `kcc evidence-bind` and `kcc evidence-verify`
 - executable regression proving external evidence cannot expand a compiled KCC grant
 
-### M3 dogfood
-- real KAVI Dispatch Bridge contract adapted into KCC inventory IR
-- 5 standing capabilities reduced to 1 read-only grant for operator-snapshot task
-- mutation capabilities blocked outside the capsule
-- portable runtime guard proves denied calls never reach the dispatcher
-- sanitized authenticated live probe implemented for `initialize -> tools/list -> get_operator_snapshot`
-- production health currently verifies `configured=true`
-- authenticated live M3B observation is intentionally not marked PASS until a secure runtime supplies the existing bearer
+### M3 framework-agnostic integration
+- universal `kcc.capabilities.v1` capability manifest
+- adapters for MCP, OpenAI function tools, Anthropic tools, OpenAPI, and generic JSON
+- semantic fingerprints independent of source format/provenance
+- generic runtime guard in front of any caller-supplied dispatcher
+- cross-format equivalence benchmark
+
+KAVI/Hermes/Codex integrations are validation targets and examples, not dependencies of the compiler.
 
 ## Security invariant
 
@@ -101,7 +101,7 @@ kcc discover-config mcp.json my-server \
 
 KCC is not a hosted gateway, IAM replacement, secret manager, or autonomous remediation system. Live discovery does not automatically execute discovered tools. Runtime enforcement is intentionally a small portable primitive.
 
-M2's recorded exit gate passes; Hermes is the next bounded dogfood target for M3. The core remains framework-agnostic.
+M2's recorded exit gate passes. M3 now focuses on a universal capability contract so existing runtimes can integrate without framework migration. Specific agent systems are optional validation targets.
 
 See `docs/M2_EXIT.md`, `docs/RUNTIME_AUTHORIZATION.md`, and `docs/EXECUTION_EVIDENCE.md`.
 
