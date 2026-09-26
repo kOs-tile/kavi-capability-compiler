@@ -61,17 +61,28 @@ Exit gates:
 
 Existing KAVI control-plane dogfood is retained as a case study only. KAVI, Hermes, Codex, LangGraph, or any other runtime may be used later as validation targets; none is a dependency or milestone prerequisite.
 
-## M4 — Portable Enforcement SDK
+## M4 — Embedded Enforcement SDK
+**Status: active.**
 
-After M3:
-- stabilize the generic adapter + manifest API
-- harden the Python runtime guard into a versioned SDK
-- optional MCP proxy/bridge
-- signed/verifiable capsules
-- approval handoff contract
+Goal: make KCC a library developers embed into their existing agent stack, with no KCC daemon, desktop host, or framework migration required.
+
+Current slice:
+- stable framework-neutral Python import surface
+- zero required third-party dependencies for the core install
+- optional MCP discovery extra
+- optional Ed25519 signing extra
+- reusable `Guard` in front of the host application's own dispatcher
+- externally trusted signed capsule envelopes
+- package/install contract tests
+
+Next:
+- finalize public API compatibility contract
+- version capsule/signature schemas
+- approval handoff interface
+- optional MCP proxy/bridge only as an adapter, never a core requirement
 - integration kits for common runtimes
 
-Compiler and runtime remain separable.
+Compiler and executor remain separable and may run in-process or in different services.
 
 ## M5 — Distribution / Product
 
