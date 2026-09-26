@@ -13,13 +13,13 @@ jobs:
       - name: Verify embedded SDK imports without optional integrations
         run: |
           python - <<'PY'
-          import importlib.util
+          from importlib import metadata
           import kavi_capability_compiler as kcc
           assert kcc.SDK_VERSION == "kcc.sdk.v1"
           assert callable(kcc.Guard)
-          assert importlib.util.find_spec("mcp") is None
-          assert importlib.util.find_spec("httpx2") is None
-          assert importlib.util.find_spec("cryptography") is None
+          reqs=metadata.requires("kavi-capability-compiler") or []
+          unconditional=[r for r in reqs if "extra ==" not in r]
+          assert unconditional == [], unconditional
           PY
 
   pytest:
