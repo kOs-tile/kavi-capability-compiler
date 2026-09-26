@@ -7,7 +7,12 @@ name = "kavi-capability-compiler"
 version = "0.0.1"
 description = "Framework-agnostic least-authority compiler for AI agents"
 requires-python = ">=3.11"
-dependencies = ["mcp>=2.2,<3", "httpx2>=2.5.0", "cryptography>=42,<49"]
+dependencies = []
+
+[project.optional-dependencies]
+mcp = ["mcp>=2.2,<3", "httpx2>=2.5.0"]
+signing = ["cryptography>=42,<49"]
+all = ["mcp>=2.2,<3", "httpx2>=2.5.0", "cryptography>=42,<49"]
 
 [project.scripts]
 kcc = "kavi_capability_compiler.cli:main"
