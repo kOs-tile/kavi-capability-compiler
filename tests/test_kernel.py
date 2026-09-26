@@ -141,3 +141,24 @@ def test_multi_action_tool_does_not_collapse_to_read():
 def test_browser_type_is_not_read_authority():
     effect,_=classify({"name":"browser_type","description":"Type text into editable element"})
     assert effect != "read"
+
+
+def test_required_parameter_constraint_fails_closed():
+    snap={"server":{"name":"svc"},"tools":[{"name":"update_item","description":"Update item","inputSchema":{"type":"object","properties":{"id":{"type":"string"}}}}]}
+    inv=scan_mcp_snapshot(snap); cid="mcp:svc:update_item"
+    intent={"capabilities":[cid],"ttl_seconds":100,"capability_constraints":{cid:{"parameters":{"id":{"required":True,"type":"string","pattern":"[A-Z]+-[0-9]+"}}}}}
+    cap=compile_capsule(inv,intent,{"default":"allow"},now=100)
+    assert authorize_call(cap,cid,parameters={},now=101)["reason"]=="required_parameter_missing:id"
+    assert authorize_call(cap,cid,parameters={"id":"bad"},now=101)["reason"]=="parameter_pattern_mismatch:id"
+    assert authorize_call(cap,cid,parameters={"id":"ABC-12"},now=101)["allowed"]
+
+
+def test_constraint_unknown_schema_parameter_rejected_at_compile():
+    snap={"server":{"name":"svc"},"tools":[{"name":"update_item","description":"Update item","inputSchema":{"type":"object","properties":{"id":{"type":"string"}}}}]}
+    inv=scan_mcp_snapshot(snap); cid="mcp:svc:update_item"
+    intent={"capabilities":[cid],"capability_constraints":{cid:{"parameters":{"ghost":{"required":True}}}}}
+    try:
+        compile_capsule(inv,intent,{"default":"allow"},now=100)
+        assert False, "expected ValueError"
+    except ValueError as e:
+        assert "unknown parameter" in str(e)
