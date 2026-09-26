@@ -678,5 +678,148 @@
     },
     "annotations": {},
     "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:fork_repository",
+    "server": "github",
+    "name": "fork_repository",
+    "description": "Fork repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:create_or_update_file",
+    "server": "github",
+    "name": "create_or_update_file",
+    "description": "Create or update a single file in a GitHub repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:push_files",
+    "server": "github",
+    "name": "push_files",
+    "description": "Push multiple files to a GitHub repository in a single commit",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:create_branch",
+    "server": "github",
+    "name": "create_branch",
+    "description": "Create a new branch in a GitHub repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:merge_pull_request",
+    "server": "github",
+    "name": "merge_pull_request",
+    "description": "Merge pull request",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:pull_request_read",
+    "server": "github",
+    "name": "pull_request_read",
+    "description": "Get details for a single pull request",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:pull_request_review_write",
+    "server": "github",
+    "name": "pull_request_review_write",
+    "description": "Write operations on pull request reviews",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:request_copilot_review",
+    "server": "github",
+    "name": "request_copilot_review",
+    "description": "Request Copilot review",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:search_repositories",
+    "server": "github",
+    "name": "search_repositories",
+    "description": "Search repositories",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:search_users",
+    "server": "github",
+    "name": "search_users",
+    "description": "Search users",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_issue_comments",
+    "server": "github",
+    "name": "get_issue_comments",
+    "description": "Get comments for a GitHub issue",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:list_issues",
+    "server": "github",
+    "name": "list_issues",
+    "description": "List issues",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:create_repository",
+    "server": "github",
+    "name": "create_repository",
+    "description": "Create repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
   }
 ]
