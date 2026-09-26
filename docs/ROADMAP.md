@@ -23,7 +23,7 @@ Evidence checkpoint:
 Exit report: `M1_EXIT.md`.
 
 ## M2 — Live Discovery + Authority Drift
-**Status: active.**
+**Status: shipped.**
 
 Goal: move from snapshot-only evidence to authority observed from running MCP servers.
 
@@ -46,8 +46,9 @@ Exit gate:
 - M1 safety gates remain green
 
 ## M3 — Hermes dogfood
+**Status: next proving stage; not yet complete.**
 
-Only after M2 exits:
+M2 has exited. The framework-agnostic runtime guard prerequisite is now implemented and CI-backed. Remaining dogfood work:
 - map a bounded Hermes capability surface into KCC IR
 - discover/compile authority before a real workflow
 - execute through the capsule guard
@@ -59,7 +60,7 @@ Hermes is a proving ground, not a dependency of the core.
 ## M4 — Portable Enforcement SDK
 
 After dogfood:
-- Python guard
+- harden the current Python guard into a versioned SDK surface
 - generic adapter contract
 - optional MCP proxy/bridge
 - signed/verifiable capsules
