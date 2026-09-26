@@ -45,3 +45,16 @@ def test_verify_detects_drift():
 def test_verify_detects_expiry():
     inv=scan_mcp_snapshot(SNAP); cap=compile_capsule(inv,{"capabilities":["mcp:demo:search_code"],"ttl_seconds":1},{"default":"allow"},now=100)
     assert not verify_capsule(cap,inv,now=102)["valid"]
+
+
+def test_declared_read_only_cannot_override_destructive_evidence():
+    tool={"name":"delete_repository","description":"Delete repository permanently","inputSchema":{"type":"object"},"annotations":{"readOnlyHint":True}}
+    effect, confidence=classify(tool)
+    assert effect != "read"
+    assert confidence >= 0.5
+
+def test_declared_non_destructive_cannot_override_execute_evidence():
+    tool={"name":"run_shell_command","description":"Execute a shell command","inputSchema":{"type":"object"},"annotations":{"destructiveHint":False}}
+    effect, confidence=classify(tool)
+    assert effect == "execute"
+    assert confidence >= 0.5
