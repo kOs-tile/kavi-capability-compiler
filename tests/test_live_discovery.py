@@ -151,3 +151,29 @@ def test_live_tools_list_drift_detects_added_removed_and_changed():
     assert diff_inventory_lock(lock, added)["added"]
     assert diff_inventory_lock(lock, removed)["removed"]
     assert diff_inventory_lock(lock, changed)["changed"]
+
+
+def test_cli_discover_config_writes_inventory_and_lock_without_secret(tmp_path):
+    secret="CLI_SECRET_SHOULD_NOT_PERSIST"
+    cfg={"mcpServers":{"fixture":{
+        "command":sys.executable,
+        "args":[str(FIXTURE)],
+        "env":{"KCC_TEST_SECRET":secret},
+    }}}
+    config_path=tmp_path/"mcp.json"
+    output_path=tmp_path/"discovery.json"
+    lock_path=tmp_path/"inventory.lock.json"
+    config_path.write_text(json.dumps(cfg))
+    code="from kavi_capability_compiler import cli; cli.main()"
+    proc=subprocess.run(
+        [sys.executable,"-c",code,"discover-config",str(config_path),"fixture",
+         "-o",str(output_path),"--lock-output",str(lock_path)],
+        capture_output=True,text=True,timeout=20,
+    )
+    assert proc.returncode==0, proc.stderr
+    discovery=json.loads(output_path.read_text())
+    lock=json.loads(lock_path.read_text())
+    assert discovery["server"]["name"]=="KCC Discovery Fixture"
+    assert lock["inventory_digest"]==discovery["inventory"]["digest"]
+    assert secret not in output_path.read_text()
+    assert secret not in lock_path.read_text()
