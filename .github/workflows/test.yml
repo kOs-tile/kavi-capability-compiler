@@ -36,6 +36,32 @@ jobs:
           assert i["adapter"]=="universal-manifest.v1"
           PY
 
+  package-wheel-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install build
+      - run: python -m build --wheel
+      - name: Install wheel without dependencies
+        run: |
+          python -m venv /tmp/kcc-wheel
+          /tmp/kcc-wheel/bin/pip install --no-deps dist/*.whl
+      - name: Smoke embedded SDK and core CLI from wheel
+        run: |
+          /tmp/kcc-wheel/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          assert callable(kcc.Guard)
+          PY
+          cat > /tmp/tools.json <<'JSON'
+          {"tools":[{"name":"read","description":"Read","input_schema":{"type":"object"}}]}
+          JSON
+          /tmp/kcc-wheel/bin/kcc manifest /tmp/tools.json --format generic --namespace smoke -o /tmp/manifest.json
+          /tmp/kcc-wheel/bin/kcc scan-manifest /tmp/manifest.json -o /tmp/inventory.json
+
   pytest:
     runs-on: ubuntu-latest
     steps:
