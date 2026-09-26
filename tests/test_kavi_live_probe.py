@@ -107,6 +107,12 @@ def test_probe_uses_only_read_only_runtime_call_and_sanitizes_artifact():
     assert evidence["read_only_tool_calls"] == ["get_operator_snapshot"]
     assert evidence["mutation_tool_calls"] == []
     assert evidence["secret_material_in_artifact"] is False
+    assert result["evidence_ref"]["kind"] == "runtime_authority_surface"
+    assert result["evidence_ref"]["producer"] == "kcc-kavi-live-probe"
+    assert (
+        result["evidence_ref"]["artifact_digest"]
+        == evidence["report_fingerprint"]
+    )
     assert secret not in str(result)
     assert "user:pass" not in str(result)
     assert "debug=secret" not in str(result)
