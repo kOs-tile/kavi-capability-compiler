@@ -29,7 +29,7 @@ def main():
     p=sub.add_parser("config-summary"); p.add_argument("input"); p.add_argument("-o","--output")
     p=sub.add_parser("evidence-bind"); p.add_argument("capsule"); p.add_argument("--execution-id",required=True); p.add_argument("--evidence",required=True); p.add_argument("--capability"); p.add_argument("--operation"); p.add_argument("-o","--output")
     p=sub.add_parser("evidence-verify"); p.add_argument("input")
-    p=sub.add_parser("probe-kavi"); p.add_argument("--endpoint",required=True); p.add_argument("--token-env",default="KAVI_DISPATCH_TOKEN"); p.add_argument("--timeout",type=float,default=10.0); p.add_argument("-o","--output")
+    p=sub.add_parser("probe-kavi",allow_abbrev=False); p.add_argument("--endpoint",required=True); p.add_argument("--token-env",default="KAVI_DISPATCH_TOKEN"); p.add_argument("--timeout",type=float,default=10.0); p.add_argument("-o","--output")
     a=ap.parse_args()
     if a.cmd=="scan": save(scan_mcp_snapshot(load(a.input)),a.output)
     elif a.cmd=="audit": save(audit_inventory(load(a.input)),a.output)
