@@ -684,5 +684,26 @@
     "dangerous": false,
     "reviewer": "human",
     "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_teams",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_repository_tree",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:list_branches",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
   }
 ]
