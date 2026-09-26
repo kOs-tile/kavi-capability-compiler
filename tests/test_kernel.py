@@ -58,3 +58,23 @@ def test_declared_non_destructive_cannot_override_execute_evidence():
     effect, confidence=classify(tool)
     assert effect == "execute"
     assert confidence >= 0.5
+
+
+def test_capability_analysis_separates_effect_from_risk():
+    a=analyze_capability({"name":"write_file","description":"Create new file or overwrite existing","annotations":{"destructiveHint":True}})
+    assert a["effect"] == "write"
+    assert "destructive" in a["risk_flags"]
+    assert a["declared"]["destructiveHint"] is True
+
+
+def test_mixed_operation_capability_is_not_silently_safe():
+    a=analyze_capability({"name":"browser_tabs","description":"List, create, close, or select a browser tab."})
+    assert a["effect"] == "mixed"
+    assert "context_dependent" in a["risk_flags"]
+
+
+def test_analysis_preserves_evidence_provenance():
+    a=analyze_capability({"name":"delete_repository","description":"Delete repository permanently","annotations":{"readOnlyHint":True}})
+    assert a["effect"] == "delete"
+    assert any(e["kind"] == "lexical" for e in a["evidence"])
+    assert any(e["kind"] == "annotation" for e in a["evidence"])
