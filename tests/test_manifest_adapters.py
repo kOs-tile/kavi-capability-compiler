@@ -221,3 +221,24 @@ def test_manifest_cli_round_trip(tmp_path):
     inventory=json.loads(inventory_path.read_text())
     assert inventory["adapter"]=="universal-manifest.v1"
     assert [x["id"] for x in inventory["capabilities"]]==["kcc:records:get_record"]
+
+
+def test_tampered_manifest_fingerprint_fails_closed():
+    manifest=from_generic([
+        {"name":"get_record","description":DESC_GET,"input_schema":SCHEMA_GET},
+    ],namespace="records")
+    manifest["capabilities"][0]["description"]="Tampered authority description"
+    try:
+        scan_manifest(manifest)
+        assert False, "expected fingerprint mismatch"
+    except ValueError as exc:
+        assert "fingerprint mismatch" in str(exc).lower()
+
+
+def test_unsupported_adapter_format_fails_closed():
+    from kavi_capability_compiler.adapters import adapt_capabilities
+    try:
+        adapt_capabilities("unknown-framework",{"tools":[]},namespace="x")
+        assert False, "expected unsupported format failure"
+    except ValueError as exc:
+        assert "Unsupported capability source format" in str(exc)
