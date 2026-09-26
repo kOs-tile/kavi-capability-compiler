@@ -1,6 +1,27 @@
 name: test
 on: [push, pull_request]
 jobs:
+  core-minimal-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install core only
+        run: python -m pip install -e .
+      - name: Verify embedded SDK imports without optional integrations
+        run: |
+          python - <<'PY'
+          import importlib.util
+          import kavi_capability_compiler as kcc
+          assert kcc.SDK_VERSION == "kcc.sdk.v1"
+          assert callable(kcc.Guard)
+          assert importlib.util.find_spec("mcp") is None
+          assert importlib.util.find_spec("httpx2") is None
+          assert importlib.util.find_spec("cryptography") is None
+          PY
+
   pytest:
     runs-on: ubuntu-latest
     steps:
@@ -8,7 +29,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: python -m pip install -e .
+      - run: python -m pip install -e ".[all]"
       - run: python -m pip install pytest
       - run: pytest -q
       - name: Run live discovery integration tests
