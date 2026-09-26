@@ -120,3 +120,19 @@ def test_authorize_call_enforces_operation_and_parameter_bounds():
     assert authorize_call(cap,cid,"list",{"tab_index":9},now=101)["reason"] == "parameter_above_max:tab_index"
     assert authorize_call(cap,"mcp:browser:other","list",{},now=101)["reason"] == "capability_not_granted"
     assert authorize_call(cap,cid,"list",{},now=201)["reason"] == "expired"
+
+
+def test_action_matching_avoids_read_noun_collisions():
+    cases=[
+        {"name":"lpush","description":"Push a value onto the left of a Redis list"},
+        {"name":"rpush","description":"Push a value onto the right of a Redis list"},
+        {"name":"conversations_mark","description":"Mark a channel or DM as read"},
+    ]
+    for tool in cases:
+        effect,_=classify(tool)
+        assert effect != "read", (tool,effect)
+
+
+def test_multi_action_tool_does_not_collapse_to_read():
+    effect,_=classify({"name":"usergroups_me","description":"Manage your user group membership: list groups you're in, join a group, or leave a group."})
+    assert effect != "read"
