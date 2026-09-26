@@ -36,6 +36,23 @@ jobs:
           PY
       - name: Run sealed M2 discovery holdout
         run: python benchmark/m2_discovery_holdout.py | tee m2-discovery-holdout.json
+      - name: Run KAVI control-plane dogfood
+        run: python benchmark/kavi_dogfood/run.py | tee kavi-dogfood.json
+      - name: Enforce KAVI dogfood authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("kavi-dogfood.json"))
+          assert r["inventory_capabilities"] == 5, r
+          assert r["declared_mutations"] == 2, r
+          assert r["compiled_grants"] == 1, r
+          assert r["authority_reduction"] == 0.8, r
+          assert r["capsule_status"] == "ready", r
+          assert r["allowed_inside_capsule"], r
+          assert r["enqueue_blocked"], r
+          assert r["approve_blocked"], r
+          assert r["mutation_grants"] == [], r
+          PY
       - name: Validate benchmark corpus
         run: python benchmark/validate_corpus.py | tee corpus-validation.json
       - name: Run sealed holdout benchmark
