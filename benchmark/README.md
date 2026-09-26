@@ -77,3 +77,25 @@ The benchmark now separates two questions:
 The task-intent corpus is intentionally small and auditable at this stage. CI requires at least 10 tasks and at least 90% mean authority reduction against the observed inventory. This is a benchmark gate, not a production security claim.
 
 See `FAILURE_TAXONOMY.md` for the failures that motivated Authority Model v2.
+
+## M1b canonical checkpoint
+
+The current audited checkpoint contains **487 capabilities across 30 canonical MCP surfaces**. Historical provider aliases were normalized before counting surfaces.
+
+Current CI exit thresholds:
+
+- zero false-safe outcomes
+- 100% dangerous-capability recall
+- <=15% unknown rate
+- <=5% overblocking rate
+- >=85% classification accuracy
+- >=450 sourced capabilities
+- >=30 canonical surfaces
+- >=85% description coverage
+- all public sources pinned to immutable repository commits
+- exact observed/label coverage with no duplicate IDs
+- 100% synthetic drift recall over every surface
+- >=90% mean task authority reduction
+- >=4,500 unnecessary standing-authority exposures removed across the 10-task benchmark
+
+The latest measured checkpoint passes all of these gates. Metrics remain benchmark evidence, not a claim that KCC is a complete production security boundary.
