@@ -31,7 +31,6 @@ def main():
     p=sub.add_parser("scan-manifest"); p.add_argument("input"); p.add_argument("-o","--output")
     p=sub.add_parser("evidence-bind"); p.add_argument("capsule"); p.add_argument("--execution-id",required=True); p.add_argument("--evidence",required=True); p.add_argument("--capability"); p.add_argument("--operation"); p.add_argument("-o","--output")
     p=sub.add_parser("evidence-verify"); p.add_argument("input")
-    p=sub.add_parser("probe-kavi",allow_abbrev=False); p.add_argument("--endpoint",required=True); p.add_argument("--token-env",default="KAVI_DISPATCH_TOKEN"); p.add_argument("--timeout",type=float,default=10.0); p.add_argument("-o","--output")
     a=ap.parse_args()
     if a.cmd=="scan": save(scan_mcp_snapshot(load(a.input)),a.output)
     elif a.cmd=="audit": save(audit_inventory(load(a.input)),a.output)
@@ -84,23 +83,6 @@ def main():
     elif a.cmd=="evidence-verify":
         r=verify_execution_evidence(load(a.input)); save(r,None)
         raise SystemExit(0 if r["valid"] else 4)
-    elif a.cmd=="probe-kavi":
-        from .live_probe import LiveProbeError, probe_kavi_bridge
-        try:
-            r=probe_kavi_bridge(
-                a.endpoint,
-                token_env=a.token_env,
-                timeout=a.timeout,
-            )
-            save(r,a.output)
-        except LiveProbeError as e:
-            save({
-                "status":"blocked",
-                "code":e.code,
-                "message":str(e),
-                "secret_material_in_artifact":False,
-            },None)
-            raise SystemExit(5)
     else:
         params=json.loads(a.parameters) if a.parameters else {}
         r=authorize_call(load(a.capsule),a.capability,a.operation,params); save(r,None)
