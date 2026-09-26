@@ -82,3 +82,14 @@ def test_sync_dispatch_works_without_event_loop():
     assert out["executed"] is True
     assert out["result"]=={"ok":True}
     assert calls==[{"id":"1"}]
+
+
+def test_public_api_contract_is_explicit_and_framework_neutral():
+    expected={
+        "__version__","SDK_VERSION","SCHEMA_VERSION","SUPPORTED_SOURCE_FORMATS",
+        "adapt_capabilities","build_manifest","scan_manifest","compile_capsule",
+        "verify_capsule","authorize_call","inventory_lock","diff_inventory_lock",
+        "Guard","AuthorityDenied","ApprovalRequired","CapabilityDenied",
+    }
+    assert set(kcc.__all__)==expected
+    assert not any("kavi" in name.lower() or "hermes" in name.lower() or "codex" in name.lower() for name in kcc.__all__)
