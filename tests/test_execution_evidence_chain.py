@@ -86,6 +86,12 @@ def test_cross_subsystem_evidence_cannot_expand_kcc_authority():
 
     evidence = [
         _artifact_ref(
+            "capability_plan",
+            "axiom",
+            "plan-1",
+            {"selected": [capability_id], "authority_granted": False},
+        ),
+        _artifact_ref(
             "context",
             "oracle",
             "state-1",
@@ -127,7 +133,7 @@ def test_cross_subsystem_evidence_cannot_expand_kcc_authority():
 
     assert verify_execution_evidence(envelope)["valid"] is True
     assert envelope["authority_granted"] is False
-    assert len(envelope["evidence"]) == 5
+    assert len(envelope["evidence"]) == 6
 
     # Evidence can explain a later observed attempt to close a tab, but even a
     # valid evidence envelope cannot convert that operation into capsule authority.
