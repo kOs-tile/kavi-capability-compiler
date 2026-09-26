@@ -1,7 +1,7 @@
 [
   {
-    "id": "modelcontextprotocol/filesystem:read_text_file",
-    "server": "modelcontextprotocol/filesystem",
+    "id": "filesystem:read_text_file",
+    "server": "filesystem",
     "name": "read_text_file",
     "description": "Read complete contents of a file as text",
     "inputSchema": {},
@@ -9,11 +9,11 @@
       "readOnlyHint": true,
       "openWorldHint": false
     },
-    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
   },
   {
-    "id": "modelcontextprotocol/filesystem:read_media_file",
-    "server": "modelcontextprotocol/filesystem",
+    "id": "filesystem:read_media_file",
+    "server": "filesystem",
     "name": "read_media_file",
     "description": "Read a media file",
     "inputSchema": {},
@@ -21,11 +21,11 @@
       "readOnlyHint": true,
       "openWorldHint": false
     },
-    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
   },
   {
-    "id": "modelcontextprotocol/filesystem:read_multiple_files",
-    "server": "modelcontextprotocol/filesystem",
+    "id": "filesystem:read_multiple_files",
+    "server": "filesystem",
     "name": "read_multiple_files",
     "description": "Read multiple files simultaneously",
     "inputSchema": {},
@@ -33,11 +33,11 @@
       "readOnlyHint": true,
       "openWorldHint": false
     },
-    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
   },
   {
-    "id": "modelcontextprotocol/filesystem:list_directory",
-    "server": "modelcontextprotocol/filesystem",
+    "id": "filesystem:list_directory",
+    "server": "filesystem",
     "name": "list_directory",
     "description": "List directory contents",
     "inputSchema": {},
@@ -45,11 +45,11 @@
       "readOnlyHint": true,
       "openWorldHint": false
     },
-    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
   },
   {
-    "id": "modelcontextprotocol/filesystem:search_files",
-    "server": "modelcontextprotocol/filesystem",
+    "id": "filesystem:search_files",
+    "server": "filesystem",
     "name": "search_files",
     "description": "Search files",
     "inputSchema": {},
@@ -57,11 +57,11 @@
       "readOnlyHint": true,
       "openWorldHint": false
     },
-    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
   },
   {
-    "id": "modelcontextprotocol/filesystem:write_file",
-    "server": "modelcontextprotocol/filesystem",
+    "id": "filesystem:write_file",
+    "server": "filesystem",
     "name": "write_file",
     "description": "Create new file or overwrite existing",
     "inputSchema": {},
@@ -71,11 +71,11 @@
       "destructiveHint": true,
       "openWorldHint": false
     },
-    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
   },
   {
-    "id": "modelcontextprotocol/filesystem:edit_file",
-    "server": "modelcontextprotocol/filesystem",
+    "id": "filesystem:edit_file",
+    "server": "filesystem",
     "name": "edit_file",
     "description": "Edit a file",
     "inputSchema": {},
@@ -85,11 +85,11 @@
       "destructiveHint": true,
       "openWorldHint": false
     },
-    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
   },
   {
-    "id": "modelcontextprotocol/filesystem:move_file",
-    "server": "modelcontextprotocol/filesystem",
+    "id": "filesystem:move_file",
+    "server": "filesystem",
     "name": "move_file",
     "description": "Move or rename a file",
     "inputSchema": {},
@@ -99,79 +99,79 @@
       "destructiveHint": true,
       "openWorldHint": false
     },
-    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
   },
   {
-    "id": "modelcontextprotocol/fetch:fetch",
-    "server": "modelcontextprotocol/fetch",
+    "id": "fetch:fetch",
+    "server": "fetch",
     "name": "fetch",
     "description": "Fetches a URL from the internet and extracts contents",
     "inputSchema": {},
     "annotations": {},
-    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/fetch/README.md"
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/fetch/README.md"
   },
   {
-    "id": "microsoft/playwright-mcp:browser_navigate",
-    "server": "microsoft/playwright-mcp",
+    "id": "playwright:browser_navigate",
+    "server": "playwright",
     "name": "browser_navigate",
     "description": "Navigate to a URL",
     "inputSchema": {},
     "annotations": {},
-    "source": "https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
   },
   {
-    "id": "microsoft/playwright-mcp:browser_snapshot",
-    "server": "microsoft/playwright-mcp",
+    "id": "playwright:browser_snapshot",
+    "server": "playwright",
     "name": "browser_snapshot",
     "description": "Capture accessibility snapshot",
     "inputSchema": {},
     "annotations": {},
-    "source": "https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
   },
   {
-    "id": "microsoft/playwright-mcp:browser_click",
-    "server": "microsoft/playwright-mcp",
+    "id": "playwright:browser_click",
+    "server": "playwright",
     "name": "browser_click",
     "description": "Click an element",
     "inputSchema": {},
     "annotations": {},
-    "source": "https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
   },
   {
-    "id": "microsoft/playwright-mcp:browser_type",
-    "server": "microsoft/playwright-mcp",
+    "id": "playwright:browser_type",
+    "server": "playwright",
     "name": "browser_type",
     "description": "Type text into an element",
     "inputSchema": {},
     "annotations": {},
-    "source": "https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
   },
   {
-    "id": "github/github-mcp-server:get_file_contents",
-    "server": "github/github-mcp-server",
+    "id": "github:get_file_contents",
+    "server": "github",
     "name": "get_file_contents",
     "description": "Get file contents from a repository",
     "inputSchema": {},
     "annotations": {},
-    "source": "https://github.com/github/github-mcp-server"
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
   },
   {
-    "id": "github/github-mcp-server:issue_read",
-    "server": "github/github-mcp-server",
+    "id": "github:issue_read",
+    "server": "github",
     "name": "issue_read",
     "description": "Read an issue",
     "inputSchema": {},
     "annotations": {},
-    "source": "https://github.com/github/github-mcp-server"
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
   },
   {
-    "id": "github/github-mcp-server:create_pull_request",
-    "server": "github/github-mcp-server",
+    "id": "github:create_pull_request",
+    "server": "github",
     "name": "create_pull_request",
     "description": "Create a pull request",
     "inputSchema": {},
     "annotations": {},
-    "source": "https://github.com/github/github-mcp-server"
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
   },
   {
     "id": "memory:add_observations",
@@ -5222,5 +5222,148 @@
     },
     "annotations": {},
     "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-documentdb:find",
+    "server": "aws-documentdb",
+    "name": "find",
+    "description": "Query documents from a DocumentDB collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/documentdb-mcp-server/README.md"
+  },
+  {
+    "id": "aws-documentdb:aggregate",
+    "server": "aws-documentdb",
+    "name": "aggregate",
+    "description": "Run an aggregation pipeline; pipelines may contain write stages unless read-only mode blocks them",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/documentdb-mcp-server/README.md"
+  },
+  {
+    "id": "aws-documentdb:insert",
+    "server": "aws-documentdb",
+    "name": "insert",
+    "description": "Insert documents into a DocumentDB collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/documentdb-mcp-server/README.md"
+  },
+  {
+    "id": "aws-documentdb:update",
+    "server": "aws-documentdb",
+    "name": "update",
+    "description": "Update documents in a DocumentDB collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/documentdb-mcp-server/README.md"
+  },
+  {
+    "id": "aws-documentdb:delete",
+    "server": "aws-documentdb",
+    "name": "delete",
+    "description": "Delete documents from a DocumentDB collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/documentdb-mcp-server/README.md"
+  },
+  {
+    "id": "aws-cloudtrail:lookup_events",
+    "server": "aws-cloudtrail",
+    "name": "lookup_events",
+    "description": "Look up CloudTrail management events",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/cloudtrail-mcp-server/README.md"
+  },
+  {
+    "id": "aws-cloudtrail:lake_query",
+    "server": "aws-cloudtrail",
+    "name": "lake_query",
+    "description": "Run analytics queries against CloudTrail Lake",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/cloudtrail-mcp-server/README.md"
+  },
+  {
+    "id": "aws-cloudtrail:get_query_status",
+    "server": "aws-cloudtrail",
+    "name": "get_query_status",
+    "description": "Get CloudTrail Lake query status",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/cloudtrail-mcp-server/README.md"
+  },
+  {
+    "id": "aws-cloudtrail:get_query_results",
+    "server": "aws-cloudtrail",
+    "name": "get_query_results",
+    "description": "Get CloudTrail Lake query results",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/cloudtrail-mcp-server/README.md"
+  },
+  {
+    "id": "aws-cloudtrail:list_event_data_stores",
+    "server": "aws-cloudtrail",
+    "name": "list_event_data_stores",
+    "description": "List CloudTrail Lake event data stores",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/cloudtrail-mcp-server/README.md"
+  },
+  {
+    "id": "aws-bedrock-kb:ListKnowledgeBases",
+    "server": "aws-bedrock-kb",
+    "name": "ListKnowledgeBases",
+    "description": "List available Bedrock knowledge bases and data sources",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/bedrock-kb-retrieval-mcp-server/awslabs/bedrock_kb_retrieval_mcp_server/server.py"
+  },
+  {
+    "id": "aws-bedrock-kb:QueryKnowledgeBases",
+    "server": "aws-bedrock-kb",
+    "name": "QueryKnowledgeBases",
+    "description": "Query an Amazon Bedrock knowledge base using natural language",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/bedrock-kb-retrieval-mcp-server/awslabs/bedrock_kb_retrieval_mcp_server/server.py"
+  },
+  {
+    "id": "aws-bedrock-kb:AgenticQueryKnowledgeBases",
+    "server": "aws-bedrock-kb",
+    "name": "AgenticQueryKnowledgeBases",
+    "description": "Run agentic retrieval over managed Bedrock knowledge bases",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/bedrock-kb-retrieval-mcp-server/awslabs/bedrock_kb_retrieval_mcp_server/server.py"
   }
 ]
