@@ -91,6 +91,7 @@ def scan_mcp_snapshot(snapshot):
         caps.append({"id":f"mcp:{server}:{t['name']}","provider":"mcp","server":server,
             "name":t["name"],"description":t.get("description",""),"input_schema":schema,
             "fingerprint":fp,"effect":effect,"confidence":confidence,
+            "analysis":analyze_capability(t),
             "annotations":t.get("annotations") or {}})
     inv={"version":"kcc.inventory.v0","capabilities":caps}
     inv["digest"]=digest(inv)
@@ -121,6 +122,23 @@ def decide(policy,c):
             return decision
     return policy.get("default","deny")
 
+def _constraint_for(intent, cid):
+    raw=(intent.get("capability_constraints") or {}).get(cid,{})
+    if not isinstance(raw,dict): raise ValueError(f"Invalid capability constraint: {cid}")
+    allowed=set(raw).intersection({"operations","parameters"})
+    if set(raw)-allowed: raise ValueError(f"Unsupported capability constraint: {cid}")
+    out={}
+    if "operations" in raw:
+        ops=raw["operations"]
+        if not isinstance(ops,list) or not ops or not all(isinstance(x,str) and x for x in ops):
+            raise ValueError(f"Invalid operations constraint: {cid}")
+        out["operations"]=sorted(set(ops))
+    if "parameters" in raw:
+        params=raw["parameters"]
+        if not isinstance(params,dict): raise ValueError(f"Invalid parameters constraint: {cid}")
+        out["parameters"]=params
+    return out
+
 def compile_capsule(inv,intent,policy,now=None):
     now=int(now or time.time()); by_id={c["id"]:c for c in inv["capabilities"]}
     grants=[]; approvals=[]; denials=[]
@@ -128,7 +146,12 @@ def compile_capsule(inv,intent,policy,now=None):
         if cid not in by_id: raise ValueError(f"Capability absent from inventory: {cid}")
         c=by_id[cid]; d=decide(policy,c)
         if c["effect"]=="unknown" and d=="allow": d="approval"
-        entry={"id":cid,"fingerprint":c["fingerprint"],"effect":c["effect"]}
+        constraints=_constraint_for(intent,cid)
+        analysis=c.get("analysis") or {"effect":c["effect"],"risk_flags":[]}
+        if analysis.get("effect")=="mixed" and not constraints.get("operations"):
+            d="approval" if d!="deny" else d
+        entry={"id":cid,"fingerprint":c["fingerprint"],"effect":c["effect"],
+            "risk_flags":analysis.get("risk_flags",[]),"constraints":constraints}
         {"allow":grants,"approval":approvals,"deny":denials}[d].append(entry)
     ttl=max(1,min(int(intent.get("ttl_seconds",900)),86400))
     status="denied" if denials else ("approval_required" if approvals else "ready")
