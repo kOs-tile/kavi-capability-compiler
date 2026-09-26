@@ -117,3 +117,36 @@ def test_evidence_verify_cli_fails_on_tamper(tmp_path, monkeypatch, capsys):
 
     assert exc.value.code == 4
     assert json.loads(capsys.readouterr().out)["valid"] is False
+
+
+
+def test_probe_kavi_cli_fails_closed_without_env_token(monkeypatch, capsys):
+    monkeypatch.delenv("KAVI_DISPATCH_TOKEN", raising=False)
+    monkeypatch.setattr(sys, "argv", [
+        "kcc",
+        "probe-kavi",
+        "--endpoint", "https://bridge.example/api/mcp",
+    ])
+
+    with pytest.raises(SystemExit) as exc:
+        main()
+
+    assert exc.value.code == 5
+    result = json.loads(capsys.readouterr().out)
+    assert result["status"] == "blocked"
+    assert result["code"] == "NEEDS_AUTH"
+    assert result["secret_material_in_artifact"] is False
+
+
+def test_probe_kavi_cli_never_accepts_token_as_cli_argument(monkeypatch):
+    monkeypatch.setattr(sys, "argv", [
+        "kcc",
+        "probe-kavi",
+        "--endpoint", "https://bridge.example/api/mcp",
+        "--token", "should-not-be-supported",
+    ])
+
+    with pytest.raises(SystemExit) as exc:
+        main()
+
+    assert exc.value.code == 2
