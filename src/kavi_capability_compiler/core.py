@@ -79,6 +79,10 @@ def classify(tool):
         return "unknown", analysis["confidence"]
     return effect, analysis["confidence"]
 
+def capability_id(provider, server, name):
+    def norm(x): return str(x).strip().lower().replace(" ", "-")
+    return f"{norm(provider)}:{norm(server)}:{norm(name)}"
+
 def scan_mcp_snapshot(snapshot):
     tools = snapshot.get("tools") or snapshot.get("result",{}).get("tools") or []
     server = snapshot.get("server",{}).get("name","mcp")
@@ -88,7 +92,7 @@ def scan_mcp_snapshot(snapshot):
         effect, confidence=classify(t)
         fp=digest({"name":t.get("name"),"description":t.get("description"),"schema":schema,
             "annotations":t.get("annotations") or {}})
-        caps.append({"id":f"mcp:{server}:{t['name']}","provider":"mcp","server":server,
+        caps.append({"id":capability_id("mcp",server,t["name"]),"provider":"mcp","server":server,
             "name":t["name"],"description":t.get("description",""),"input_schema":schema,
             "fingerprint":fp,"effect":effect,"confidence":confidence,
             "analysis":analyze_capability(t),
@@ -185,3 +189,31 @@ def diff_inventory_lock(lock, inv):
     added=sorted(set(new)-set(old)); removed=sorted(set(old)-set(new))
     changed=sorted(k for k in set(old)&set(new) if old[k]!=new[k])
     return {"clean":not (added or removed or changed),"added":added,"removed":removed,"changed":changed}
+
+
+def authorize_call(cap, capability_id, operation=None, parameters=None, now=None):
+    if not verify_capsule(cap, {"digest":cap.get("inventory_digest"), "capabilities":[
+        {"id":x["id"],"fingerprint":x["fingerprint"]}
+        for k in ("grants","approvals","denials") for x in cap.get(k,[])
+    ]}, now=now)["checks"][0]["ok"]:
+        return {"allowed":False,"reason":"invalid_capsule_integrity"}
+    if int(now or time.time()) >= cap.get("expires_at",0):
+        return {"allowed":False,"reason":"expired"}
+    grants={x["id"]:x for x in cap.get("grants",[])}
+    if capability_id not in grants:
+        return {"allowed":False,"reason":"capability_not_granted"}
+    entry=grants[capability_id]; constraints=entry.get("constraints") or {}
+    ops=constraints.get("operations")
+    if ops and operation not in ops:
+        return {"allowed":False,"reason":"operation_not_granted"}
+    params=parameters or {}
+    for key, rule in (constraints.get("parameters") or {}).items():
+        if key not in params: continue
+        value=params[key]
+        if isinstance(rule,dict):
+            if "max" in rule and value > rule["max"]: return {"allowed":False,"reason":f"parameter_above_max:{key}"}
+            if "min" in rule and value < rule["min"]: return {"allowed":False,"reason":f"parameter_below_min:{key}"}
+            if "enum" in rule and value not in rule["enum"]: return {"allowed":False,"reason":f"parameter_not_allowed:{key}"}
+        elif value != rule:
+            return {"allowed":False,"reason":f"parameter_mismatch:{key}"}
+    return {"allowed":True,"reason":"granted"}
