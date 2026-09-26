@@ -1,18 +1,245 @@
 [
-  {"server":"modelcontextprotocol/filesystem","name":"read_text_file","description":"Read complete contents of a file as text","annotations":{"readOnlyHint":true,"openWorldHint":false},"expected_effect":"read","dangerous":false,"source":"https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"},
-  {"server":"modelcontextprotocol/filesystem","name":"read_media_file","description":"Read a media file","annotations":{"readOnlyHint":true,"openWorldHint":false},"expected_effect":"read","dangerous":false,"source":"https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"},
-  {"server":"modelcontextprotocol/filesystem","name":"read_multiple_files","description":"Read multiple files simultaneously","annotations":{"readOnlyHint":true,"openWorldHint":false},"expected_effect":"read","dangerous":false,"source":"https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"},
-  {"server":"modelcontextprotocol/filesystem","name":"list_directory","description":"List directory contents","annotations":{"readOnlyHint":true,"openWorldHint":false},"expected_effect":"read","dangerous":false,"source":"https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"},
-  {"server":"modelcontextprotocol/filesystem","name":"search_files","description":"Search files","annotations":{"readOnlyHint":true,"openWorldHint":false},"expected_effect":"read","dangerous":false,"source":"https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"},
-  {"server":"modelcontextprotocol/filesystem","name":"write_file","description":"Create new file or overwrite existing","annotations":{"readOnlyHint":false,"idempotentHint":true,"destructiveHint":true,"openWorldHint":false},"expected_effect":"delete","dangerous":true,"source":"https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"},
-  {"server":"modelcontextprotocol/filesystem","name":"edit_file","description":"Edit a file","annotations":{"readOnlyHint":false,"idempotentHint":false,"destructiveHint":true,"openWorldHint":false},"expected_effect":"delete","dangerous":true,"source":"https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"},
-  {"server":"modelcontextprotocol/filesystem","name":"move_file","description":"Move or rename a file","annotations":{"readOnlyHint":false,"idempotentHint":false,"destructiveHint":true,"openWorldHint":false},"expected_effect":"delete","dangerous":true,"source":"https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"},
-  {"server":"modelcontextprotocol/fetch","name":"fetch","description":"Fetches a URL from the internet and extracts contents","expected_effect":"read","dangerous":false,"source":"https://github.com/modelcontextprotocol/servers/blob/main/src/fetch/README.md"},
-  {"server":"microsoft/playwright-mcp","name":"browser_navigate","description":"Navigate to a URL","expected_effect":"unknown","dangerous":true,"source":"https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"},
-  {"server":"microsoft/playwright-mcp","name":"browser_snapshot","description":"Capture accessibility snapshot","expected_effect":"read","dangerous":false,"source":"https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"},
-  {"server":"microsoft/playwright-mcp","name":"browser_click","description":"Click an element","expected_effect":"unknown","dangerous":true,"source":"https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"},
-  {"server":"microsoft/playwright-mcp","name":"browser_type","description":"Type text into an element","expected_effect":"unknown","dangerous":true,"source":"https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"},
-  {"server":"github/github-mcp-server","name":"get_file_contents","description":"Get file contents from a repository","expected_effect":"read","dangerous":false,"source":"https://github.com/github/github-mcp-server"},
-  {"server":"github/github-mcp-server","name":"issue_read","description":"Read an issue","expected_effect":"read","dangerous":false,"source":"https://github.com/github/github-mcp-server"},
-  {"server":"github/github-mcp-server","name":"create_pull_request","description":"Create a pull request","expected_effect":"write","dangerous":true,"source":"https://github.com/github/github-mcp-server"}
+  {
+    "server": "modelcontextprotocol/filesystem",
+    "name": "read_text_file",
+    "description": "Read complete contents of a file as text",
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "expected_effect": "read",
+    "dangerous": false,
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "server": "modelcontextprotocol/filesystem",
+    "name": "read_media_file",
+    "description": "Read a media file",
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "expected_effect": "read",
+    "dangerous": false,
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "server": "modelcontextprotocol/filesystem",
+    "name": "read_multiple_files",
+    "description": "Read multiple files simultaneously",
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "expected_effect": "read",
+    "dangerous": false,
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "server": "modelcontextprotocol/filesystem",
+    "name": "list_directory",
+    "description": "List directory contents",
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "expected_effect": "read",
+    "dangerous": false,
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "server": "modelcontextprotocol/filesystem",
+    "name": "search_files",
+    "description": "Search files",
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "expected_effect": "read",
+    "dangerous": false,
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "server": "modelcontextprotocol/filesystem",
+    "name": "write_file",
+    "description": "Create new file or overwrite existing",
+    "annotations": {
+      "readOnlyHint": false,
+      "idempotentHint": true,
+      "destructiveHint": true,
+      "openWorldHint": false
+    },
+    "expected_effect": "delete",
+    "dangerous": true,
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "server": "modelcontextprotocol/filesystem",
+    "name": "edit_file",
+    "description": "Edit a file",
+    "annotations": {
+      "readOnlyHint": false,
+      "idempotentHint": false,
+      "destructiveHint": true,
+      "openWorldHint": false
+    },
+    "expected_effect": "delete",
+    "dangerous": true,
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "server": "modelcontextprotocol/filesystem",
+    "name": "move_file",
+    "description": "Move or rename a file",
+    "annotations": {
+      "readOnlyHint": false,
+      "idempotentHint": false,
+      "destructiveHint": true,
+      "openWorldHint": false
+    },
+    "expected_effect": "delete",
+    "dangerous": true,
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "server": "modelcontextprotocol/fetch",
+    "name": "fetch",
+    "description": "Fetches a URL from the internet and extracts contents",
+    "expected_effect": "read",
+    "dangerous": false,
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/fetch/README.md"
+  },
+  {
+    "server": "microsoft/playwright-mcp",
+    "name": "browser_navigate",
+    "description": "Navigate to a URL",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "source": "https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"
+  },
+  {
+    "server": "microsoft/playwright-mcp",
+    "name": "browser_snapshot",
+    "description": "Capture accessibility snapshot",
+    "expected_effect": "read",
+    "dangerous": false,
+    "source": "https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"
+  },
+  {
+    "server": "microsoft/playwright-mcp",
+    "name": "browser_click",
+    "description": "Click an element",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "source": "https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"
+  },
+  {
+    "server": "microsoft/playwright-mcp",
+    "name": "browser_type",
+    "description": "Type text into an element",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "source": "https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"
+  },
+  {
+    "server": "github/github-mcp-server",
+    "name": "get_file_contents",
+    "description": "Get file contents from a repository",
+    "expected_effect": "read",
+    "dangerous": false,
+    "source": "https://github.com/github/github-mcp-server"
+  },
+  {
+    "server": "github/github-mcp-server",
+    "name": "issue_read",
+    "description": "Read an issue",
+    "expected_effect": "read",
+    "dangerous": false,
+    "source": "https://github.com/github/github-mcp-server"
+  },
+  {
+    "server": "github/github-mcp-server",
+    "name": "create_pull_request",
+    "description": "Create a pull request",
+    "expected_effect": "write",
+    "dangerous": true,
+    "source": "https://github.com/github/github-mcp-server"
+  },
+  {
+    "server": "memory",
+    "name": "add_observations",
+    "description": "Add new observations to existing entities in the knowledge graph",
+    "inputSchema": {
+      "type": "object"
+    },
+    "expected_effect": "write",
+    "dangerous": true,
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/index.ts"
+  },
+  {
+    "server": "time",
+    "name": "get_current_time",
+    "description": "Get current time in a specific timezone or system timezone.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "expected_effect": "read",
+    "dangerous": false,
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/time/README.md"
+  },
+  {
+    "server": "git",
+    "name": "git_status",
+    "description": "Shows the working tree status",
+    "inputSchema": {
+      "type": "object"
+    },
+    "expected_effect": "read",
+    "dangerous": false,
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "server": "playwright",
+    "name": "browser_run_code_unsafe",
+    "description": "Run a Playwright code snippet. Unsafe: executes arbitrary JavaScript in the Playwright server process and is RCE-equivalent.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "expected_effect": "execute",
+    "dangerous": true,
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "server": "playwright",
+    "name": "browser_file_upload",
+    "description": "Upload one or multiple files",
+    "inputSchema": {
+      "type": "object"
+    },
+    "expected_effect": "write",
+    "dangerous": true,
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "server": "github",
+    "name": "create_issue",
+    "description": "Create a new issue in a GitHub repository with a title and optional body.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "expected_effect": "write",
+    "dangerous": true,
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/pkg/github/issues_granular.go"
+  },
+  {
+    "server": "github",
+    "name": "delete_file",
+    "description": "Delete a file from a GitHub repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "expected_effect": "delete",
+    "dangerous": true,
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/pkg/github/repositories.go"
+  }
 ]
