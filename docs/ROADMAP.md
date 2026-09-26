@@ -45,16 +45,23 @@ Exit gate:
 - fresh sealed discovery holdout passes
 - M1 safety gates remain green
 
-## M3 — Hermes dogfood
+## M3 — KAVI/Hermes dogfood
+**Status: active; M3A KAVI control-plane dogfood passed.**
 
-Only after M2 exits:
-- map a bounded Hermes capability surface into KCC IR
-- discover/compile authority before a real workflow
-- execute through the capsule guard
-- prove an outside-capsule operation is blocked
-- record one reproducible dogfood case study
+M3A evidence:
+- authoritative KAVI Dispatch Bridge contract adapted into KCC IR
+- 5 standing capabilities -> 1 task-scoped grant
+- 80% authority reduction for the read-only operator-snapshot task
+- granted read allowed by runtime guard
+- enqueue_task and approve_task blocked outside the capsule
+- live production bridge health verified without extracting secrets
 
-Hermes is a proving ground, not a dependency of the core.
+M3B:
+- authenticated read-only live bridge discovery when the existing bearer is available through an authorized runtime
+- Hermes-local adapter only after an actual Hermes capability/tool export or registry is available
+- never invent a Hermes surface from chat history
+
+Hermes/KAVI remain proving grounds, not dependencies of the core.
 
 ## M4 — Portable Enforcement SDK
 
