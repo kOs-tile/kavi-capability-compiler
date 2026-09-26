@@ -40,6 +40,12 @@ canonical KCC capsule by digest.
       "producer": "phantom",
       "artifact_id": "extract-123",
       "artifact_digest": "<PHANTOM report_fingerprint>"
+    },
+    {
+      "kind": "domain_detection",
+      "producer": "nephilim",
+      "artifact_id": "ethereum:19000001:sandwich",
+      "artifact_digest": "<NEPHILIM report_fingerprint>"
     }
   ],
   "authority_granted": false,
@@ -59,7 +65,7 @@ not the full evidence payloads.
 | MNEMOS | memory admission audit | `admission_fingerprint` |
 | SPECTRAFLOW | authority-drift evaluation | `evaluation_fingerprint` |
 | PHANTOM | extraction or extraction-drift report | `report_fingerprint` |
-| NEPHILIM | future detector evidence bundle | not yet standardized |
+| NEPHILIM | detector evidence bound to normalized block inputs | `report_fingerprint` |
 
 ## Verification boundary
 
