@@ -6,27 +6,13 @@ from pathlib import Path
 from kavi_capability_compiler.core import inventory_lock
 from kavi_capability_compiler.discovery import discover_stdio
 
-SERVERS = [
-    {
-        "id": "filesystem",
-        "package": "@modelcontextprotocol/server-filesystem@2026.8.31",
-        "expected": {"read_text_file", "write_file", "list_directory"},
-    },
-    {
-        "id": "memory",
-        "package": "@modelcontextprotocol/server-memory@2026.8.31",
-        "expected": {"read_graph", "create_entities", "delete_entities"},
-    },
-    {
-        "id": "sequential-thinking",
-        "package": "@modelcontextprotocol/server-sequential-thinking@2026.8.31",
-        "expected": {"sequential_thinking"},
-    },
-]
+ROOT=Path(__file__).parent
+MANIFEST=json.loads((ROOT/"real_mcp_compat_manifest.json").read_text())
 
 
 async def discover_one(spec, root):
-    args=["-y", spec["package"]]
+    package_spec=f"{spec['package']}@{spec['published_version']}"
+    args=["-y", package_spec]
     env={}
     if spec["id"]=="filesystem":
         allowed=root/"filesystem"
@@ -46,13 +32,16 @@ async def discover_one(spec, root):
     )
     inv=result["inventory"]
     names={c["name"] for c in inv["capabilities"]}
-    missing=sorted(spec["expected"]-names)
+    expected=set(spec["expected_tools"])
+    missing=sorted(expected-names)
     if missing:
         raise AssertionError(f"{spec['id']} missing expected tools: {missing}")
     lock=inventory_lock(inv)
     return {
         "id":spec["id"],
-        "package":spec["package"],
+        "package":package_spec,
+        "source_repository":spec["source_repository"],
+        "source_blob_sha":spec["source_blob_sha"],
         "protocol_version":result["protocol_version"],
         "server_name":result["server"]["name"],
         "tool_count":len(inv["capabilities"]),
@@ -66,9 +55,10 @@ async def main():
     with tempfile.TemporaryDirectory(prefix="kcc-real-mcp-") as tmp:
         root=Path(tmp)
         results=[]
-        for spec in SERVERS:
+        for spec in MANIFEST["servers"]:
             results.append(await discover_one(spec,root))
         print(json.dumps({
+            "manifest_version":MANIFEST["version"],
             "servers":len(results),
             "all_nonempty":all(x["tool_count"]>0 for x in results),
             "all_expected_tools_present":all(x["expected_tools_present"] for x in results),
