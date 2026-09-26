@@ -1,0 +1,5 @@
+{
+  "classifier_blob_sha": "6624647b95df4721dd2500195d658d822f421105",
+  "branch_checkpoint_commit": "e30e88c61f495f2876d93fdeac0b153cb70825e2",
+  "note": "Holdout labels were committed before evaluator execution and before any further classifier change."
+}
