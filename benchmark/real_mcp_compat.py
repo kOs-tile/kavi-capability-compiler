@@ -9,17 +9,17 @@ from kavi_capability_compiler.discovery import discover_stdio
 SERVERS = [
     {
         "id": "filesystem",
-        "package": "@modelcontextprotocol/server-filesystem@0.6.3",
+        "package": "@modelcontextprotocol/server-filesystem@2026.8.31",
         "expected": {"read_text_file", "write_file", "list_directory"},
     },
     {
         "id": "memory",
-        "package": "@modelcontextprotocol/server-memory@0.6.3",
+        "package": "@modelcontextprotocol/server-memory@2026.8.31",
         "expected": {"read_graph", "create_entities", "delete_entities"},
     },
     {
         "id": "sequential-thinking",
-        "package": "@modelcontextprotocol/server-sequential-thinking@0.6.2",
+        "package": "@modelcontextprotocol/server-sequential-thinking@2026.8.31",
         "expected": {"sequential_thinking"},
     },
 ]
