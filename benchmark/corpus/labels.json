@@ -432,5 +432,96 @@
     "dangerous": true,
     "reviewer": "human",
     "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:fork_repository",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:create_or_update_file",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:push_files",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:create_branch",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:merge_pull_request",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:pull_request_read",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:pull_request_review_write",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:request_copilot_review",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:search_repositories",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:search_users",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_issue_comments",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:list_issues",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:create_repository",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
   }
 ]
