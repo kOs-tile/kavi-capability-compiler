@@ -1,0 +1,429 @@
+[
+  {
+    "id": "modelcontextprotocol/filesystem:read_text_file",
+    "server": "modelcontextprotocol/filesystem",
+    "name": "read_text_file",
+    "description": "Read complete contents of a file as text",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "id": "modelcontextprotocol/filesystem:read_media_file",
+    "server": "modelcontextprotocol/filesystem",
+    "name": "read_media_file",
+    "description": "Read a media file",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "id": "modelcontextprotocol/filesystem:read_multiple_files",
+    "server": "modelcontextprotocol/filesystem",
+    "name": "read_multiple_files",
+    "description": "Read multiple files simultaneously",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "id": "modelcontextprotocol/filesystem:list_directory",
+    "server": "modelcontextprotocol/filesystem",
+    "name": "list_directory",
+    "description": "List directory contents",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "id": "modelcontextprotocol/filesystem:search_files",
+    "server": "modelcontextprotocol/filesystem",
+    "name": "search_files",
+    "description": "Search files",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "id": "modelcontextprotocol/filesystem:write_file",
+    "server": "modelcontextprotocol/filesystem",
+    "name": "write_file",
+    "description": "Create new file or overwrite existing",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": false,
+      "idempotentHint": true,
+      "destructiveHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "id": "modelcontextprotocol/filesystem:edit_file",
+    "server": "modelcontextprotocol/filesystem",
+    "name": "edit_file",
+    "description": "Edit a file",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": false,
+      "idempotentHint": false,
+      "destructiveHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "id": "modelcontextprotocol/filesystem:move_file",
+    "server": "modelcontextprotocol/filesystem",
+    "name": "move_file",
+    "description": "Move or rename a file",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": false,
+      "idempotentHint": false,
+      "destructiveHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem/README.md"
+  },
+  {
+    "id": "modelcontextprotocol/fetch:fetch",
+    "server": "modelcontextprotocol/fetch",
+    "name": "fetch",
+    "description": "Fetches a URL from the internet and extracts contents",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/main/src/fetch/README.md"
+  },
+  {
+    "id": "microsoft/playwright-mcp:browser_navigate",
+    "server": "microsoft/playwright-mcp",
+    "name": "browser_navigate",
+    "description": "Navigate to a URL",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"
+  },
+  {
+    "id": "microsoft/playwright-mcp:browser_snapshot",
+    "server": "microsoft/playwright-mcp",
+    "name": "browser_snapshot",
+    "description": "Capture accessibility snapshot",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"
+  },
+  {
+    "id": "microsoft/playwright-mcp:browser_click",
+    "server": "microsoft/playwright-mcp",
+    "name": "browser_click",
+    "description": "Click an element",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"
+  },
+  {
+    "id": "microsoft/playwright-mcp:browser_type",
+    "server": "microsoft/playwright-mcp",
+    "name": "browser_type",
+    "description": "Type text into an element",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright.dev/blob/main/mcp/introduction.mdx"
+  },
+  {
+    "id": "github/github-mcp-server:get_file_contents",
+    "server": "github/github-mcp-server",
+    "name": "get_file_contents",
+    "description": "Get file contents from a repository",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server"
+  },
+  {
+    "id": "github/github-mcp-server:issue_read",
+    "server": "github/github-mcp-server",
+    "name": "issue_read",
+    "description": "Read an issue",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server"
+  },
+  {
+    "id": "github/github-mcp-server:create_pull_request",
+    "server": "github/github-mcp-server",
+    "name": "create_pull_request",
+    "description": "Create a pull request",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server"
+  },
+  {
+    "id": "memory:add_observations",
+    "server": "memory",
+    "name": "add_observations",
+    "description": "Add new observations to existing entities in the knowledge graph",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/index.ts"
+  },
+  {
+    "id": "time:get_current_time",
+    "server": "time",
+    "name": "get_current_time",
+    "description": "Get current time in a specific timezone or system timezone.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/time/README.md"
+  },
+  {
+    "id": "git:git_status",
+    "server": "git",
+    "name": "git_status",
+    "description": "Shows the working tree status",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "playwright:browser_run_code_unsafe",
+    "server": "playwright",
+    "name": "browser_run_code_unsafe",
+    "description": "Run a Playwright code snippet. Unsafe: executes arbitrary JavaScript in the Playwright server process and is RCE-equivalent.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_file_upload",
+    "server": "playwright",
+    "name": "browser_file_upload",
+    "description": "Upload one or multiple files",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "github:create_issue",
+    "server": "github",
+    "name": "create_issue",
+    "description": "Create a new issue in a GitHub repository with a title and optional body.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/pkg/github/issues_granular.go"
+  },
+  {
+    "id": "github:delete_file",
+    "server": "github",
+    "name": "delete_file",
+    "description": "Delete a file from a GitHub repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/pkg/github/repositories.go"
+  },
+  {
+    "id": "memory:create_entities",
+    "server": "memory",
+    "name": "create_entities",
+    "description": "Create multiple new entities in the knowledge graph",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "memory:create_relations",
+    "server": "memory",
+    "name": "create_relations",
+    "description": "Create multiple new relations between entities",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "memory:delete_entities",
+    "server": "memory",
+    "name": "delete_entities",
+    "description": "Remove entities and their relations",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "memory:delete_observations",
+    "server": "memory",
+    "name": "delete_observations",
+    "description": "Remove specific observations from entities",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "memory:delete_relations",
+    "server": "memory",
+    "name": "delete_relations",
+    "description": "Remove specific relations from the graph",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "memory:read_graph",
+    "server": "memory",
+    "name": "read_graph",
+    "description": "Read the entire knowledge graph",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "memory:search_nodes",
+    "server": "memory",
+    "name": "search_nodes",
+    "description": "Search for nodes based on query",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "memory:open_nodes",
+    "server": "memory",
+    "name": "open_nodes",
+    "description": "Retrieve specific nodes by name",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "git:git_diff_unstaged",
+    "server": "git",
+    "name": "git_diff_unstaged",
+    "description": "Shows changes in working directory not yet staged",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_diff_staged",
+    "server": "git",
+    "name": "git_diff_staged",
+    "description": "Shows changes that are staged for commit",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_diff",
+    "server": "git",
+    "name": "git_diff",
+    "description": "Shows changes comparing current state with target",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_commit",
+    "server": "git",
+    "name": "git_commit",
+    "description": "Records changes to the repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_add",
+    "server": "git",
+    "name": "git_add",
+    "description": "Adds file contents to the staging area",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_reset",
+    "server": "git",
+    "name": "git_reset",
+    "description": "Unstages all staged changes",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_log",
+    "server": "git",
+    "name": "git_log",
+    "description": "Shows the commit logs with optional date filtering",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_create_branch",
+    "server": "git",
+    "name": "git_create_branch",
+    "description": "Creates a new branch",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  }
+]
