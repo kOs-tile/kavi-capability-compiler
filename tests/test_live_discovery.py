@@ -177,3 +177,14 @@ def test_cli_discover_config_writes_inventory_and_lock_without_secret(tmp_path):
     assert lock["inventory_digest"]==discovery["inventory"]["digest"]
     assert secret not in output_path.read_text()
     assert secret not in lock_path.read_text()
+
+
+def test_stdio_discovery_timeout_is_bounded():
+    hanging=Path(__file__).parent/"fixtures"/"hanging_server.py"
+    started=time.monotonic()
+    try:
+        asyncio.run(discover_stdio(sys.executable,[str(hanging)],timeout_seconds=0.25))
+        assert False, "expected DiscoveryError"
+    except DiscoveryError as exc:
+        assert "stdio discovery failed" in str(exc)
+    assert time.monotonic()-started < 3
