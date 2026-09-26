@@ -78,3 +78,19 @@ def test_analysis_preserves_evidence_provenance():
     assert a["effect"] == "delete"
     assert any(e["kind"] == "lexical" for e in a["evidence"])
     assert any(e["kind"] == "annotation" for e in a["evidence"])
+
+
+def test_capsule_binds_operation_and_parameter_constraints():
+    snap={"server":{"name":"browser"},"tools":[{"name":"browser_tabs","description":"List, create, close, or select a browser tab.","inputSchema":{"type":"object"}}]}
+    inv=scan_mcp_snapshot(snap); cid="mcp:browser:browser_tabs"
+    intent={"capabilities":[cid],"capability_constraints":{cid:{"operations":["list"],"parameters":{"tab_index":{"max":3}}}}}
+    cap=compile_capsule(inv,intent,{"default":"allow"},now=100)
+    assert cap["grants"][0]["constraints"]["operations"] == ["list"]
+    assert cap["grants"][0]["constraints"]["parameters"]["tab_index"]["max"] == 3
+
+
+def test_mixed_capability_without_operation_constraint_requires_approval():
+    snap={"server":{"name":"browser"},"tools":[{"name":"browser_tabs","description":"List, create, close, or select a browser tab.","inputSchema":{"type":"object"}}]}
+    inv=scan_mcp_snapshot(snap); cid="mcp:browser:browser_tabs"
+    cap=compile_capsule(inv,{"capabilities":[cid]},{"default":"allow"},now=100)
+    assert cap["status"] == "approval_required"
