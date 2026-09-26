@@ -1,6 +1,6 @@
 # KAVI Capability Compiler
 
-> **Status — Active flagship.** M0, M1, and M2 exit gates are CI-backed and passed. M2 added live MCP discovery, secret-safe config import, deterministic inventory locks, and observed authority-contract drift. The next proving stage is bounded M3 dogfood.
+> **Status — Active flagship.** M0, M1, and M2 exit gates are CI-backed and passed. M3A KAVI control-plane dogfood passed; M3B authenticated live observation is probe-ready and remains pending secure bearer availability.
 
 KCC is a framework-agnostic **least-authority compiler for AI agents**.
 
@@ -58,6 +58,15 @@ These are benchmark checkpoint measurements, not production security guarantees.
 - explicit `authority_granted=false` invariant
 - CLI: `kcc evidence-bind` and `kcc evidence-verify`
 - executable regression proving external evidence cannot expand a compiled KCC grant
+
+### M3 dogfood
+- real KAVI Dispatch Bridge contract adapted into KCC inventory IR
+- 5 standing capabilities reduced to 1 read-only grant for operator-snapshot task
+- mutation capabilities blocked outside the capsule
+- portable runtime guard proves denied calls never reach the dispatcher
+- sanitized authenticated live probe implemented for `initialize -> tools/list -> get_operator_snapshot`
+- production health currently verifies `configured=true`
+- authenticated live M3B observation is intentionally not marked PASS until a secure runtime supplies the existing bearer
 
 ## Security invariant
 
