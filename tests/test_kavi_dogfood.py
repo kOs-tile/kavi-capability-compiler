@@ -48,3 +48,27 @@ def test_read_only_kavi_capsule_blocks_outside_control_plane_authority():
     assert authorize_call(cap,ids["get_operator_snapshot"],parameters={},now=101)["allowed"]
     assert authorize_call(cap,ids["enqueue_task"],parameters={},now=101)["reason"]=="capability_not_granted"
     assert authorize_call(cap,ids["approve_task"],parameters={},now=101)["reason"]=="capability_not_granted"
+
+
+def test_provenance_revision_without_authority_change_does_not_create_capability_drift():
+    raw=json.loads(FIXTURE.read_text())
+    s=raw["source"]
+    a=scan_kavi_dispatch_contract(raw["contract"],source_repository=s["repository"],source_path=s["path"],source_sha=s["sha"])
+    b=scan_kavi_dispatch_contract(raw["contract"],source_repository=s["repository"],source_path=s["path"],source_sha="different-source-revision")
+    assert a["digest"]==b["digest"]
+    assert [x["fingerprint"] for x in a["capabilities"]]==[x["fingerprint"] for x in b["capabilities"]]
+
+
+def test_declared_authority_change_changes_only_affected_capability():
+    raw=json.loads(FIXTURE.read_text())
+    s=raw["source"]
+    a=scan_kavi_dispatch_contract(raw["contract"],source_repository=s["repository"],source_path=s["path"],source_sha=s["sha"])
+    changed=json.loads(json.dumps(raw["contract"]))
+    for tool in changed["tools"]:
+        if tool["name"]=="get_task_status":
+            tool["write"]=True
+    b=scan_kavi_dispatch_contract(changed,source_repository=s["repository"],source_path=s["path"],source_sha="new-revision")
+    afp={x["name"]:x["fingerprint"] for x in a["capabilities"]}
+    bfp={x["name"]:x["fingerprint"] for x in b["capabilities"]}
+    changed_names=sorted(name for name in afp if afp[name]!=bfp[name])
+    assert changed_names==["get_task_status"]
