@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Mapping, Sequence
 
+import asyncio
 import httpx2
 from mcp import Client, StdioServerParameters
 from mcp.client.streamable_http import streamable_http_client
@@ -46,6 +47,7 @@ async def discover_stdio(
     env: Mapping[str, str] | None = None,
     *,
     server_name: str | None = None,
+    timeout_seconds: float = 15.0,
 ) -> dict[str, Any]:
     """Discover a local MCP server over stdio and return a deterministic KCC inventory.
 
@@ -62,17 +64,20 @@ async def discover_stdio(
     )
     fallback = server_name or str(command)
 
+    if timeout_seconds <= 0:
+        raise ValueError("timeout_seconds must be positive")
     try:
-        async with Client(params) as client:
-            tools_result = await client.list_tools()
-            snapshot = _snapshot_from_client(client, tools_result, fallback)
-            inventory = scan_mcp_snapshot(snapshot)
-            return {
-                "transport": "stdio",
-                "protocol_version": str(client.protocol_version),
-                "server": snapshot["server"],
-                "inventory": inventory,
-            }
+        async with asyncio.timeout(timeout_seconds):
+            async with Client(params) as client:
+                tools_result = await client.list_tools()
+                snapshot = _snapshot_from_client(client, tools_result, fallback)
+                inventory = scan_mcp_snapshot(snapshot)
+                return {
+                    "transport": "stdio",
+                    "protocol_version": str(client.protocol_version),
+                    "server": snapshot["server"],
+                    "inventory": inventory,
+                }
     except Exception as exc:
         raise DiscoveryError(f"stdio discovery failed for {fallback}: {type(exc).__name__}") from exc
 
@@ -82,6 +87,7 @@ async def discover_streamable_http(
     *,
     headers: Mapping[str, str] | None = None,
     server_name: str | None = None,
+    timeout_seconds: float = 30.0,
 ) -> dict[str, Any]:
     """Discover an MCP server over Streamable HTTP using the official SDK lifecycle.
 
@@ -91,34 +97,37 @@ async def discover_streamable_http(
     if not url or not str(url).startswith(("http://", "https://")):
         raise ValueError("Streamable HTTP URL must use http:// or https://")
     fallback = server_name or str(url)
+    if timeout_seconds <= 0:
+        raise ValueError("timeout_seconds must be positive")
 
     try:
-        if headers:
-            async with httpx2.AsyncClient(
-                headers={str(k): str(v) for k, v in headers.items()},
-                timeout=httpx2.Timeout(30.0, read=300.0),
-            ) as http_client:
-                transport = streamable_http_client(str(url), http_client=http_client)
-                async with Client(transport) as client:
-                    tools_result = await client.list_tools()
-                    snapshot = _snapshot_from_client(client, tools_result, fallback)
-                    inventory = scan_mcp_snapshot(snapshot)
-                    return {
-                        "transport": "streamable-http",
-                        "protocol_version": str(client.protocol_version),
-                        "server": snapshot["server"],
-                        "inventory": inventory,
-                    }
-        async with Client(str(url)) as client:
-            tools_result = await client.list_tools()
-            snapshot = _snapshot_from_client(client, tools_result, fallback)
-            inventory = scan_mcp_snapshot(snapshot)
-            return {
-                "transport": "streamable-http",
-                "protocol_version": str(client.protocol_version),
-                "server": snapshot["server"],
-                "inventory": inventory,
-            }
+        async with asyncio.timeout(timeout_seconds):
+            if headers:
+                async with httpx2.AsyncClient(
+                    headers={str(k): str(v) for k, v in headers.items()},
+                    timeout=httpx2.Timeout(30.0, read=300.0),
+                ) as http_client:
+                    transport = streamable_http_client(str(url), http_client=http_client)
+                    async with Client(transport) as client:
+                        tools_result = await client.list_tools()
+                        snapshot = _snapshot_from_client(client, tools_result, fallback)
+                        inventory = scan_mcp_snapshot(snapshot)
+                        return {
+                            "transport": "streamable-http",
+                            "protocol_version": str(client.protocol_version),
+                            "server": snapshot["server"],
+                            "inventory": inventory,
+                        }
+            async with Client(str(url)) as client:
+                tools_result = await client.list_tools()
+                snapshot = _snapshot_from_client(client, tools_result, fallback)
+                inventory = scan_mcp_snapshot(snapshot)
+                return {
+                    "transport": "streamable-http",
+                    "protocol_version": str(client.protocol_version),
+                    "server": snapshot["server"],
+                    "inventory": inventory,
+                }
     except Exception as exc:
         raise DiscoveryError(f"streamable HTTP discovery failed for {fallback}: {type(exc).__name__}") from exc
 
