@@ -1,111 +1,111 @@
 [
   {
-    "id": "modelcontextprotocol/filesystem:read_text_file",
+    "id": "filesystem:read_text_file",
     "expected_effect": "read",
     "dangerous": false,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "modelcontextprotocol/filesystem:read_media_file",
+    "id": "filesystem:read_media_file",
     "expected_effect": "read",
     "dangerous": false,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "modelcontextprotocol/filesystem:read_multiple_files",
+    "id": "filesystem:read_multiple_files",
     "expected_effect": "read",
     "dangerous": false,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "modelcontextprotocol/filesystem:list_directory",
+    "id": "filesystem:list_directory",
     "expected_effect": "read",
     "dangerous": false,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "modelcontextprotocol/filesystem:search_files",
+    "id": "filesystem:search_files",
     "expected_effect": "read",
     "dangerous": false,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "modelcontextprotocol/filesystem:write_file",
+    "id": "filesystem:write_file",
     "expected_effect": "delete",
     "dangerous": true,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "modelcontextprotocol/filesystem:edit_file",
+    "id": "filesystem:edit_file",
     "expected_effect": "delete",
     "dangerous": true,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "modelcontextprotocol/filesystem:move_file",
+    "id": "filesystem:move_file",
     "expected_effect": "delete",
     "dangerous": true,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "modelcontextprotocol/fetch:fetch",
+    "id": "fetch:fetch",
     "expected_effect": "read",
     "dangerous": false,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "microsoft/playwright-mcp:browser_navigate",
+    "id": "playwright:browser_navigate",
     "expected_effect": "unknown",
     "dangerous": true,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "microsoft/playwright-mcp:browser_snapshot",
+    "id": "playwright:browser_snapshot",
     "expected_effect": "read",
     "dangerous": false,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "microsoft/playwright-mcp:browser_click",
+    "id": "playwright:browser_click",
     "expected_effect": "unknown",
     "dangerous": true,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "microsoft/playwright-mcp:browser_type",
+    "id": "playwright:browser_type",
     "expected_effect": "unknown",
     "dangerous": true,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "github/github-mcp-server:get_file_contents",
+    "id": "github:get_file_contents",
     "expected_effect": "read",
     "dangerous": false,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "github/github-mcp-server:issue_read",
+    "id": "github:issue_read",
     "expected_effect": "read",
     "dangerous": false,
     "reviewer": "human",
     "label_version": "m1.v0.1"
   },
   {
-    "id": "github/github-mcp-server:create_pull_request",
+    "id": "github:create_pull_request",
     "expected_effect": "write",
     "dangerous": true,
     "reviewer": "human",
@@ -3314,6 +3314,97 @@
     "id": "aws-ccapi:delete_resource",
     "expected_effect": "delete",
     "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-documentdb:find",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-documentdb:aggregate",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-documentdb:insert",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-documentdb:update",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-documentdb:delete",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-cloudtrail:lookup_events",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-cloudtrail:lake_query",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-cloudtrail:get_query_status",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-cloudtrail:get_query_results",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-cloudtrail:list_event_data_stores",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-bedrock-kb:ListKnowledgeBases",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-bedrock-kb:QueryKnowledgeBases",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-bedrock-kb:AgenticQueryKnowledgeBases",
+    "expected_effect": "read",
+    "dangerous": false,
     "reviewer": "manual-source-review",
     "label_version": "m1.v0.2"
   }
