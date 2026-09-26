@@ -189,6 +189,15 @@ def _constraint_for(intent, cid):
         out["parameters"]=params
     return out
 
+def _validate_parameter_constraints(capability, constraints):
+    params=constraints.get("parameters") or {}
+    schema=capability.get("input_schema") or {}
+    properties=schema.get("properties")
+    if isinstance(properties,dict) and properties:
+        unknown=sorted(set(params)-set(properties))
+        if unknown:
+            raise ValueError(f"Constraint references unknown parameter(s) for {capability['id']}: {unknown}")
+
 def compile_capsule(inv,intent,policy,now=None):
     now=int(now or time.time()); by_id={c["id"]:c for c in inv["capabilities"]}
     grants=[]; approvals=[]; denials=[]
@@ -196,6 +205,7 @@ def compile_capsule(inv,intent,policy,now=None):
         if cid not in by_id: raise ValueError(f"Capability absent from inventory: {cid}")
         c=by_id[cid]; d=decide(policy,c)
         constraints=_constraint_for(intent,cid)
+        _validate_parameter_constraints(c,constraints)
         analysis=c.get("analysis") or {"effect":c["effect"],"risk_flags":[]}
         mixed=analysis.get("effect")=="mixed"
         if c["effect"]=="unknown" and d=="allow" and not (mixed and constraints.get("operations")):
@@ -254,12 +264,22 @@ def authorize_call(cap, capability_id, operation=None, parameters=None, now=None
         return {"allowed":False,"reason":"operation_not_granted"}
     params=parameters or {}
     for key, rule in (constraints.get("parameters") or {}).items():
+        if isinstance(rule,dict) and rule.get("required") is True and key not in params:
+            return {"allowed":False,"reason":f"required_parameter_missing:{key}"}
         if key not in params: continue
         value=params[key]
         if isinstance(rule,dict):
+            if "type" in rule:
+                kinds={"string":str,"integer":int,"number":(int,float),"boolean":bool,"array":list,"object":dict}
+                expected=kinds.get(rule["type"])
+                if expected is None: return {"allowed":False,"reason":f"unsupported_parameter_type_rule:{key}"}
+                if not isinstance(value,expected) or (rule["type"] in {"integer","number"} and isinstance(value,bool)):
+                    return {"allowed":False,"reason":f"parameter_type_mismatch:{key}"}
             if "max" in rule and value > rule["max"]: return {"allowed":False,"reason":f"parameter_above_max:{key}"}
             if "min" in rule and value < rule["min"]: return {"allowed":False,"reason":f"parameter_below_min:{key}"}
             if "enum" in rule and value not in rule["enum"]: return {"allowed":False,"reason":f"parameter_not_allowed:{key}"}
+            if "max_length" in rule and len(value) > rule["max_length"]: return {"allowed":False,"reason":f"parameter_too_long:{key}"}
+            if "pattern" in rule and not re.fullmatch(rule["pattern"],str(value)): return {"allowed":False,"reason":f"parameter_pattern_mismatch:{key}"}
         elif value != rule:
             return {"allowed":False,"reason":f"parameter_mismatch:{key}"}
     return {"allowed":True,"reason":"granted"}
