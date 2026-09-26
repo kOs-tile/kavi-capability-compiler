@@ -6,7 +6,7 @@ from copy import deepcopy
 from typing import Any
 
 from .core import authorize_call
-from .runtime import AuthorityDenied
+from .runtime import ApprovalRequired, AuthorityDenied, CapabilityDenied
 
 SDK_VERSION="kcc.sdk.v1"
 
@@ -100,6 +100,10 @@ class Guard:
             now=now,
         )
         if not decision["allowed"]:
+            if decision.get("reason")=="approval_required":
+                raise ApprovalRequired(decision)
+            if decision.get("reason")=="capability_denied":
+                raise CapabilityDenied(decision)
             raise AuthorityDenied(decision)
         return decision
 
