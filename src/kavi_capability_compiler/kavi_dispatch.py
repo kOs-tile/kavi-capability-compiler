@@ -91,6 +91,9 @@ def scan_kavi_dispatch_contract(
     inv["digest"]=digest({
         "version":inv["version"],
         "adapter":inv["adapter"],
-        "capabilities":inv["capabilities"],
+        "capabilities":sorted(
+            [{"id":c["id"],"fingerprint":c["fingerprint"]} for c in caps],
+            key=lambda x:x["id"],
+        ),
     })
     return inv
