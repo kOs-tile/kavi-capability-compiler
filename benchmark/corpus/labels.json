@@ -565,5 +565,61 @@
     "dangerous": false,
     "reviewer": "human",
     "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_find",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_drop",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_network_request",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_show",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_checkout",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_branch",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "time:convert_time",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "sequentialthinking:sequentialthinking",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
   }
 ]
