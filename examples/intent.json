@@ -1,0 +1,1 @@
+{"task":"Analyze repository and create an issue","capabilities":["mcp:demo-github:search_code","mcp:demo-github:create_issue"],"ttl_seconds":900,"constraints":{"max_tool_calls":8}}
