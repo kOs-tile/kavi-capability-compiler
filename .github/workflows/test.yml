@@ -30,4 +30,6 @@ jobs:
           r=json.load(open("authority-reduction-results.json"))
           assert r["tasks"] >= 10, r
           assert r["mean_authority_reduction"] >= 0.90, r
+          assert r["inventory_capabilities"] >= 100, r
+          assert r["unnecessary_authority_removed"] >= 900, r
           PY
