@@ -887,5 +887,93 @@
     },
     "annotations": {},
     "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "playwright:browser_find",
+    "server": "playwright",
+    "name": "browser_find",
+    "description": "Search the accessibility snapshot of the current page",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_drop",
+    "server": "playwright",
+    "name": "browser_drop",
+    "description": "Drop files or MIME-typed data onto an element",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_network_request",
+    "server": "playwright",
+    "name": "browser_network_request",
+    "description": "Show network request details",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "git:git_show",
+    "server": "git",
+    "name": "git_show",
+    "description": "Shows the contents of a commit",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_checkout",
+    "server": "git",
+    "name": "git_checkout",
+    "description": "Switches branches",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_branch",
+    "server": "git",
+    "name": "git_branch",
+    "description": "List Git branches",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "time:convert_time",
+    "server": "time",
+    "name": "convert_time",
+    "description": "Convert time between timezones",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/time/README.md"
+  },
+  {
+    "id": "sequentialthinking:sequentialthinking",
+    "server": "sequentialthinking",
+    "name": "sequentialthinking",
+    "description": "A detailed tool for dynamic and reflective problem-solving through thoughts",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/sequentialthinking/README.md"
   }
 ]
