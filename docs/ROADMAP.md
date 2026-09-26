@@ -62,25 +62,21 @@ Exit gates:
 Existing KAVI control-plane dogfood is retained as a case study only. KAVI, Hermes, Codex, LangGraph, or any other runtime may be used later as validation targets; none is a dependency or milestone prerequisite.
 
 ## M4 — Embedded Enforcement SDK
-**Status: active.**
+**Status: shipped.**
 
-Goal: make KCC a library developers embed into their existing agent stack, with no KCC daemon, desktop host, or framework migration required.
-
-Current slice:
-- stable framework-neutral Python import surface
+Delivered:
+- stable framework-neutral Python public API
 - zero required third-party dependencies for the core install
+- dependency-free wheel smoke in a fresh virtual environment
 - optional MCP discovery extra
 - optional Ed25519 signing extra
-- reusable `Guard` in front of the host application's own dispatcher
+- sync + async `Guard` in front of host-owned dispatchers
+- first-class host-owned approval handoff
 - externally trusted signed capsule envelopes
-- package/install contract tests
+- signed capsule schema and fail-closed trust tests
+- project-specific validation targets removed from public CLI/API
 
-Next:
-- finalize public API compatibility contract
-- version capsule/signature schemas
-- approval handoff interface
-- optional MCP proxy/bridge only as an adapter, never a core requirement
-- integration kits for common runtimes
+Exit report: `M4_EXIT.md`.
 
 Compiler and executor remain separable and may run in-process or in different services.
 
