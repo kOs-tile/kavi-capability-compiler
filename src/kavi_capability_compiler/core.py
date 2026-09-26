@@ -169,3 +169,17 @@ def verify_capsule(cap,inv,now=None):
     bound=all(by_id.get(x["id"],{}).get("fingerprint")==x["fingerprint"] for k in ("grants","approvals","denials") for x in cap.get(k,[]))
     checks += [("fingerprints",bound),("expiry",int(now or time.time()) < cap.get("expires_at",0))]
     return {"valid":all(v for _,v in checks),"checks":[{"name":n,"ok":v} for n,v in checks]}
+
+
+def inventory_lock(inv):
+    entries=[{"id":c["id"],"fingerprint":c["fingerprint"]} for c in inv["capabilities"]]
+    lock={"version":"kcc.inventory-lock.v0","inventory_digest":inv["digest"],"capabilities":sorted(entries,key=lambda x:x["id"])}
+    lock["digest"]=digest(lock)
+    return lock
+
+def diff_inventory_lock(lock, inv):
+    old={x["id"]:x["fingerprint"] for x in lock.get("capabilities",[])}
+    new={x["id"]:x["fingerprint"] for x in inv.get("capabilities",[])}
+    added=sorted(set(new)-set(old)); removed=sorted(set(old)-set(new))
+    changed=sorted(k for k in set(old)&set(new) if old[k]!=new[k])
+    return {"clean":not (added or removed or changed),"added":added,"removed":removed,"changed":changed}
