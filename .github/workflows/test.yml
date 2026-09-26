@@ -28,6 +28,9 @@ jobs:
           r=json.load(open("benchmark-results.json"))
           assert r["false_safe_count"] == 0, r
           assert r["dangerous_recall"] == 1.0, r
+          assert r["unknown_rate"] <= 0.15, r
+          assert r["overblocking_rate"] <= 0.05, r
+          assert r["accuracy"] >= 0.85, r
           PY
       - name: Enforce drift recall gate
         run: |
