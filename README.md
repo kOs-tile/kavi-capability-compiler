@@ -78,8 +78,23 @@ Uncertain authority fails closed into denial/approval behavior rather than becom
 
 Python 3.11+.
 
+Default install is the embedded core SDK and has no required third-party runtime dependencies:
+
 ```bash
-python -m pip install -e .
+pip install kavi-capability-compiler
+```
+
+Optional extras:
+
+```bash
+pip install "kavi-capability-compiler[mcp]"
+pip install "kavi-capability-compiler[signing]"
+```
+
+For repository development:
+
+```bash
+python -m pip install -e ".[all]"
 pytest -q
 
 # Static snapshot
@@ -99,7 +114,7 @@ kcc discover-config mcp.json my-server \
 
 ## Current boundary
 
-KCC is not a hosted gateway, IAM replacement, secret manager, or autonomous remediation system. Live discovery does not automatically execute discovered tools. Runtime enforcement is intentionally a small portable primitive.
+KCC is not a hosted gateway, desktop service, local daemon, IAM replacement, secret manager, or autonomous remediation system. Live discovery does not automatically execute discovered tools. Runtime enforcement is intentionally a small portable primitive.
 
 M2's recorded exit gate passes. M3 now focuses on a universal capability contract so existing runtimes can integrate without framework migration. Specific agent systems are optional validation targets.
 
@@ -108,3 +123,29 @@ See `docs/M2_EXIT.md`, `docs/RUNTIME_AUTHORIZATION.md`, and `docs/EXECUTION_EVID
 ## KAVI ecosystem
 
 KCC stays independent of the surrounding research stack. Integration responsibilities and non-goals are documented in `docs/KAVI_ECOSYSTEM.md`.
+
+
+## Embed it into an existing agent
+
+The primary integration model is in-process:
+
+```python
+import kavi_capability_compiler as kcc
+
+manifest = kcc.adapt_capabilities(
+    "openai",
+    {"tools": existing_agent_tools},
+    namespace="my-agent",
+)
+inventory = kcc.scan_manifest(manifest)
+capsule = kcc.compile_capsule(inventory, task_intent, policy)
+guard = kcc.Guard.from_capsule(capsule)
+
+result = await guard.dispatch(
+    capability_id,
+    existing_dispatcher,
+    parameters=tool_arguments,
+)
+```
+
+KCC does not own the model, dispatcher, credentials, filesystem, or deployment. See `docs/EMBEDDED_SDK.md`.

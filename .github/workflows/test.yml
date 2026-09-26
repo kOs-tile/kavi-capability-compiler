@@ -1,6 +1,75 @@
 name: test
 on: [push, pull_request]
 jobs:
+  core-minimal-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install core only
+        run: python -m pip install -e .
+      - name: Verify embedded SDK imports without optional integrations
+        run: |
+          python - <<'PY'
+          from importlib import metadata
+          import kavi_capability_compiler as kcc
+          assert kcc.SDK_VERSION == "kcc.sdk.v1"
+          assert callable(kcc.Guard)
+          reqs=metadata.requires("kavi-capability-compiler") or []
+          unconditional=[r for r in reqs if "extra ==" not in r]
+          assert unconditional == [], unconditional
+          PY
+      - name: Verify core CLI works without optional integrations
+        run: |
+          cat > /tmp/tools.json <<'JSON'
+          {"tools":[{"name":"get_record","description":"Get record","input_schema":{"type":"object"}}]}
+          JSON
+          kcc manifest /tmp/tools.json --format generic --namespace demo -o /tmp/capabilities.json
+          kcc scan-manifest /tmp/capabilities.json -o /tmp/inventory.json
+          python - <<'PY'
+          import json
+          m=json.load(open("/tmp/capabilities.json"))
+          i=json.load(open("/tmp/inventory.json"))
+          assert m["schema_version"]=="kcc.capabilities.v1"
+          assert i["adapter"]=="universal-manifest.v1"
+          PY
+
+  package-wheel-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install build
+      - run: python -m build --wheel
+      - name: Install wheel without dependencies
+        run: |
+          python -m venv /tmp/kcc-wheel
+          /tmp/kcc-wheel/bin/pip install --no-deps dist/*.whl
+      - name: Smoke embedded SDK and core CLI from wheel
+        run: |
+          /tmp/kcc-wheel/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          assert callable(kcc.Guard)
+          PY
+          cat > /tmp/tools.json <<'JSON'
+          {"tools":[{"name":"read","description":"Read","input_schema":{"type":"object"}}]}
+          JSON
+          /tmp/kcc-wheel/bin/kcc manifest /tmp/tools.json --format generic --namespace smoke -o /tmp/manifest.json
+          /tmp/kcc-wheel/bin/kcc scan-manifest /tmp/manifest.json -o /tmp/inventory.json
+      - name: Verify optional MCP command fails with install guidance
+        run: |
+          set +e
+          output=$(/tmp/kcc-wheel/bin/kcc discover-stdio python 2>&1)
+          code=$?
+          set -e
+          test "$code" -ne 0
+          echo "$output" | grep -F 'kavi-capability-compiler[mcp]'
+
   pytest:
     runs-on: ubuntu-latest
     steps:
@@ -8,7 +77,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: python -m pip install -e .
+      - run: python -m pip install -e ".[all]"
       - run: python -m pip install pytest
       - run: pytest -q
       - name: Run live discovery integration tests

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kavi-ai.com/schemas/kcc.signed-capsule.v1.schema.json",
+  "title": "KCC Signed Capsule Envelope",
+  "type": "object",
+  "required": [
+    "version",
+    "capsule",
+    "signature",
+    "envelope_id"
+  ],
+  "properties": {
+    "version": {
+      "const": "kcc.signed-capsule.v1"
+    },
+    "capsule": {
+      "type": "object"
+    },
+    "signature": {
+      "type": "object",
+      "required": [
+        "algorithm",
+        "key_id",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "Ed25519"
+        },
+        "key_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "envelope_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

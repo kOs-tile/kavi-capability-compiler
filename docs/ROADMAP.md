@@ -61,17 +61,24 @@ Exit gates:
 
 Existing KAVI control-plane dogfood is retained as a case study only. KAVI, Hermes, Codex, LangGraph, or any other runtime may be used later as validation targets; none is a dependency or milestone prerequisite.
 
-## M4 — Portable Enforcement SDK
+## M4 — Embedded Enforcement SDK
+**Status: shipped.**
 
-After M3:
-- stabilize the generic adapter + manifest API
-- harden the Python runtime guard into a versioned SDK
-- optional MCP proxy/bridge
-- signed/verifiable capsules
-- approval handoff contract
-- integration kits for common runtimes
+Delivered:
+- stable framework-neutral Python public API
+- zero required third-party dependencies for the core install
+- dependency-free wheel smoke in a fresh virtual environment
+- optional MCP discovery extra
+- optional Ed25519 signing extra
+- sync + async `Guard` in front of host-owned dispatchers
+- first-class host-owned approval handoff
+- externally trusted signed capsule envelopes
+- signed capsule schema and fail-closed trust tests
+- project-specific validation targets removed from public CLI/API
 
-Compiler and runtime remain separable.
+Exit report: `M4_EXIT.md`.
+
+Compiler and executor remain separable and may run in-process or in different services.
 
 ## M5 — Distribution / Product
 

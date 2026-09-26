@@ -256,6 +256,20 @@ def authorize_call(cap, capability_id, operation=None, parameters=None, now=None
     if int(now or time.time()) >= cap.get("expires_at",0):
         return {"allowed":False,"reason":"expired"}
     grants={x["id"]:x for x in cap.get("grants",[])}
+    approvals={x["id"]:x for x in cap.get("approvals",[])}
+    denials={x["id"]:x for x in cap.get("denials",[])}
+    if capability_id in approvals:
+        return {
+            "allowed":False,
+            "reason":"approval_required",
+            "capability":approvals[capability_id],
+        }
+    if capability_id in denials:
+        return {
+            "allowed":False,
+            "reason":"capability_denied",
+            "capability":denials[capability_id],
+        }
     if capability_id not in grants:
         return {"allowed":False,"reason":"capability_not_granted"}
     entry=grants[capability_id]; constraints=entry.get("constraints") or {}

@@ -22,6 +22,14 @@ class AuthorityDenied(RuntimeError):
         super().__init__(decision.get("reason", "authority_denied"))
 
 
+class ApprovalRequired(AuthorityDenied):
+    """Raised when authority exists only behind an external approval handoff."""
+
+
+class CapabilityDenied(AuthorityDenied):
+    """Raised when policy explicitly denies the requested capability."""
+
+
 def require_authorized_call(
     capsule: dict[str, Any],
     capability_id: str,
@@ -39,6 +47,10 @@ def require_authorized_call(
         now=now,
     )
     if not decision["allowed"]:
+        if decision.get("reason")=="approval_required":
+            raise ApprovalRequired(decision)
+        if decision.get("reason")=="capability_denied":
+            raise CapabilityDenied(decision)
         raise AuthorityDenied(decision)
     return decision
 
