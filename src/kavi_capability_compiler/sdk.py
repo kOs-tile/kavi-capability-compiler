@@ -7,7 +7,6 @@ from typing import Any
 
 from .core import authorize_call
 from .runtime import AuthorityDenied
-from .signing import verify_signed_capsule
 
 SDK_VERSION="kcc.sdk.v1"
 
@@ -43,6 +42,7 @@ class Guard:
         *,
         now: int | None = None,
     ) -> "Guard":
+        from .signing import verify_signed_capsule
         result=verify_signed_capsule(envelope,trusted_keys,now=now)
         if not result["valid"]:
             raise AuthorityDenied({"allowed":False,"reason":"signed_capsule_invalid","verification":result})
@@ -69,6 +69,7 @@ class Guard:
         now: int | None = None,
     ) -> dict[str, Any]:
         if self._signed_envelope is not None:
+            from .signing import verify_signed_capsule
             verified=verify_signed_capsule(self._signed_envelope,self._trusted_keys,now=now)
             if not verified["valid"]:
                 return {
