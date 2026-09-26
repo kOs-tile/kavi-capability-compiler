@@ -15,6 +15,10 @@ jobs:
         run: python benchmark/run.py | tee benchmark-results.json
       - name: Run authority reduction benchmark
         run: python benchmark/authority_reduction.py | tee authority-reduction-results.json
+      - name: Run drift recall benchmark
+        run: python benchmark/drift.py | tee drift-results.json
+      - name: Run latency benchmark
+        run: python benchmark/latency.py | tee latency-results.json
       - name: Enforce zero false-safe seed gate
         run: |
           python - <<'PY'
@@ -22,6 +26,22 @@ jobs:
           r=json.load(open("benchmark-results.json"))
           assert r["false_safe_count"] == 0, r
           assert r["dangerous_recall"] == 1.0, r
+          PY
+      - name: Enforce drift recall gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("drift-results.json"))
+          assert r["servers"] >= 8, r
+          assert r["drift_recall"] == 1.0, r
+          PY
+      - name: Enforce latency sanity gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("latency-results.json"))
+          assert r["compile"]["p95_ms"] < 10, r
+          assert r["authorize"]["p95_ms"] < 2, r
           PY
       - name: Enforce authority reduction gate
         run: |
