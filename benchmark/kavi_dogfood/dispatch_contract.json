@@ -1,0 +1,61 @@
+{
+  "source": {
+    "repository": "kOs-tile/kavi-codex-state",
+    "path": "dispatch-bridge/bridge-contract.json",
+    "sha": "80f521a9aba225bbc5abcb815feae24569fa8098"
+  },
+  "contract": {
+    "schema_version": 1,
+    "name": "KAVI Dispatch Bridge",
+    "version": "0.1.0",
+    "transport": "streamable-http-json",
+    "endpoint_path": "/api/mcp",
+    "health_path": "/api/health",
+    "authentication": {
+      "type": "bearer",
+      "environment_secret": "KAVI_DISPATCH_TOKEN"
+    },
+    "tools": [
+      {
+        "name": "enqueue_task",
+        "write": true,
+        "approval": "tool-level / Shared Execution Control gates",
+        "actors": [
+          "codex",
+          "work"
+        ]
+      },
+      {
+        "name": "get_task_status",
+        "write": false
+      },
+      {
+        "name": "get_operator_snapshot",
+        "write": false
+      },
+      {
+        "name": "list_recent_tasks",
+        "write": false
+      },
+      {
+        "name": "approve_task",
+        "write": true,
+        "fail_closed_until_operator_contract": true
+      }
+    ],
+    "authority": {
+      "repository": "kOs-tile/kavi-codex-state",
+      "queue": "shared/execution-queue.json",
+      "handoffs": "chatgpt/codex-handoffs.json"
+    },
+    "guarantees": [
+      "no arbitrary repository writes",
+      "atomic task+handoff Git commit",
+      "bounded optimistic-concurrency retry",
+      "idempotency-key dedupe",
+      "AUTO limited to NONE/LOW risk",
+      "no raw transcript mirroring",
+      "approval self-elevation prohibited"
+    ]
+  }
+}
