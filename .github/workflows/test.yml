@@ -13,6 +13,8 @@ jobs:
       - run: pytest -q
       - name: Validate benchmark corpus
         run: python benchmark/validate_corpus.py | tee corpus-validation.json
+      - name: Run sealed holdout benchmark
+        run: python benchmark/holdout_eval.py | tee holdout-results.json
       - name: Run capability benchmark
         run: python benchmark/run.py | tee benchmark-results.json
       - name: Run authority reduction benchmark
