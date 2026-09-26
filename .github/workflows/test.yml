@@ -21,6 +21,7 @@ jobs:
           import json
           r=json.load(open("benchmark-results.json"))
           assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
           PY
       - name: Enforce authority reduction gate
         run: |
