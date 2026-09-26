@@ -1,0 +1,1 @@
+{"default":"deny","allow":[{"effects":["read"]}],"approval":[{"effects":["write","external_message"]}],"deny":[{"effects":["delete","execute","deploy","financial"]}]}
