@@ -66,3 +66,25 @@ Do not implement until these requirements are represented in tests:
 7. No probabilistic component may silently expand authority.
 
 The next benchmark stage should test this model against the frozen 101-capability corpus before expanding the product surface.
+
+### F7 — Substring matching creates false-safe semantic collisions
+
+The 415-capability expansion exposed four false-safe cases. Raw substring matching treated incidental words as actions: a Redis `list` noun made `lpush`/ `rpush` look read-only, “mark … as read” made a Slack mutation look like a read, and multi-action membership management collapsed to its list operation.
+
+The fix was architectural rather than a four-name exception list: classification now prioritizes tool-name action tokens, explicit high-impact evidence, mixed-operation descriptions, and only then the description's leading action.
+
+On the canonical 487-capability / 30-surface checkpoint this family is covered by regression tests and the false-safe count is zero.
+
+## M1 expanded checkpoint
+
+- Capabilities: 487
+- Distinct canonical surfaces: 30
+- Dangerous recall: 100%
+- False-safe count: 0
+- Accuracy: 89.73%
+- Unknown rate: 11.91%
+- Overblocking rate: 3.50%
+- Mean task authority reduction: 99.49%
+- Drift recall: 100%
+
+These are benchmark checkpoint measurements, not production security guarantees.
