@@ -2796,7 +2796,7 @@
     "id": "grafana:list_teams",
     "server": "grafana",
     "name": "list_teams",
-    "description": "",
+    "description": "List all teams",
     "inputSchema": {
       "type": "object"
     },
@@ -2807,7 +2807,7 @@
     "id": "grafana:list_users_by_org",
     "server": "grafana",
     "name": "list_users_by_org",
-    "description": "",
+    "description": "List all users in an organization",
     "inputSchema": {
       "type": "object"
     },
@@ -2818,7 +2818,7 @@
     "id": "grafana:list_all_roles",
     "server": "grafana",
     "name": "list_all_roles",
-    "description": "",
+    "description": "List all Grafana roles",
     "inputSchema": {
       "type": "object"
     },
@@ -2829,7 +2829,7 @@
     "id": "grafana:get_role_details",
     "server": "grafana",
     "name": "get_role_details",
-    "description": "",
+    "description": "Get details for a Grafana role",
     "inputSchema": {
       "type": "object"
     },
@@ -2840,7 +2840,7 @@
     "id": "grafana:get_role_assignments",
     "server": "grafana",
     "name": "get_role_assignments",
-    "description": "",
+    "description": "List assignments for a role",
     "inputSchema": {
       "type": "object"
     },
@@ -2851,7 +2851,7 @@
     "id": "grafana:list_user_roles",
     "server": "grafana",
     "name": "list_user_roles",
-    "description": "",
+    "description": "List roles for users",
     "inputSchema": {
       "type": "object"
     },
@@ -2862,7 +2862,7 @@
     "id": "grafana:list_team_roles",
     "server": "grafana",
     "name": "list_team_roles",
-    "description": "",
+    "description": "List roles for teams",
     "inputSchema": {
       "type": "object"
     },
@@ -2873,7 +2873,7 @@
     "id": "grafana:get_resource_permissions",
     "server": "grafana",
     "name": "get_resource_permissions",
-    "description": "",
+    "description": "List permissions for a resource",
     "inputSchema": {
       "type": "object"
     },
@@ -2884,7 +2884,7 @@
     "id": "grafana:get_resource_description",
     "server": "grafana",
     "name": "get_resource_description",
-    "description": "",
+    "description": "Describe a Grafana resource type",
     "inputSchema": {
       "type": "object"
     },
@@ -2895,7 +2895,7 @@
     "id": "grafana:user_info",
     "server": "grafana",
     "name": "user_info",
-    "description": "",
+    "description": "Current identity, capabilities, and accessible organizations",
     "inputSchema": {
       "type": "object"
     },
@@ -2906,7 +2906,7 @@
     "id": "grafana:search_dashboards",
     "server": "grafana",
     "name": "search_dashboards",
-    "description": "",
+    "description": "Search for dashboards by query, folder UID, tag, or starred",
     "inputSchema": {
       "type": "object"
     },
@@ -2917,7 +2917,7 @@
     "id": "grafana:search_folders",
     "server": "grafana",
     "name": "search_folders",
-    "description": "",
+    "description": "Search for folders by query string",
     "inputSchema": {
       "type": "object"
     },
@@ -2928,7 +2928,7 @@
     "id": "grafana:get_dashboard_by_uid",
     "server": "grafana",
     "name": "get_dashboard_by_uid",
-    "description": "",
+    "description": "Get a dashboard by uid, optionally a saved version",
     "inputSchema": {
       "type": "object"
     },
@@ -2939,7 +2939,7 @@
     "id": "grafana:list_dashboard_versions",
     "server": "grafana",
     "name": "list_dashboard_versions",
-    "description": "",
+    "description": "List saved versions of a dashboard (version, author, time, message)",
     "inputSchema": {
       "type": "object"
     },
@@ -2950,7 +2950,7 @@
     "id": "grafana:update_dashboard",
     "server": "grafana",
     "name": "update_dashboard",
-    "description": "",
+    "description": "Update or create a new dashboard",
     "inputSchema": {
       "type": "object"
     },
@@ -2961,7 +2961,7 @@
     "id": "grafana:get_dashboard_panel_queries",
     "server": "grafana",
     "name": "get_dashboard_panel_queries",
-    "description": "",
+    "description": "Get panel title, queries, datasource UID and type from a dashboard",
     "inputSchema": {
       "type": "object"
     },
@@ -2972,7 +2972,7 @@
     "id": "grafana:run_panel_query",
     "server": "grafana",
     "name": "run_panel_query",
-    "description": "",
+    "description": "Execute one or more dashboard panel queries",
     "inputSchema": {
       "type": "object"
     },
@@ -2983,7 +2983,7 @@
     "id": "grafana:get_dashboard_property",
     "server": "grafana",
     "name": "get_dashboard_property",
-    "description": "",
+    "description": "Extract specific parts of a dashboard using JSONPath expressions",
     "inputSchema": {
       "type": "object"
     },
@@ -2994,7 +2994,7 @@
     "id": "grafana:get_dashboard_summary",
     "server": "grafana",
     "name": "get_dashboard_summary",
-    "description": "",
+    "description": "Get a compact summary of a dashboard without full JSON",
     "inputSchema": {
       "type": "object"
     },
@@ -3005,7 +3005,7 @@
     "id": "grafana:create_folder",
     "server": "grafana",
     "name": "create_folder",
-    "description": "",
+    "description": "Create a Grafana folder with a title and optional UID",
     "inputSchema": {
       "type": "object"
     },
@@ -3016,7 +3016,7 @@
     "id": "grafana:list_datasources",
     "server": "grafana",
     "name": "list_datasources",
-    "description": "",
+    "description": "List datasources",
     "inputSchema": {
       "type": "object"
     },
@@ -3027,7 +3027,7 @@
     "id": "grafana:get_datasource",
     "server": "grafana",
     "name": "get_datasource",
-    "description": "",
+    "description": "Get a datasource by UID or name",
     "inputSchema": {
       "type": "object"
     },
@@ -3038,7 +3038,7 @@
     "id": "grafana:get_query_examples",
     "server": "grafana",
     "name": "get_query_examples",
-    "description": "",
+    "description": "Get example queries for a datasource type",
     "inputSchema": {
       "type": "object"
     },
@@ -3049,7 +3049,7 @@
     "id": "grafana:query_prometheus",
     "server": "grafana",
     "name": "query_prometheus",
-    "description": "",
+    "description": "Execute a query against a Prometheus datasource",
     "inputSchema": {
       "type": "object"
     },
@@ -3060,7 +3060,7 @@
     "id": "grafana:list_prometheus_metric_metadata",
     "server": "grafana",
     "name": "list_prometheus_metric_metadata",
-    "description": "",
+    "description": "List metric metadata",
     "inputSchema": {
       "type": "object"
     },
@@ -3071,7 +3071,7 @@
     "id": "grafana:list_prometheus_metric_names",
     "server": "grafana",
     "name": "list_prometheus_metric_names",
-    "description": "",
+    "description": "List available metric names",
     "inputSchema": {
       "type": "object"
     },
@@ -3082,7 +3082,7 @@
     "id": "grafana:list_prometheus_label_names",
     "server": "grafana",
     "name": "list_prometheus_label_names",
-    "description": "",
+    "description": "List label names matching a selector",
     "inputSchema": {
       "type": "object"
     },
@@ -3093,7 +3093,7 @@
     "id": "grafana:list_prometheus_label_values",
     "server": "grafana",
     "name": "list_prometheus_label_values",
-    "description": "",
+    "description": "List values for a specific label",
     "inputSchema": {
       "type": "object"
     },
@@ -3104,7 +3104,7 @@
     "id": "grafana:query_prometheus_histogram",
     "server": "grafana",
     "name": "query_prometheus_histogram",
-    "description": "",
+    "description": "Calculate histogram percentile values",
     "inputSchema": {
       "type": "object"
     },
@@ -3115,7 +3115,7 @@
     "id": "grafana:list_incidents",
     "server": "grafana",
     "name": "list_incidents",
-    "description": "",
+    "description": "List incidents in Grafana Incident, optionally with their custom field values",
     "inputSchema": {
       "type": "object"
     },
@@ -3126,7 +3126,7 @@
     "id": "grafana:create_incident",
     "server": "grafana",
     "name": "create_incident",
-    "description": "",
+    "description": "Create an incident in Grafana Incident, optionally setting custom fields",
     "inputSchema": {
       "type": "object"
     },
@@ -3137,7 +3137,7 @@
     "id": "grafana:add_activity_to_incident",
     "server": "grafana",
     "name": "add_activity_to_incident",
-    "description": "",
+    "description": "Add an activity item to an incident in Grafana Incident",
     "inputSchema": {
       "type": "object"
     },
@@ -3148,7 +3148,7 @@
     "id": "grafana:update_incident",
     "server": "grafana",
     "name": "update_incident",
-    "description": "",
+    "description": "Update an incident in Grafana Incident (status, severity, title, or custom fields)",
     "inputSchema": {
       "type": "object"
     },
@@ -3159,7 +3159,7 @@
     "id": "grafana:get_incident",
     "server": "grafana",
     "name": "get_incident",
-    "description": "",
+    "description": "Get a single incident by ID, including its custom fields",
     "inputSchema": {
       "type": "object"
     },
@@ -3170,7 +3170,7 @@
     "id": "grafana:list_incident_custom_fields",
     "server": "grafana",
     "name": "list_incident_custom_fields",
-    "description": "",
+    "description": "List the custom fields configured for incidents, with their types and select options",
     "inputSchema": {
       "type": "object"
     },
@@ -3181,7 +3181,7 @@
     "id": "grafana:query_loki_logs",
     "server": "grafana",
     "name": "query_loki_logs",
-    "description": "",
+    "description": "Query and retrieve logs using LogQL (either log or metric queries)",
     "inputSchema": {
       "type": "object"
     },
@@ -3192,7 +3192,7 @@
     "id": "grafana:list_loki_label_names",
     "server": "grafana",
     "name": "list_loki_label_names",
-    "description": "",
+    "description": "List all available label names in logs",
     "inputSchema": {
       "type": "object"
     },
@@ -3203,7 +3203,7 @@
     "id": "grafana:list_loki_label_values",
     "server": "grafana",
     "name": "list_loki_label_values",
-    "description": "",
+    "description": "List values for a specific log label",
     "inputSchema": {
       "type": "object"
     },
@@ -3214,7 +3214,7 @@
     "id": "grafana:query_loki_stats",
     "server": "grafana",
     "name": "query_loki_stats",
-    "description": "",
+    "description": "Get statistics about log streams",
     "inputSchema": {
       "type": "object"
     },
@@ -3225,7 +3225,7 @@
     "id": "grafana:query_loki_patterns",
     "server": "grafana",
     "name": "query_loki_patterns",
-    "description": "",
+    "description": "Query detected log patterns to identify common structures",
     "inputSchema": {
       "type": "object"
     },
@@ -3236,7 +3236,7 @@
     "id": "grafana:query_influxdb",
     "server": "grafana",
     "name": "query_influxdb",
-    "description": "",
+    "description": "Query InfluxDB using InfluxQL (v1) or Flux (v2)",
     "inputSchema": {
       "type": "object"
     },
@@ -3247,7 +3247,7 @@
     "id": "grafana:list_sql_databases",
     "server": "grafana",
     "name": "list_sql_databases",
-    "description": "",
+    "description": "List databases, schemas, or catalogs from a SQL datasource",
     "inputSchema": {
       "type": "object"
     },
@@ -3258,7 +3258,7 @@
     "id": "grafana:list_sql_tables",
     "server": "grafana",
     "name": "list_sql_tables",
-    "description": "",
+    "description": "List tables in a SQL datasource",
     "inputSchema": {
       "type": "object"
     },
@@ -3269,7 +3269,7 @@
     "id": "grafana:describe_sql_table",
     "server": "grafana",
     "name": "describe_sql_table",
-    "description": "",
+    "description": "Get column schema for a table",
     "inputSchema": {
       "type": "object"
     },
@@ -3280,7 +3280,7 @@
     "id": "grafana:query_sql",
     "server": "grafana",
     "name": "query_sql",
-    "description": "",
+    "description": "Execute SQL queries with macro substitution",
     "inputSchema": {
       "type": "object"
     },
@@ -3291,7 +3291,7 @@
     "id": "grafana:list_cloudwatch_namespaces",
     "server": "grafana",
     "name": "list_cloudwatch_namespaces",
-    "description": "",
+    "description": "List available AWS CloudWatch namespaces",
     "inputSchema": {
       "type": "object"
     },
@@ -3302,7 +3302,7 @@
     "id": "grafana:list_cloudwatch_metrics",
     "server": "grafana",
     "name": "list_cloudwatch_metrics",
-    "description": "",
+    "description": "List metrics in a namespace",
     "inputSchema": {
       "type": "object"
     },
@@ -3313,7 +3313,7 @@
     "id": "grafana:list_cloudwatch_dimensions",
     "server": "grafana",
     "name": "list_cloudwatch_dimensions",
-    "description": "",
+    "description": "List dimensions for a metric",
     "inputSchema": {
       "type": "object"
     },
@@ -3324,7 +3324,7 @@
     "id": "grafana:list_cloudwatch_dimension_values",
     "server": "grafana",
     "name": "list_cloudwatch_dimension_values",
-    "description": "",
+    "description": "List values for a dimension key",
     "inputSchema": {
       "type": "object"
     },
@@ -3335,7 +3335,7 @@
     "id": "grafana:query_cloudwatch",
     "server": "grafana",
     "name": "query_cloudwatch",
-    "description": "",
+    "description": "Execute CloudWatch metric queries",
     "inputSchema": {
       "type": "object"
     },
@@ -3346,7 +3346,7 @@
     "id": "grafana:list_cloud_logging_projects",
     "server": "grafana",
     "name": "list_cloud_logging_projects",
-    "description": "",
+    "description": "List GCP projects readable by a Google Cloud Logging datasource",
     "inputSchema": {
       "type": "object"
     },
@@ -3357,7 +3357,7 @@
     "id": "grafana:list_cloud_logging_buckets",
     "server": "grafana",
     "name": "list_cloud_logging_buckets",
-    "description": "",
+    "description": "List log buckets in a GCP project",
     "inputSchema": {
       "type": "object"
     },
@@ -3368,7 +3368,7 @@
     "id": "grafana:list_cloud_logging_views",
     "server": "grafana",
     "name": "list_cloud_logging_views",
-    "description": "",
+    "description": "List log views in a log bucket",
     "inputSchema": {
       "type": "object"
     },
@@ -3379,7 +3379,7 @@
     "id": "grafana:query_cloud_logging",
     "server": "grafana",
     "name": "query_cloud_logging",
-    "description": "",
+    "description": "Query logs with the Cloud Logging query language",
     "inputSchema": {
       "type": "object"
     },
@@ -3390,7 +3390,7 @@
     "id": "grafana:query_elasticsearch",
     "server": "grafana",
     "name": "query_elasticsearch",
-    "description": "",
+    "description": "Query Elasticsearch using Lucene syntax or Query DSL",
     "inputSchema": {
       "type": "object"
     },
@@ -3401,7 +3401,7 @@
     "id": "grafana:query_quickwit",
     "server": "grafana",
     "name": "query_quickwit",
-    "description": "",
+    "description": "Query Quickwit using Lucene syntax or Query DSL",
     "inputSchema": {
       "type": "object"
     },
@@ -3412,7 +3412,7 @@
     "id": "grafana:alerting_manage_rules",
     "server": "grafana",
     "name": "alerting_manage_rules",
-    "description": "",
+    "description": "Manage alert rules (list, get, versions, create, update, delete)",
     "inputSchema": {
       "type": "object"
     },
@@ -3423,7 +3423,7 @@
     "id": "grafana:alerting_manage_routing",
     "server": "grafana",
     "name": "alerting_manage_routing",
-    "description": "",
+    "description": "Manage notification policies, contact points, and time intervals",
     "inputSchema": {
       "type": "object"
     },
@@ -3434,7 +3434,7 @@
     "id": "grafana:alerting_manage_silences",
     "server": "grafana",
     "name": "alerting_manage_silences",
-    "description": "",
+    "description": "Manage alerting silences (list, get, create, update, expire)",
     "inputSchema": {
       "type": "object"
     },
@@ -3445,7 +3445,7 @@
     "id": "grafana:list_oncall_schedules",
     "server": "grafana",
     "name": "list_oncall_schedules",
-    "description": "",
+    "description": "List schedules from Grafana OnCall",
     "inputSchema": {
       "type": "object"
     },
@@ -3456,7 +3456,7 @@
     "id": "grafana:get_oncall_shift",
     "server": "grafana",
     "name": "get_oncall_shift",
-    "description": "",
+    "description": "Get details for a specific OnCall shift",
     "inputSchema": {
       "type": "object"
     },
@@ -3467,7 +3467,7 @@
     "id": "grafana:get_current_oncall_users",
     "server": "grafana",
     "name": "get_current_oncall_users",
-    "description": "",
+    "description": "Get users currently on-call for a specific schedule",
     "inputSchema": {
       "type": "object"
     },
@@ -3478,7 +3478,7 @@
     "id": "grafana:list_oncall_teams",
     "server": "grafana",
     "name": "list_oncall_teams",
-    "description": "",
+    "description": "List teams from Grafana OnCall",
     "inputSchema": {
       "type": "object"
     },
@@ -3489,7 +3489,7 @@
     "id": "grafana:list_oncall_users",
     "server": "grafana",
     "name": "list_oncall_users",
-    "description": "",
+    "description": "List users from Grafana OnCall",
     "inputSchema": {
       "type": "object"
     },
@@ -3500,7 +3500,7 @@
     "id": "grafana:list_alert_groups",
     "server": "grafana",
     "name": "list_alert_groups",
-    "description": "",
+    "description": "List alert groups from Grafana OnCall with filtering options",
     "inputSchema": {
       "type": "object"
     },
@@ -3511,7 +3511,7 @@
     "id": "grafana:get_alert_group",
     "server": "grafana",
     "name": "get_alert_group",
-    "description": "",
+    "description": "Get a specific alert group from Grafana OnCall by its ID",
     "inputSchema": {
       "type": "object"
     },
@@ -3522,7 +3522,7 @@
     "id": "grafana:update_alert_group",
     "server": "grafana",
     "name": "update_alert_group",
-    "description": "",
+    "description": "Acknowledge, unacknowledge, resolve, or unresolve an alert group",
     "inputSchema": {
       "type": "object"
     },
@@ -3533,7 +3533,7 @@
     "id": "grafana:get_sift_investigation",
     "server": "grafana",
     "name": "get_sift_investigation",
-    "description": "",
+    "description": "Retrieve an existing Sift investigation by its UUID",
     "inputSchema": {
       "type": "object"
     },
@@ -3544,7 +3544,7 @@
     "id": "grafana:get_sift_analysis",
     "server": "grafana",
     "name": "get_sift_analysis",
-    "description": "",
+    "description": "Retrieve a specific analysis from a Sift investigation",
     "inputSchema": {
       "type": "object"
     },
@@ -3555,7 +3555,7 @@
     "id": "grafana:list_sift_investigations",
     "server": "grafana",
     "name": "list_sift_investigations",
-    "description": "",
+    "description": "Retrieve a list of Sift investigations with an optional limit",
     "inputSchema": {
       "type": "object"
     },
@@ -3566,7 +3566,7 @@
     "id": "grafana:find_error_pattern_logs",
     "server": "grafana",
     "name": "find_error_pattern_logs",
-    "description": "",
+    "description": "Finds elevated error patterns in Loki logs.",
     "inputSchema": {
       "type": "object"
     },
@@ -3577,7 +3577,7 @@
     "id": "grafana:find_slow_requests",
     "server": "grafana",
     "name": "find_slow_requests",
-    "description": "",
+    "description": "Finds slow requests from the relevant tempo datasources.",
     "inputSchema": {
       "type": "object"
     },
@@ -3588,7 +3588,7 @@
     "id": "grafana:list_pyroscope_label_names",
     "server": "grafana",
     "name": "list_pyroscope_label_names",
-    "description": "",
+    "description": "List label names matching a selector",
     "inputSchema": {
       "type": "object"
     },
@@ -3599,7 +3599,7 @@
     "id": "grafana:list_pyroscope_label_values",
     "server": "grafana",
     "name": "list_pyroscope_label_values",
-    "description": "",
+    "description": "List label values matching a selector for a label name",
     "inputSchema": {
       "type": "object"
     },
@@ -3610,7 +3610,7 @@
     "id": "grafana:list_pyroscope_profile_types",
     "server": "grafana",
     "name": "list_pyroscope_profile_types",
-    "description": "",
+    "description": "List available profile types",
     "inputSchema": {
       "type": "object"
     },
@@ -3621,7 +3621,7 @@
     "id": "grafana:query_pyroscope",
     "server": "grafana",
     "name": "query_pyroscope",
-    "description": "",
+    "description": "Query profiles, metrics, or both from Pyroscope",
     "inputSchema": {
       "type": "object"
     },
@@ -3632,7 +3632,7 @@
     "id": "grafana:search_tempo_traces",
     "server": "grafana",
     "name": "search_tempo_traces",
-    "description": "",
+    "description": "Search for traces using TraceQL queries",
     "inputSchema": {
       "type": "object"
     },
@@ -3643,7 +3643,7 @@
     "id": "grafana:query_tempo_metrics",
     "server": "grafana",
     "name": "query_tempo_metrics",
-    "description": "",
+    "description": "Compute trace-derived metrics (instant value or time series)",
     "inputSchema": {
       "type": "object"
     },
@@ -3654,7 +3654,7 @@
     "id": "grafana:get_tempo_trace",
     "server": "grafana",
     "name": "get_tempo_trace",
-    "description": "",
+    "description": "Fetch a complete trace by ID",
     "inputSchema": {
       "type": "object"
     },
@@ -3665,7 +3665,7 @@
     "id": "grafana:diff_tempo_traces",
     "server": "grafana",
     "name": "diff_tempo_traces",
-    "description": "",
+    "description": "Compare two traces",
     "inputSchema": {
       "type": "object"
     },
@@ -3676,7 +3676,7 @@
     "id": "grafana:list_tempo_attribute_names",
     "server": "grafana",
     "name": "list_tempo_attribute_names",
-    "description": "",
+    "description": "List available trace attribute names",
     "inputSchema": {
       "type": "object"
     },
@@ -3687,7 +3687,7 @@
     "id": "grafana:list_tempo_attribute_values",
     "server": "grafana",
     "name": "list_tempo_attribute_values",
-    "description": "",
+    "description": "List values for a specific trace attribute",
     "inputSchema": {
       "type": "object"
     },
@@ -3698,7 +3698,7 @@
     "id": "grafana:get_tempo_traceql_docs",
     "server": "grafana",
     "name": "get_tempo_traceql_docs",
-    "description": "",
+    "description": "Retrieve TraceQL reference documentation with examples",
     "inputSchema": {
       "type": "object"
     },
@@ -3709,7 +3709,7 @@
     "id": "grafana:get_assertions",
     "server": "grafana",
     "name": "get_assertions",
-    "description": "",
+    "description": "Get assertion summary for a given entity",
     "inputSchema": {
       "type": "object"
     },
@@ -3720,7 +3720,7 @@
     "id": "grafana:ask_assistant",
     "server": "grafana",
     "name": "ask_assistant",
-    "description": "",
+    "description": "Send a prompt to Grafana Assistant and return the full text reply (multi-turn via `contextId`)",
     "inputSchema": {
       "type": "object"
     },
@@ -3731,7 +3731,7 @@
     "id": "grafana:generate_deeplink",
     "server": "grafana",
     "name": "generate_deeplink",
-    "description": "",
+    "description": "Generate accurate deeplink URLs for Grafana resources",
     "inputSchema": {
       "type": "object"
     },
@@ -3742,7 +3742,7 @@
     "id": "grafana:get_annotations",
     "server": "grafana",
     "name": "get_annotations",
-    "description": "",
+    "description": "Fetch annotations with filters",
     "inputSchema": {
       "type": "object"
     },
@@ -3753,7 +3753,7 @@
     "id": "grafana:create_annotation",
     "server": "grafana",
     "name": "create_annotation",
-    "description": "",
+    "description": "Create a new annotation (standard or Graphite format)",
     "inputSchema": {
       "type": "object"
     },
@@ -3764,7 +3764,7 @@
     "id": "grafana:update_annotation",
     "server": "grafana",
     "name": "update_annotation",
-    "description": "",
+    "description": "Update specific fields of an annotation (partial update)",
     "inputSchema": {
       "type": "object"
     },
@@ -3775,7 +3775,7 @@
     "id": "grafana:delete_annotation",
     "server": "grafana",
     "name": "delete_annotation",
-    "description": "",
+    "description": "Delete an annotation by ID",
     "inputSchema": {
       "type": "object"
     },
@@ -3786,7 +3786,7 @@
     "id": "grafana:get_annotation_tags",
     "server": "grafana",
     "name": "get_annotation_tags",
-    "description": "",
+    "description": "List annotation tags with optional filtering",
     "inputSchema": {
       "type": "object"
     },
@@ -3797,7 +3797,7 @@
     "id": "grafana:list_snapshots",
     "server": "grafana",
     "name": "list_snapshots",
-    "description": "",
+    "description": "List dashboard snapshots with optional query and limit filters",
     "inputSchema": {
       "type": "object"
     },
@@ -3808,7 +3808,7 @@
     "id": "grafana:get_snapshot",
     "server": "grafana",
     "name": "get_snapshot",
-    "description": "",
+    "description": "Get snapshot metadata and dashboard payload by snapshot key",
     "inputSchema": {
       "type": "object"
     },
@@ -3819,7 +3819,7 @@
     "id": "grafana:create_snapshot",
     "server": "grafana",
     "name": "create_snapshot",
-    "description": "",
+    "description": "Create a dashboard snapshot from a full dashboard payload",
     "inputSchema": {
       "type": "object"
     },
@@ -3830,7 +3830,7 @@
     "id": "grafana:delete_snapshot",
     "server": "grafana",
     "name": "delete_snapshot",
-    "description": "",
+    "description": "Delete a dashboard snapshot by snapshot key",
     "inputSchema": {
       "type": "object"
     },
@@ -3841,7 +3841,7 @@
     "id": "grafana:get_panel_image",
     "server": "grafana",
     "name": "get_panel_image",
-    "description": "",
+    "description": "Render a stored dashboard or panel — or a provisioning preview from a repository branch — as a PNG image",
     "inputSchema": {
       "type": "object"
     },
@@ -3852,7 +3852,7 @@
     "id": "grafana:list_provisioning_repositories",
     "server": "grafana",
     "name": "list_provisioning_repositories",
-    "description": "",
+    "description": "List provisioning repositories (e.g. git-sync sources) with their source URL, branch, sync state, and health",
     "inputSchema": {
       "type": "object"
     },
@@ -3863,7 +3863,7 @@
     "id": "grafana:validate_provisioning_file",
     "server": "grafana",
     "name": "validate_provisioning_file",
-    "description": "",
+    "description": "Dry-run-apply a file from a provisioning repository and report admission validation errors",
     "inputSchema": {
       "type": "object"
     },
@@ -3874,7 +3874,7 @@
     "id": "grafana:search_docs",
     "server": "grafana",
     "name": "search_docs",
-    "description": "",
+    "description": "Search Grafana documentation or list product groups (omit query to list products)",
     "inputSchema": {
       "type": "object"
     },
@@ -3885,7 +3885,7 @@
     "id": "grafana:get_doc",
     "server": "grafana",
     "name": "get_doc",
-    "description": "",
+    "description": "Fetch a documentation page; set outline_only for headings, or section for bounded retrieval",
     "inputSchema": {
       "type": "object"
     },
