@@ -8,7 +8,7 @@ def test_config_summary_never_persists_env_header_or_url_secret_values():
         "mcpServers":{
             "local":{
                 "command":"/Users/alice/bin/npx",
-                "args":["-y","@vendor/server","--token=literal-secret","\${API_KEY}"],
+                "args":["-y","@vendor/server","--token=literal-secret","$"+"{API_KEY}"],
                 "env":{"API_KEY":"super-secret","PASSWORD":"another-secret"},
             },
             "remote":{
