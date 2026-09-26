@@ -8,24 +8,31 @@ def digest(value):
     return hashlib.sha256(canonical(value).encode()).hexdigest()
 
 def classify(tool):
-    # MCP annotations are declared evidence, not proof. Prefer explicit
-    # read-only/destructive declarations over lexical heuristics, while
-    # preserving unknown when the declaration is incomplete.
+    # MCP annotations are declared hints, not authorization. Strong explicit
+    # dangerous evidence wins over contradictory annotations.
     annotations = tool.get("annotations") or {}
-    if annotations.get("readOnlyHint") is True:
-        return "read", 0.95
-    if annotations.get("destructiveHint") is True:
-        return "delete", 0.90
-
     text = " ".join([tool.get("name",""), tool.get("description","")]).lower()
-    rules = [
+
+    strong_rules = [
         ("delete", ("delete","remove","destroy","drop")),
-        ("deploy", ("deploy","release","publish production")),
-        ("execute", ("exec","shell","command","run process")),
+        ("deploy", ("deploy","publish production")),
+        ("execute", ("rce-equivalent","arbitrary javascript","exec","shell","command","run process")),
         ("financial", ("payment","transfer","trade","purchase")),
+    ]
+    for effect, words in strong_rules:
+        if any(w in text for w in words):
+            return effect, 0.95
+
+    if annotations.get("destructiveHint") is True:
+        # destructiveHint means mutation risk, not necessarily deletion.
+        return "write", 0.90
+    if annotations.get("readOnlyHint") is True:
+        return "read", 0.90
+
+    rules = [
         ("external_message", ("send email","send message","post message")),
-        ("write", ("create","update","write","edit","merge")),
-        ("read", ("read","get","list","search","fetch","inspect")),
+        ("write", ("create","update","write","edit","merge","upload")),
+        ("read", ("read","get","list","search","fetch","inspect","status","snapshot")),
     ]
     for effect, words in rules:
         if any(w in text for w in words):
