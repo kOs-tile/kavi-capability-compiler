@@ -145,10 +145,12 @@ def compile_capsule(inv,intent,policy,now=None):
     for cid in intent.get("capabilities",[]):
         if cid not in by_id: raise ValueError(f"Capability absent from inventory: {cid}")
         c=by_id[cid]; d=decide(policy,c)
-        if c["effect"]=="unknown" and d=="allow": d="approval"
         constraints=_constraint_for(intent,cid)
         analysis=c.get("analysis") or {"effect":c["effect"],"risk_flags":[]}
-        if analysis.get("effect")=="mixed" and not constraints.get("operations"):
+        mixed=analysis.get("effect")=="mixed"
+        if c["effect"]=="unknown" and d=="allow" and not (mixed and constraints.get("operations")):
+            d="approval"
+        if mixed and not constraints.get("operations"):
             d="approval" if d!="deny" else d
         entry={"id":cid,"fingerprint":c["fingerprint"],"effect":c["effect"],
             "risk_flags":analysis.get("risk_flags",[]),"constraints":constraints}
