@@ -7,37 +7,77 @@ def canonical(value):
 def digest(value):
     return hashlib.sha256(canonical(value).encode()).hexdigest()
 
-def classify(tool):
-    # MCP annotations are declared hints, not authorization. Strong explicit
-    # dangerous evidence wins over contradictory annotations.
-    annotations = tool.get("annotations") or {}
+def analyze_capability(tool):
+    annotations = dict(tool.get("annotations") or {})
     text = " ".join([tool.get("name",""), tool.get("description","")]).lower()
+    evidence = []
+    for key, value in annotations.items():
+        if value is not None:
+            evidence.append({"kind":"annotation","key":key,"value":value})
 
-    strong_rules = [
+    dangerous_rules = [
         ("delete", ("delete","remove","destroy","drop")),
         ("deploy", ("deploy","publish production")),
-        ("execute", ("rce-equivalent","arbitrary javascript","exec","shell","command","run process")),
+        ("execute", ("rce-equivalent","arbitrary javascript","evaluate javascript","exec","shell","command","run process")),
         ("financial", ("payment","transfer","trade","purchase")),
     ]
-    for effect, words in strong_rules:
-        if any(w in text for w in words):
-            return effect, 0.95
+    effect = None
+    confidence = 0.0
+    for candidate, words in dangerous_rules:
+        matched = [w for w in words if w in text]
+        if matched:
+            effect, confidence = candidate, 0.95
+            evidence.append({"kind":"lexical","effect":candidate,"matches":matched,"confidence":confidence})
+            break
 
-    if annotations.get("destructiveHint") is True:
-        # destructiveHint means mutation risk, not necessarily deletion.
-        return "write", 0.90
-    if annotations.get("readOnlyHint") is True:
-        return "read", 0.90
+    mixed_markers = ("list, create, close", "list/create/close", "create, close, or select")
+    if effect is None and any(m in text for m in mixed_markers):
+        effect, confidence = "mixed", 0.85
+        evidence.append({"kind":"lexical","effect":"mixed","matches":["multi-operation description"],"confidence":confidence})
 
-    rules = [
-        ("external_message", ("send email","send message","post message")),
-        ("write", ("create","update","write","edit","merge","upload")),
-        ("read", ("read","get","list","search","fetch","inspect","status","snapshot")),
-    ]
-    for effect, words in rules:
-        if any(w in text for w in words):
-            return effect, 0.8
-    return "unknown", 0.0
+    if effect is None and annotations.get("destructiveHint") is True:
+        effect, confidence = "write", 0.90
+    if effect is None and annotations.get("readOnlyHint") is True:
+        effect, confidence = "read", 0.90
+
+    if effect is None:
+        rules = [
+            ("external_message", ("send email","send message","post message")),
+            ("write", ("create","update","write","edit","merge","upload","add observation","commit","checkout","switches branches")),
+            ("read", ("read","get","list","search","fetch","inspect","status","snapshot","show","convert time")),
+        ]
+        for candidate, words in rules:
+            matched = [w for w in words if w in text]
+            if matched:
+                effect, confidence = candidate, 0.8
+                evidence.append({"kind":"lexical","effect":candidate,"matches":matched,"confidence":confidence})
+                break
+
+    if effect is None:
+        effect = "unknown"
+
+    risk_flags = []
+    if annotations.get("destructiveHint") is True or effect == "delete":
+        risk_flags.append("destructive")
+    if annotations.get("openWorldHint") is True:
+        risk_flags.append("open_world")
+    if annotations.get("idempotentHint") is False:
+        risk_flags.append("non_idempotent")
+    if effect in {"unknown","mixed"}:
+        risk_flags.append("context_dependent")
+    if annotations.get("readOnlyHint") is True and effect not in {"read","unknown"}:
+        risk_flags.append("annotation_conflict")
+
+    return {"effect":effect,"confidence":confidence,"risk_flags":risk_flags,
+        "declared":annotations,"evidence":evidence}
+
+def classify(tool):
+    analysis = analyze_capability(tool)
+    effect = analysis["effect"]
+    # Preserve v0 classifier contract while v2 can represent mixed authority.
+    if effect == "mixed":
+        return "unknown", analysis["confidence"]
+    return effect, analysis["confidence"]
 
 def scan_mcp_snapshot(snapshot):
     tools = snapshot.get("tools") or snapshot.get("result",{}).get("tools") or []
