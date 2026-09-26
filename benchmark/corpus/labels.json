@@ -1,0 +1,275 @@
+[
+  {
+    "id": "modelcontextprotocol/filesystem:read_text_file",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "modelcontextprotocol/filesystem:read_media_file",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "modelcontextprotocol/filesystem:read_multiple_files",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "modelcontextprotocol/filesystem:list_directory",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "modelcontextprotocol/filesystem:search_files",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "modelcontextprotocol/filesystem:write_file",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "modelcontextprotocol/filesystem:edit_file",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "modelcontextprotocol/filesystem:move_file",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "modelcontextprotocol/fetch:fetch",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "microsoft/playwright-mcp:browser_navigate",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "microsoft/playwright-mcp:browser_snapshot",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "microsoft/playwright-mcp:browser_click",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "microsoft/playwright-mcp:browser_type",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github/github-mcp-server:get_file_contents",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github/github-mcp-server:issue_read",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github/github-mcp-server:create_pull_request",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:add_observations",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "time:get_current_time",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_status",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_run_code_unsafe",
+    "expected_effect": "execute",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_file_upload",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:create_issue",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:delete_file",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:create_entities",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:create_relations",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:delete_entities",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:delete_observations",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:delete_relations",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:read_graph",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:search_nodes",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:open_nodes",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_diff_unstaged",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_diff_staged",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_diff",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_commit",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_add",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_reset",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_log",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_create_branch",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  }
+]
