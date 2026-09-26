@@ -44,7 +44,7 @@ def analyze_capability(tool):
     if matches or leading in delete_actions:
         effect,confidence="delete",0.95
         evidence.append({"kind":"lexical","source":"action","effect":"delete","matches":matches or [leading],"confidence":confidence})
-    elif any(x in execute_actions for x in name_tokens) or leading in execute_actions or _phrase(description,"rce equivalent") or _phrase(description,"arbitrary javascript"):
+    elif any(x in execute_actions for x in name_tokens) or leading in execute_actions or ({"rce","equivalent"} <= set(desc_tokens)) or _phrase(description,"arbitrary javascript"):
         matches=[x for x in name_tokens if x in execute_actions]
         effect,confidence="execute",0.95
         evidence.append({"kind":"lexical","source":"action","effect":"execute","matches":matches or [leading or "explicit execution evidence"],"confidence":confidence})
@@ -56,8 +56,11 @@ def analyze_capability(tool):
         effect,confidence="deploy",0.95
         evidence.append({"kind":"lexical","source":"action","effect":"deploy","matches":["deploy"],"confidence":confidence})
 
-    # Generic manage/run-query surfaces are context dependent unless bounded later.
-    if effect is None and ("manage" in name_tokens or leading=="manage" or ("run" in name_tokens and "query" in name_tokens)):
+    # Multi-operation and generic manage/run-query surfaces are context dependent
+    # unless a later capsule constrains the operation.
+    mixed_markers=("list, create, close","list/create/close","create, close, or select")
+    explicit_mixed=any(m in description.lower() for m in mixed_markers)
+    if effect is None and (explicit_mixed or "manage" in name_tokens or leading=="manage" or ("run" in name_tokens and "query" in name_tokens)):
         effect,confidence="mixed",0.85
         evidence.append({"kind":"lexical","source":"action","effect":"mixed","matches":["context-dependent operation"],"confidence":confidence})
 
