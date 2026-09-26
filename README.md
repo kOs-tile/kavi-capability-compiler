@@ -56,3 +56,8 @@ M0 is a working compiler kernel, not a validated security product. It does **not
 M1 is explicitly designed to test whether the product thesis survives real MCP data. See `docs/ROADMAP.md`.
 
 Earlier KAVI capability experiments and the ideas retained or rejected here are documented in `docs/RESEARCH_LINEAGE.md`.
+
+
+## KAVI ecosystem
+
+KCC stays independent of the surrounding research stack. Integration responsibilities and non-goals are documented in `docs/ECOSYSTEM.md`.
