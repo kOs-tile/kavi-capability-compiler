@@ -65,3 +65,15 @@ Comparators:
 4. KCC + optional probabilistic gate
 
 The benchmark should publish failures and ambiguous cases, not just aggregate scores.
+
+
+## 101-capability checkpoint
+
+The benchmark now separates two questions:
+
+1. **Classification safety** — especially false-safe outcomes on dangerous capabilities.
+2. **Authority reduction** — how much standing authority can be removed for a concrete task intent.
+
+The task-intent corpus is intentionally small and auditable at this stage. CI requires at least 10 tasks and at least 90% mean authority reduction against the observed inventory. This is a benchmark gate, not a production security claim.
+
+See `FAILURE_TAXONOMY.md` for the failures that motivated Authority Model v2.
