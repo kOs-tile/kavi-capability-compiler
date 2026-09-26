@@ -64,7 +64,7 @@ jobs:
       - name: Verify optional MCP command fails with install guidance
         run: |
           set +e
-          output=$(/tmp/kcc-wheel/bin/kcc discover-stdio python -c 'print(1)' 2>&1)
+          output=$(/tmp/kcc-wheel/bin/kcc discover-stdio python 2>&1)
           code=$?
           set -e
           test "$code" -ne 0
