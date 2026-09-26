@@ -3,6 +3,9 @@ from __future__ import annotations
 from typing import Any, Mapping, Sequence
 
 import asyncio
+from pathlib import Path
+from urllib.parse import urlsplit
+
 import httpx2
 from mcp import Client, StdioServerParameters
 from mcp.client.streamable_http import streamable_http_client
@@ -62,7 +65,7 @@ async def discover_stdio(
         args=[str(x) for x in (args or [])],
         env={str(k): str(v) for k, v in (env or {}).items()} or None,
     )
-    fallback = server_name or str(command)
+    fallback = server_name or Path(str(command)).name or "stdio-mcp"
 
     if timeout_seconds <= 0:
         raise ValueError("timeout_seconds must be positive")
@@ -96,7 +99,8 @@ async def discover_streamable_http(
     """
     if not url or not str(url).startswith(("http://", "https://")):
         raise ValueError("Streamable HTTP URL must use http:// or https://")
-    fallback = server_name or str(url)
+    parsed = urlsplit(str(url))
+    fallback = server_name or parsed.hostname or "http-mcp"
     if timeout_seconds <= 0:
         raise ValueError("timeout_seconds must be positive")
 
