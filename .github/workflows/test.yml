@@ -23,6 +23,16 @@ jobs:
         run: python benchmark/drift.py | tee drift-results.json
       - name: Run latency benchmark
         run: python benchmark/latency.py | tee latency-results.json
+      - name: Enforce revealed-holdout regression floor
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("holdout-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["accuracy"] >= 0.75, r
+          assert r["unknown_rate"] <= 0.30, r
+          PY
       - name: Enforce zero false-safe seed gate
         run: |
           python - <<'PY'
