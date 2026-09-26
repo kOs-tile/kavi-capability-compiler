@@ -28,6 +28,7 @@ Agent systems accumulate standing authority through MCP servers, tools, credenti
 - operation and parameter constraints
 - capability fingerprints and capsule integrity
 - runtime `authorize_call` primitive
+- portable fail-closed runtime guard that blocks before dispatcher execution
 - inventory locks and drift diff
 
 ### M1 evidence
@@ -97,4 +98,4 @@ See `docs/M2_EXIT.md`, `docs/RUNTIME_AUTHORIZATION.md`, and `docs/EXECUTION_EVID
 
 ## KAVI ecosystem
 
-KCC stays independent of the surrounding research stack. Integration responsibilities and non-goals are documented in `docs/ECOSYSTEM.md`.
+KCC stays independent of the surrounding research stack. Integration responsibilities and non-goals are documented in `docs/KAVI_ECOSYSTEM.md`.
