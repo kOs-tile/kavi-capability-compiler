@@ -2,12 +2,10 @@ import argparse, asyncio, json
 from pathlib import Path
 from . import __version__
 from .core import scan_mcp_snapshot,audit_inventory,compile_capsule,verify_capsule,inventory_lock,diff_inventory_lock,authorize_call
-from .discovery import discover_stdio, discover_streamable_http, discover_config_server
 from .config import sanitize_mcp_config
 from .adapters import adapt_capabilities, SUPPORTED_SOURCE_FORMATS
 from .manifest import scan_manifest
 from .evidence import build_execution_evidence, verify_execution_evidence
-from .live_probe import LiveProbeError, probe_kavi_bridge
 
 def load(p): return json.loads(Path(p).read_text())
 def save(v,p):
@@ -46,14 +44,17 @@ def main():
         r=diff_inventory_lock(load(a.lock),load(a.inventory)); save(r,None)
         raise SystemExit(0 if r["clean"] else 2)
     elif a.cmd=="discover-stdio":
+        from .discovery import discover_stdio
         r=asyncio.run(discover_stdio(a.command,a.args,server_name=a.server_name))
         if a.lock_output: save(inventory_lock(r["inventory"]),a.lock_output)
         save(r,a.output)
     elif a.cmd=="discover-http":
+        from .discovery import discover_streamable_http
         r=asyncio.run(discover_streamable_http(a.url,server_name=a.server_name))
         if a.lock_output: save(inventory_lock(r["inventory"]),a.lock_output)
         save(r,a.output)
     elif a.cmd=="discover-config":
+        from .discovery import discover_config_server
         r=asyncio.run(discover_config_server(load(a.input),a.server))
         if a.lock_output: save(inventory_lock(r["inventory"]),a.lock_output)
         save(r,a.output)
@@ -84,6 +85,7 @@ def main():
         r=verify_execution_evidence(load(a.input)); save(r,None)
         raise SystemExit(0 if r["valid"] else 4)
     elif a.cmd=="probe-kavi":
+        from .live_probe import LiveProbeError, probe_kavi_bridge
         try:
             r=probe_kavi_bridge(
                 a.endpoint,
