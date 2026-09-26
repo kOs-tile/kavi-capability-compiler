@@ -25,55 +25,51 @@ Exit report: `M1_EXIT.md`.
 ## M2 — Live Discovery + Authority Drift
 **Status: shipped.**
 
-Goal: move from snapshot-only evidence to authority observed from running MCP servers.
-
-Scope:
+Delivered:
 - stdio `initialize -> tools/list`
 - Streamable HTTP discovery
-- common MCP config import without persisting secret values
+- secret-safe MCP config import
 - live inventory -> deterministic lock
 - added / removed / changed authority detection
 - bounded timeout and fail-closed protocol behavior
 - compatibility against pinned published MCP servers
-- fresh sealed discovery holdout
+- sealed discovery holdout
 
-Exit gate:
-- local stdio + Streamable HTTP integration tests pass
-- real published MCP servers discover successfully without tool execution
-- secret values do not enter KCC artifacts/errors
-- live lock detects real or controlled live authority changes
-- fresh sealed discovery holdout passes
-- M1 safety gates remain green
+## M3 — Framework-Agnostic Integration & Enforcement
+**Status: active.**
 
-## M3 — KAVI/Hermes dogfood
-**Status: active; M3A KAVI control-plane dogfood passed.**
+Goal: make KCC usable by existing agent/tool stacks without requiring framework migration or modifications to the agent runtime.
 
-M3A evidence:
-- authoritative KAVI Dispatch Bridge contract adapted into KCC IR
-- 5 standing capabilities -> 1 task-scoped grant
-- 80% authority reduction for the read-only operator-snapshot task
-- granted read allowed by runtime guard
-- enqueue_task and approve_task blocked outside the capsule
-- live production bridge health verified without extracting secrets
+Core contract:
+`external capability definitions -> kcc.capabilities.v1 -> KCC inventory -> task capsule -> generic runtime guard`
 
-M3B:
-- **probe implementation: shipped and CI-backed**
-- production bridge health: verified `READY` / `configured=true`
-- authenticated read-only live bridge observation: pending existing bearer availability through an authorized secure runtime
-- probe performs only `initialize`, `tools/list`, and `get_operator_snapshot`; mutation calls are absent by construction and regression test
-- Hermes-local adapter only after an actual Hermes capability/tool export or registry is available
-- never invent a Hermes surface from chat history
+Required source adapters:
+- MCP tool definitions
+- OpenAI function tools
+- Anthropic tools
+- OpenAPI operations
+- generic JSON capability registries
 
-Hermes/KAVI remain proving grounds, not dependencies of the core.
+Exit gates:
+- equivalent authority expressed in different source formats normalizes to the same semantic manifest
+- equivalent manifests produce the same KCC inventory and task-scoped grants
+- provenance/source-format changes alone do not create authority drift
+- schema/authority changes do create deterministic drift
+- same-named capabilities in different namespaces do not collide
+- denied calls never reach the caller-supplied dispatcher
+- all M1/M2 safety gates remain green
+
+Existing KAVI control-plane dogfood is retained as a case study only. KAVI, Hermes, Codex, LangGraph, or any other runtime may be used later as validation targets; none is a dependency or milestone prerequisite.
 
 ## M4 — Portable Enforcement SDK
 
-After dogfood:
-- harden the current Python guard into a versioned SDK surface
-- generic adapter contract
+After M3:
+- stabilize the generic adapter + manifest API
+- harden the Python runtime guard into a versioned SDK
 - optional MCP proxy/bridge
 - signed/verifiable capsules
 - approval handoff contract
+- integration kits for common runtimes
 
 Compiler and runtime remain separable.
 

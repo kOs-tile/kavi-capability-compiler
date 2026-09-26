@@ -53,6 +53,21 @@ jobs:
           assert r["approve_blocked"], r
           assert r["mutation_grants"] == [], r
           PY
+      - name: Run framework equivalence benchmark
+        run: python benchmark/framework_equivalence.py | tee framework-equivalence.json
+      - name: Enforce framework equivalence
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("framework-equivalence.json"))
+          assert r["formats"] == 5, r
+          assert r["manifest_digest_count"] == 1, r
+          assert r["inventory_digest_count"] == 1, r
+          assert r["all_same_grants"], r
+          assert r["all_allowed_executed"], r
+          assert r["all_outside_blocked"], r
+          assert r["denied_dispatches_total"] == 0, r
+          PY
       - name: Validate benchmark corpus
         run: python benchmark/validate_corpus.py | tee corpus-validation.json
       - name: Run sealed holdout benchmark
