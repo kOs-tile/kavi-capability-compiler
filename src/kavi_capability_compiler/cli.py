@@ -14,7 +14,7 @@ def save(v,p):
     else: print(text,end="")
 
 def main():
-    ap=argparse.ArgumentParser(prog="kcc"); ap.add_argument("--version",action="version",version=__version__)
+    ap=argparse.ArgumentParser(prog="kcc",allow_abbrev=False); ap.add_argument("--version",action="version",version=__version__)
     sub=ap.add_subparsers(dest="cmd",required=True)
     for name in ("scan","audit"):
         p=sub.add_parser(name); p.add_argument("input"); p.add_argument("-o","--output")
