@@ -8,6 +8,16 @@ from .manifest import scan_manifest
 from .evidence import build_execution_evidence, verify_execution_evidence
 
 def load(p): return json.loads(Path(p).read_text())
+
+def _load_mcp_discovery():
+    try:
+        from .discovery import discover_config_server, discover_stdio, discover_streamable_http
+        return discover_stdio, discover_streamable_http, discover_config_server
+    except ModuleNotFoundError as exc:
+        if exc.name in {"mcp","httpx2","httpcore2"}:
+            raise SystemExit('MCP discovery requires: pip install "kavi-capability-compiler[mcp]"') from None
+        raise
+
 def save(v,p):
     text=json.dumps(v,indent=2,sort_keys=True)+"\n"
     if p: Path(p).write_text(text)
@@ -43,17 +53,17 @@ def main():
         r=diff_inventory_lock(load(a.lock),load(a.inventory)); save(r,None)
         raise SystemExit(0 if r["clean"] else 2)
     elif a.cmd=="discover-stdio":
-        from .discovery import discover_stdio
+        discover_stdio, _, _ = _load_mcp_discovery()
         r=asyncio.run(discover_stdio(a.command,a.args,server_name=a.server_name))
         if a.lock_output: save(inventory_lock(r["inventory"]),a.lock_output)
         save(r,a.output)
     elif a.cmd=="discover-http":
-        from .discovery import discover_streamable_http
+        _, discover_streamable_http, _ = _load_mcp_discovery()
         r=asyncio.run(discover_streamable_http(a.url,server_name=a.server_name))
         if a.lock_output: save(inventory_lock(r["inventory"]),a.lock_output)
         save(r,a.output)
     elif a.cmd=="discover-config":
-        from .discovery import discover_config_server
+        _, _, discover_config_server = _load_mcp_discovery()
         r=asyncio.run(discover_config_server(load(a.input),a.server))
         if a.lock_output: save(inventory_lock(r["inventory"]),a.lock_output)
         save(r,a.output)
