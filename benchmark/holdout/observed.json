@@ -1,0 +1,695 @@
+[
+  {
+    "id": "kubernetes-holdout:configuration_contexts_list",
+    "server": "kubernetes-holdout",
+    "name": "configuration_contexts_list",
+    "description": "List all available context names and associated server urls from the kubeconfig file",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:targets_list",
+    "server": "kubernetes-holdout",
+    "name": "targets_list",
+    "description": "List all available targets",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:configuration_view",
+    "server": "kubernetes-holdout",
+    "name": "configuration_view",
+    "description": "Get the current Kubernetes configuration content as a kubeconfig YAML",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:events_list",
+    "server": "kubernetes-holdout",
+    "name": "events_list",
+    "description": "List Kubernetes events for debugging and troubleshooting",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:namespaces_list",
+    "server": "kubernetes-holdout",
+    "name": "namespaces_list",
+    "description": "List all Kubernetes namespaces",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:projects_list",
+    "server": "kubernetes-holdout",
+    "name": "projects_list",
+    "description": "List all OpenShift projects",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:nodes_log",
+    "server": "kubernetes-holdout",
+    "name": "nodes_log",
+    "description": "Get logs from a Kubernetes node",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:nodes_stats_summary",
+    "server": "kubernetes-holdout",
+    "name": "nodes_stats_summary",
+    "description": "Get detailed resource usage statistics from a Kubernetes node",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:nodes_top",
+    "server": "kubernetes-holdout",
+    "name": "nodes_top",
+    "description": "List node CPU and memory consumption",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:pods_list",
+    "server": "kubernetes-holdout",
+    "name": "pods_list",
+    "description": "List all Kubernetes pods",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:pods_list_in_namespace",
+    "server": "kubernetes-holdout",
+    "name": "pods_list_in_namespace",
+    "description": "List Kubernetes pods in a namespace",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:pods_get",
+    "server": "kubernetes-holdout",
+    "name": "pods_get",
+    "description": "Get a Kubernetes Pod",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:pods_delete",
+    "server": "kubernetes-holdout",
+    "name": "pods_delete",
+    "description": "Delete a Kubernetes Pod",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:pods_top",
+    "server": "kubernetes-holdout",
+    "name": "pods_top",
+    "description": "List pod CPU and memory consumption",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:pods_exec",
+    "server": "kubernetes-holdout",
+    "name": "pods_exec",
+    "description": "Execute a command in a Kubernetes Pod",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:pods_log",
+    "server": "kubernetes-holdout",
+    "name": "pods_log",
+    "description": "Get logs of a Kubernetes Pod",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:pods_run",
+    "server": "kubernetes-holdout",
+    "name": "pods_run",
+    "description": "Run a Kubernetes Pod from a container image",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:resources_list",
+    "server": "kubernetes-holdout",
+    "name": "resources_list",
+    "description": "List Kubernetes resources and objects",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:resources_get",
+    "server": "kubernetes-holdout",
+    "name": "resources_get",
+    "description": "Get a Kubernetes resource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:resources_create_or_update",
+    "server": "kubernetes-holdout",
+    "name": "resources_create_or_update",
+    "description": "Create or update a Kubernetes resource via Server-Side Apply",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:resources_delete",
+    "server": "kubernetes-holdout",
+    "name": "resources_delete",
+    "description": "Delete a Kubernetes resource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:resources_scale",
+    "server": "kubernetes-holdout",
+    "name": "resources_scale",
+    "description": "Get or update the scale of a Kubernetes resource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:helm_install",
+    "server": "kubernetes-holdout",
+    "name": "helm_install",
+    "description": "Install and deploy a Helm chart",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:helm_list",
+    "server": "kubernetes-holdout",
+    "name": "helm_list",
+    "description": "List Helm releases",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:helm_uninstall",
+    "server": "kubernetes-holdout",
+    "name": "helm_uninstall",
+    "description": "Uninstall a Helm release",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:kcp_workspaces_list",
+    "server": "kubernetes-holdout",
+    "name": "kcp_workspaces_list",
+    "description": "List kcp workspaces",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:kcp_workspace_describe",
+    "server": "kubernetes-holdout",
+    "name": "kcp_workspace_describe",
+    "description": "Get detailed information about a kcp workspace",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:kiali_get_mesh_status",
+    "server": "kubernetes-holdout",
+    "name": "kiali_get_mesh_status",
+    "description": "Retrieve high-level health and topology of the Istio service mesh",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:kiali_get_resource_details",
+    "server": "kubernetes-holdout",
+    "name": "kiali_get_resource_details",
+    "description": "Fetch resources or retrieve details for a resource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:kiali_manage_istio_config",
+    "server": "kubernetes-holdout",
+    "name": "kiali_manage_istio_config",
+    "description": "Create, patch, or delete Istio and Gateway API config",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:vm_clone",
+    "server": "kubernetes-holdout",
+    "name": "vm_clone",
+    "description": "Clone a VirtualMachine by creating a VirtualMachineClone resource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:vm_create",
+    "server": "kubernetes-holdout",
+    "name": "vm_create",
+    "description": "Create a VirtualMachine",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:vm_guest_info",
+    "server": "kubernetes-holdout",
+    "name": "vm_guest_info",
+    "description": "Get guest operating system information from a VirtualMachine",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:vm_lifecycle",
+    "server": "kubernetes-holdout",
+    "name": "vm_lifecycle",
+    "description": "Manage VM lifecycle: start, stop, restart, pause, or unpause",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:vm_create_from_template",
+    "server": "kubernetes-holdout",
+    "name": "vm_create_from_template",
+    "description": "Create a VirtualMachine from a template",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:vm_troubleshoot",
+    "server": "kubernetes-holdout",
+    "name": "vm_troubleshoot",
+    "description": "Diagnose VirtualMachine issues and return diagnostic data",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:netobserv_list_flows",
+    "server": "kubernetes-holdout",
+    "name": "netobserv_list_flows",
+    "description": "List NetObserv network flow records",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:netobserv_get_flow_metrics",
+    "server": "kubernetes-holdout",
+    "name": "netobserv_get_flow_metrics",
+    "description": "Return aggregated NetObserv flow metrics",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:tekton_pipeline_start",
+    "server": "kubernetes-holdout",
+    "name": "tekton_pipeline_start",
+    "description": "Start a Tekton Pipeline by creating a PipelineRun",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:tekton_pipelinerun_lifecycle",
+    "server": "kubernetes-holdout",
+    "name": "tekton_pipelinerun_lifecycle",
+    "description": "Restart or cancel a Tekton PipelineRun",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:tekton_pipelinerun_logs",
+    "server": "kubernetes-holdout",
+    "name": "tekton_pipelinerun_logs",
+    "description": "Get logs for TaskRuns owned by a PipelineRun",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:tekton_task_start",
+    "server": "kubernetes-holdout",
+    "name": "tekton_task_start",
+    "description": "Start a Tekton Task by creating a TaskRun",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:tekton_taskrun_restart",
+    "server": "kubernetes-holdout",
+    "name": "tekton_taskrun_restart",
+    "description": "Restart a Tekton TaskRun by creating a new TaskRun",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "kubernetes-holdout:tekton_taskrun_logs",
+    "server": "kubernetes-holdout",
+    "name": "tekton_taskrun_logs",
+    "description": "Get logs from a Tekton TaskRun",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/containers/kubernetes-mcp-server/blob/eeb2dd63ac12ede4df3b2793c72aff90dd5a8bd0/README.md"
+  },
+  {
+    "id": "supabase-holdout:get_schemas",
+    "server": "supabase-holdout",
+    "name": "get_schemas",
+    "description": "Lists schemas with sizes and table counts",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:get_tables",
+    "server": "supabase-holdout",
+    "name": "get_tables",
+    "description": "Lists tables, foreign tables, and views with metadata",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:get_table_schema",
+    "server": "supabase-holdout",
+    "name": "get_table_schema",
+    "description": "Gets detailed table structure",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:execute_postgresql",
+    "server": "supabase-holdout",
+    "name": "execute_postgresql",
+    "description": "Executes SQL statements against your database",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:confirm_destructive_operation",
+    "server": "supabase-holdout",
+    "name": "confirm_destructive_operation",
+    "description": "Executes high-risk operations after confirmation",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:retrieve_migrations",
+    "server": "supabase-holdout",
+    "name": "retrieve_migrations",
+    "description": "Gets migrations with filtering and pagination options",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:live_dangerously",
+    "server": "supabase-holdout",
+    "name": "live_dangerously",
+    "description": "Toggles between safe and unsafe modes",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:send_management_api_request",
+    "server": "supabase-holdout",
+    "name": "send_management_api_request",
+    "description": "Sends arbitrary requests to Supabase Management API",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:get_management_api_spec",
+    "server": "supabase-holdout",
+    "name": "get_management_api_spec",
+    "description": "Gets enriched API specification with safety information",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:get_management_api_safety_rules",
+    "server": "supabase-holdout",
+    "name": "get_management_api_safety_rules",
+    "description": "Gets all safety rules with human-readable explanations",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:get_user_by_id",
+    "server": "supabase-holdout",
+    "name": "get_user_by_id",
+    "description": "Retrieve a user by their ID",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:list_users",
+    "server": "supabase-holdout",
+    "name": "list_users",
+    "description": "List all users with pagination",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:create_user",
+    "server": "supabase-holdout",
+    "name": "create_user",
+    "description": "Create a new user",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:delete_user",
+    "server": "supabase-holdout",
+    "name": "delete_user",
+    "description": "Delete a user by their ID",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:invite_user_by_email",
+    "server": "supabase-holdout",
+    "name": "invite_user_by_email",
+    "description": "Send an invite link to a user's email",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:generate_link",
+    "server": "supabase-holdout",
+    "name": "generate_link",
+    "description": "Generate an email link for authentication purposes",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:update_user_by_id",
+    "server": "supabase-holdout",
+    "name": "update_user_by_id",
+    "description": "Update user attributes by ID",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:delete_factor",
+    "server": "supabase-holdout",
+    "name": "delete_factor",
+    "description": "Delete a factor on a user",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  },
+  {
+    "id": "supabase-holdout:retrieve_logs",
+    "server": "supabase-holdout",
+    "name": "retrieve_logs",
+    "description": "Retrieve logs from Supabase services",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/alexander-zuev/supabase-mcp-server/blob/2457a1ce598d328e8993f7ecbf11c6d3f3dcaa5a/README.md"
+  }
+]
