@@ -975,5 +975,104 @@
     },
     "annotations": {},
     "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/sequentialthinking/README.md"
+  },
+  {
+    "id": "github:get_label",
+    "server": "github",
+    "name": "get_label",
+    "description": "Get a specific label from a repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:list_label",
+    "server": "github",
+    "name": "list_label",
+    "description": "List labels from a repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_release_by_tag",
+    "server": "github",
+    "name": "get_release_by_tag",
+    "description": "Get a release by tag name",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:list_releases",
+    "server": "github",
+    "name": "list_releases",
+    "description": "List releases",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_tag",
+    "server": "github",
+    "name": "get_tag",
+    "description": "Get tag details",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:list_tags",
+    "server": "github",
+    "name": "list_tags",
+    "description": "List tags",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_latest_release",
+    "server": "github",
+    "name": "get_latest_release",
+    "description": "Get latest release",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_team_members",
+    "server": "github",
+    "name": "get_team_members",
+    "description": "Get team members",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_me",
+    "server": "github",
+    "name": "get_me",
+    "description": "Get my user profile",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
   }
 ]
