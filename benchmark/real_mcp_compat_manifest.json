@@ -33,11 +33,12 @@
       "package": "@modelcontextprotocol/server-sequential-thinking",
       "published_version": "2026.8.31",
       "source_repository": "modelcontextprotocol/servers",
-      "source_file": "src/sequentialthinking/README.md",
-      "source_blob_sha": "b6b853aa56775f0d62977c81e3f294705a5fa171",
+      "source_file": "src/sequentialthinking/index.ts",
+      "source_blob_sha": "1ae09d1db850159627921b7647f484a075ada09c",
       "expected_tools": [
-        "sequential_thinking"
-      ]
+        "sequentialthinking"
+      ],
+      "note": "README heading/tool prose says sequential_thinking, but runtime registration and published tools/list use sequentialthinking."
     }
   ]
 }
