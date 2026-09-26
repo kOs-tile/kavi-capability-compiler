@@ -184,3 +184,40 @@ def test_generic_runtime_guard_is_source_format_independent():
         except AuthorityDenied as exc:
             assert exc.decision["reason"]=="capability_not_granted"
         assert len(dispatched)==before
+
+
+def test_manifest_cli_round_trip(tmp_path):
+    import json
+    import subprocess
+    import sys
+
+    source=tmp_path/"tools.json"
+    manifest_path=tmp_path/"capabilities.json"
+    inventory_path=tmp_path/"inventory.json"
+    source.write_text(json.dumps({
+        "tools":[
+            {"type":"function","function":{
+                "name":"get_record",
+                "description":DESC_GET,
+                "parameters":SCHEMA_GET,
+            }}
+        ]
+    }))
+    code="from kavi_capability_compiler import cli; cli.main()"
+    p1=subprocess.run(
+        [sys.executable,"-c",code,"manifest",str(source),"--format","openai","--namespace","records","-o",str(manifest_path)],
+        capture_output=True,text=True,timeout=15,
+    )
+    assert p1.returncode==0, p1.stderr
+    manifest=json.loads(manifest_path.read_text())
+    assert manifest["schema_version"]=="kcc.capabilities.v1"
+    assert manifest["capabilities"][0]["source"]["kind"]=="openai-function"
+
+    p2=subprocess.run(
+        [sys.executable,"-c",code,"scan-manifest",str(manifest_path),"-o",str(inventory_path)],
+        capture_output=True,text=True,timeout=15,
+    )
+    assert p2.returncode==0, p2.stderr
+    inventory=json.loads(inventory_path.read_text())
+    assert inventory["adapter"]=="universal-manifest.v1"
+    assert [x["id"] for x in inventory["capabilities"]]==["kcc:records:get_record"]
