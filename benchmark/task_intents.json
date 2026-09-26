@@ -61,8 +61,8 @@
     "id": "read-files",
     "task": "Read selected local files and directory metadata",
     "required": [
-      "filesystem:read_text_file",
-      "filesystem:list_directory",
+      "modelcontextprotocol/filesystem:read_text_file",
+      "modelcontextprotocol/filesystem:list_directory",
       "filesystem:get_file_info"
     ],
     "approval": []
@@ -71,11 +71,11 @@
     "id": "edit-file",
     "task": "Edit one local file",
     "required": [
-      "filesystem:read_text_file",
-      "filesystem:edit_file"
+      "modelcontextprotocol/filesystem:read_text_file",
+      "modelcontextprotocol/filesystem:edit_file"
     ],
     "approval": [
-      "filesystem:edit_file"
+      "modelcontextprotocol/filesystem:edit_file"
     ]
   },
   {
