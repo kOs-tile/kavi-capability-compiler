@@ -1,0 +1,112 @@
+[
+  {
+    "id": "review-code",
+    "task": "Inspect repository content and recent commits without mutation",
+    "required": [
+      "github:get_file_contents",
+      "github:search_code",
+      "github:list_commits"
+    ],
+    "approval": []
+  },
+  {
+    "id": "triage-issue",
+    "task": "Read an issue and add one bounded comment",
+    "required": [
+      "github:get_issue_comments",
+      "github:add_issue_comment"
+    ],
+    "approval": [
+      "github:add_issue_comment"
+    ]
+  },
+  {
+    "id": "prepare-pr",
+    "task": "Read files, create a branch, update one file, and open a pull request",
+    "required": [
+      "github:get_file_contents",
+      "github:create_branch",
+      "github:create_or_update_file",
+      "github:create_pull_request"
+    ],
+    "approval": [
+      "github:create_branch",
+      "github:create_or_update_file",
+      "github:create_pull_request"
+    ]
+  },
+  {
+    "id": "inspect-worktree",
+    "task": "Inspect local git state without mutation",
+    "required": [
+      "git:git_status",
+      "git:git_diff_unstaged",
+      "git:git_log"
+    ],
+    "approval": []
+  },
+  {
+    "id": "commit-change",
+    "task": "Stage and commit an already-reviewed local change",
+    "required": [
+      "git:git_add",
+      "git:git_commit"
+    ],
+    "approval": [
+      "git:git_add",
+      "git:git_commit"
+    ]
+  },
+  {
+    "id": "read-files",
+    "task": "Read selected local files and directory metadata",
+    "required": [
+      "filesystem:read_text_file",
+      "filesystem:list_directory",
+      "filesystem:get_file_info"
+    ],
+    "approval": []
+  },
+  {
+    "id": "edit-file",
+    "task": "Edit one local file",
+    "required": [
+      "filesystem:read_text_file",
+      "filesystem:edit_file"
+    ],
+    "approval": [
+      "filesystem:edit_file"
+    ]
+  },
+  {
+    "id": "browser-research",
+    "task": "Navigate and inspect a page without form submission",
+    "required": [
+      "playwright:browser_navigate",
+      "playwright:browser_snapshot",
+      "playwright:browser_network_requests"
+    ],
+    "approval": [
+      "playwright:browser_navigate"
+    ]
+  },
+  {
+    "id": "browser-form",
+    "task": "Fill a form but do not submit it",
+    "required": [
+      "playwright:browser_snapshot",
+      "playwright:browser_fill_form"
+    ],
+    "approval": [
+      "playwright:browser_fill_form"
+    ]
+  },
+  {
+    "id": "time-convert",
+    "task": "Convert a time between timezones",
+    "required": [
+      "time:convert_time"
+    ],
+    "approval": []
+  }
+]
