@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from typing import Any, Mapping, Sequence
 
+import httpx2
 from mcp import Client, StdioServerParameters
+from mcp.client.streamable_http import streamable_http_client
 
 from .core import scan_mcp_snapshot
 
@@ -78,14 +80,35 @@ async def discover_stdio(
 async def discover_streamable_http(
     url: str,
     *,
+    headers: Mapping[str, str] | None = None,
     server_name: str | None = None,
 ) -> dict[str, Any]:
-    """Discover an MCP server over Streamable HTTP using the official SDK lifecycle."""
+    """Discover an MCP server over Streamable HTTP using the official SDK lifecycle.
+
+    Header values are used only by the HTTP client and never copied into the
+    discovery artifact.
+    """
     if not url or not str(url).startswith(("http://", "https://")):
         raise ValueError("Streamable HTTP URL must use http:// or https://")
     fallback = server_name or str(url)
 
     try:
+        if headers:
+            async with httpx2.AsyncClient(
+                headers={str(k): str(v) for k, v in headers.items()},
+                timeout=httpx2.Timeout(30.0, read=300.0),
+            ) as http_client:
+                transport = streamable_http_client(str(url), http_client=http_client)
+                async with Client(transport) as client:
+                    tools_result = await client.list_tools()
+                    snapshot = _snapshot_from_client(client, tools_result, fallback)
+                    inventory = scan_mcp_snapshot(snapshot)
+                    return {
+                        "transport": "streamable-http",
+                        "protocol_version": str(client.protocol_version),
+                        "server": snapshot["server"],
+                        "inventory": inventory,
+                    }
         async with Client(str(url)) as client:
             tools_result = await client.list_tools()
             snapshot = _snapshot_from_client(client, tools_result, fallback)
@@ -98,3 +121,38 @@ async def discover_streamable_http(
             }
     except Exception as exc:
         raise DiscoveryError(f"streamable HTTP discovery failed for {fallback}: {type(exc).__name__}") from exc
+
+
+async def discover_config_server(config: Mapping[str, Any], name: str) -> dict[str, Any]:
+    """Discover one configured MCP server without persisting raw secret values."""
+    raw_servers = config.get("mcpServers")
+    if raw_servers is None:
+        raw_servers = config.get("servers")
+    if not isinstance(raw_servers, Mapping) or name not in raw_servers:
+        raise KeyError(f"Unknown MCP server: {name}")
+    raw = raw_servers[name]
+    if not isinstance(raw, Mapping):
+        raise ValueError(f"Invalid MCP server config: {name}")
+
+    url = raw.get("url") or raw.get("serverUrl")
+    if url:
+        return await discover_streamable_http(
+            str(url),
+            headers=raw.get("headers") if isinstance(raw.get("headers"), Mapping) else None,
+            server_name=name,
+        )
+    command = raw.get("command")
+    if not command:
+        raise ValueError(f"MCP server {name} has neither command nor URL")
+    args = raw.get("args")
+    if args is not None and not isinstance(args, Sequence):
+        raise ValueError(f"Invalid args for MCP server: {name}")
+    env = raw.get("env")
+    if env is not None and not isinstance(env, Mapping):
+        raise ValueError(f"Invalid env for MCP server: {name}")
+    return await discover_stdio(
+        str(command),
+        [str(x) for x in (args or [])],
+        {str(k): str(v) for k, v in (env or {}).items()},
+        server_name=name,
+    )
