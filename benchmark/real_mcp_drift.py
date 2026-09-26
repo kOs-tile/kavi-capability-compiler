@@ -6,7 +6,7 @@ from pathlib import Path
 from kavi_capability_compiler.core import diff_inventory_lock, inventory_lock
 from kavi_capability_compiler.discovery import discover_stdio
 
-OLD="@modelcontextprotocol/server-filesystem@2026.7.10"
+OLD="@modelcontextprotocol/server-filesystem@2026.1.14"
 NEW="@modelcontextprotocol/server-filesystem@2026.8.31"
 
 
