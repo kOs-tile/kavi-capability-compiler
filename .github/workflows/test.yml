@@ -13,6 +13,17 @@ jobs:
       - run: pytest -q
       - name: Run live discovery integration tests
         run: pytest -q tests/test_live_discovery.py
+      - name: Run pinned official MCP compatibility
+        run: python benchmark/real_mcp_compat.py | tee real-mcp-compat.json
+      - name: Enforce official MCP compatibility
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-compat.json"))
+          assert r["servers"] == 3, r
+          assert r["all_nonempty"], r
+          assert r["all_expected_tools_present"], r
+          PY
       - name: Validate benchmark corpus
         run: python benchmark/validate_corpus.py | tee corpus-validation.json
       - name: Run sealed holdout benchmark
