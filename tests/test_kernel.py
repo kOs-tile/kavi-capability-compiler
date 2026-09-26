@@ -104,3 +104,19 @@ def test_inventory_lock_detects_added_removed_and_changed():
     assert not d["clean"] and "mcp:demo:search_code" in d["changed"]
     added=copy.deepcopy(SNAP); added["tools"].append({"name":"new_tool","description":"Read new data","inputSchema":{"type":"object"}})
     assert "mcp:demo:new_tool" in diff_inventory_lock(lock,scan_mcp_snapshot(added))["added"]
+
+
+def test_canonical_capability_identity_is_provider_scoped():
+    assert capability_id("MCP","GitHub/GitHub-MCP-Server","Get_File_Contents") == "mcp:github/github-mcp-server:get_file_contents"
+
+
+def test_authorize_call_enforces_operation_and_parameter_bounds():
+    snap={"server":{"name":"browser"},"tools":[{"name":"browser_tabs","description":"List, create, close, or select a browser tab.","inputSchema":{"type":"object"}}]}
+    inv=scan_mcp_snapshot(snap); cid="mcp:browser:browser_tabs"
+    intent={"capabilities":[cid],"ttl_seconds":100,"capability_constraints":{cid:{"operations":["list"],"parameters":{"tab_index":{"min":0,"max":3}}}}}
+    cap=compile_capsule(inv,intent,{"default":"allow"},now=100)
+    assert authorize_call(cap,cid,"list",{"tab_index":2},now=101)["allowed"]
+    assert authorize_call(cap,cid,"close",{"tab_index":2},now=101)["reason"] == "operation_not_granted"
+    assert authorize_call(cap,cid,"list",{"tab_index":9},now=101)["reason"] == "parameter_above_max:tab_index"
+    assert authorize_call(cap,"mcp:browser:other","list",{},now=101)["reason"] == "capability_not_granted"
+    assert authorize_call(cap,cid,"list",{},now=201)["reason"] == "expired"
