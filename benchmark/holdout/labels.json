@@ -1,0 +1,443 @@
+[
+  {
+    "id": "kubernetes-holdout:configuration_contexts_list",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:targets_list",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:configuration_view",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:events_list",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:namespaces_list",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:projects_list",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:nodes_log",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:nodes_stats_summary",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:nodes_top",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:pods_list",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:pods_list_in_namespace",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:pods_get",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:pods_delete",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:pods_top",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:pods_exec",
+    "expected_effect": "execute",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:pods_log",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:pods_run",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:resources_list",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:resources_get",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:resources_create_or_update",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:resources_delete",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:resources_scale",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:helm_install",
+    "expected_effect": "deploy",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:helm_list",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:helm_uninstall",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:kcp_workspaces_list",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:kcp_workspace_describe",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:kiali_get_mesh_status",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:kiali_get_resource_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:kiali_manage_istio_config",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:vm_clone",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:vm_create",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:vm_guest_info",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:vm_lifecycle",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:vm_create_from_template",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:vm_troubleshoot",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:netobserv_list_flows",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:netobserv_get_flow_metrics",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:tekton_pipeline_start",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:tekton_pipelinerun_lifecycle",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:tekton_pipelinerun_logs",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:tekton_task_start",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:tekton_taskrun_restart",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "kubernetes-holdout:tekton_taskrun_logs",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:get_schemas",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:get_tables",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:get_table_schema",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:execute_postgresql",
+    "expected_effect": "execute",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:confirm_destructive_operation",
+    "expected_effect": "execute",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:retrieve_migrations",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:live_dangerously",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:send_management_api_request",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:get_management_api_spec",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:get_management_api_safety_rules",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:get_user_by_id",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:list_users",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:create_user",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:delete_user",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:invite_user_by_email",
+    "expected_effect": "external_message",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:generate_link",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:update_user_by_id",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:delete_factor",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  },
+  {
+    "id": "supabase-holdout:retrieve_logs",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "source-reviewed-pre-eval",
+    "label_version": "m1.holdout.v0.1"
+  }
+]
