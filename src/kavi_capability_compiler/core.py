@@ -34,7 +34,7 @@ def analyze_capability(tool):
         "upgrade","build","replace","touch","expire","move","patch","containerize","join","leave"}
     read_actions={"read","get","list","search","fetch","inspect","status","snapshot","show","find",
         "query","describe","count","scan","preview","discover","check","validate","explain","diff",
-        "log","wait","simulate","type","info","retrieve"}
+        "log","wait","simulate","info","retrieve"}
     external_actions={"send","publish"}
 
     # Name action evidence is preferred over incidental nouns in descriptions.
@@ -60,7 +60,9 @@ def analyze_capability(tool):
     # unless a later capsule constrains the operation.
     mixed_markers=("list, create, close","list/create/close","create, close, or select")
     explicit_mixed=any(m in description.lower() for m in mixed_markers)
-    if effect is None and (explicit_mixed or "manage" in name_tokens or leading=="manage" or ("run" in name_tokens and "query" in name_tokens)):
+    desc_has_read=any(x in read_actions for x in desc_tokens)
+    desc_has_write=any(x in write_actions for x in desc_tokens)
+    if effect is None and (explicit_mixed or (desc_has_read and desc_has_write) or "manage" in name_tokens or leading=="manage" or ("run" in name_tokens and "query" in name_tokens)):
         effect,confidence="mixed",0.85
         evidence.append({"kind":"lexical","source":"action","effect":"mixed","matches":["context-dependent operation"],"confidence":confidence})
 
