@@ -48,3 +48,22 @@ def test_embedded_guard_dispatches_inside_host_application_only():
     except kcc.AuthorityDenied as exc:
         assert exc.decision["reason"]=="capability_not_granted"
     assert len(calls)==before
+
+
+def test_host_can_distinguish_approval_handoff_from_denial():
+    inv=_inventory()
+    ids={x["name"]:x["id"] for x in inv["capabilities"]}
+    cap=kcc.compile_capsule(
+        inv,
+        {"task":"update","capabilities":[ids["update_record"]]},
+        {"default":"approval"},
+        now=100,
+    )
+    guard=kcc.Guard.from_capsule(cap)
+    decision=guard.authorize(ids["update_record"],parameters={"id":"1","value":"x"},now=101)
+    assert decision["reason"]=="approval_required"
+    try:
+        guard.require(ids["update_record"],parameters={"id":"1","value":"x"},now=101)
+        assert False, "expected ApprovalRequired"
+    except kcc.ApprovalRequired as exc:
+        assert exc.decision["reason"]=="approval_required"
