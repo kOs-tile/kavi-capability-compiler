@@ -4,6 +4,8 @@ from . import __version__
 from .core import scan_mcp_snapshot,audit_inventory,compile_capsule,verify_capsule,inventory_lock,diff_inventory_lock,authorize_call
 from .discovery import discover_stdio, discover_streamable_http, discover_config_server
 from .config import sanitize_mcp_config
+from .adapters import adapt_capabilities, SUPPORTED_SOURCE_FORMATS
+from .manifest import scan_manifest
 from .evidence import build_execution_evidence, verify_execution_evidence
 from .live_probe import LiveProbeError, probe_kavi_bridge
 
@@ -27,6 +29,8 @@ def main():
     p=sub.add_parser("discover-http"); p.add_argument("url"); p.add_argument("--server-name"); p.add_argument("-o","--output"); p.add_argument("--lock-output")
     p=sub.add_parser("discover-config"); p.add_argument("input"); p.add_argument("server"); p.add_argument("-o","--output"); p.add_argument("--lock-output")
     p=sub.add_parser("config-summary"); p.add_argument("input"); p.add_argument("-o","--output")
+    p=sub.add_parser("manifest"); p.add_argument("input"); p.add_argument("--format",required=True,choices=SUPPORTED_SOURCE_FORMATS); p.add_argument("--namespace",required=True); p.add_argument("--server"); p.add_argument("-o","--output")
+    p=sub.add_parser("scan-manifest"); p.add_argument("input"); p.add_argument("-o","--output")
     p=sub.add_parser("evidence-bind"); p.add_argument("capsule"); p.add_argument("--execution-id",required=True); p.add_argument("--evidence",required=True); p.add_argument("--capability"); p.add_argument("--operation"); p.add_argument("-o","--output")
     p=sub.add_parser("evidence-verify"); p.add_argument("input")
     p=sub.add_parser("probe-kavi",allow_abbrev=False); p.add_argument("--endpoint",required=True); p.add_argument("--token-env",default="KAVI_DISPATCH_TOKEN"); p.add_argument("--timeout",type=float,default=10.0); p.add_argument("-o","--output")
@@ -55,6 +59,16 @@ def main():
         save(r,a.output)
     elif a.cmd=="config-summary":
         save(sanitize_mcp_config(load(a.input)),a.output)
+    elif a.cmd=="manifest":
+        save(adapt_capabilities(
+            a.format,
+            load(a.input),
+            namespace=a.namespace,
+            source_metadata={"input":Path(a.input).name},
+            server=a.server,
+        ),a.output)
+    elif a.cmd=="scan-manifest":
+        save(scan_manifest(load(a.input)),a.output)
     elif a.cmd=="evidence-bind":
         capsule=load(a.capsule)
         refs=load(a.evidence)
