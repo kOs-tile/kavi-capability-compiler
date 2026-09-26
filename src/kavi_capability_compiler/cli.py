@@ -4,6 +4,7 @@ from . import __version__
 from .core import scan_mcp_snapshot,audit_inventory,compile_capsule,verify_capsule,inventory_lock,diff_inventory_lock,authorize_call
 from .discovery import discover_stdio, discover_streamable_http, discover_config_server
 from .config import sanitize_mcp_config
+from .evidence import build_execution_evidence, verify_execution_evidence
 
 def load(p): return json.loads(Path(p).read_text())
 def save(v,p):
@@ -25,6 +26,8 @@ def main():
     p=sub.add_parser("discover-http"); p.add_argument("url"); p.add_argument("--server-name"); p.add_argument("-o","--output"); p.add_argument("--lock-output")
     p=sub.add_parser("discover-config"); p.add_argument("input"); p.add_argument("server"); p.add_argument("-o","--output"); p.add_argument("--lock-output")
     p=sub.add_parser("config-summary"); p.add_argument("input"); p.add_argument("-o","--output")
+    p=sub.add_parser("evidence-bind"); p.add_argument("capsule"); p.add_argument("--execution-id",required=True); p.add_argument("--evidence",required=True); p.add_argument("--capability"); p.add_argument("--operation"); p.add_argument("-o","--output")
+    p=sub.add_parser("evidence-verify"); p.add_argument("input")
     a=ap.parse_args()
     if a.cmd=="scan": save(scan_mcp_snapshot(load(a.input)),a.output)
     elif a.cmd=="audit": save(audit_inventory(load(a.input)),a.output)
@@ -50,6 +53,20 @@ def main():
         save(r,a.output)
     elif a.cmd=="config-summary":
         save(sanitize_mcp_config(load(a.input)),a.output)
+    elif a.cmd=="evidence-bind":
+        capsule=load(a.capsule)
+        refs=load(a.evidence)
+        if isinstance(refs,dict): refs=refs.get("evidence",[])
+        save(build_execution_evidence(
+            a.execution_id,
+            capsule["capsule_id"],
+            refs,
+            capability_id=a.capability,
+            operation=a.operation,
+        ),a.output)
+    elif a.cmd=="evidence-verify":
+        r=verify_execution_evidence(load(a.input)); save(r,None)
+        raise SystemExit(0 if r["valid"] else 4)
     else:
         params=json.loads(a.parameters) if a.parameters else {}
         r=authorize_call(load(a.capsule),a.capability,a.operation,params); save(r,None)
