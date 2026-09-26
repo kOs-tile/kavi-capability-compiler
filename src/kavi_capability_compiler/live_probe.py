@@ -205,8 +205,18 @@ def probe_kavi_bridge(
         "secret_material_in_artifact": False,
     }
     evidence["report_fingerprint"] = digest(evidence)
+    evidence_reference = {
+        "kind": "runtime_authority_surface",
+        "producer": "kcc-kavi-live-probe",
+        "artifact_id": (
+            f"{server_info.get('name') or 'kavi-dispatch-bridge'}:"
+            f"{observed_at}"
+        ),
+        "artifact_digest": evidence["report_fingerprint"],
+    }
 
     return {
         "inventory": inventory,
         "evidence": evidence,
+        "evidence_ref": evidence_reference,
     }
