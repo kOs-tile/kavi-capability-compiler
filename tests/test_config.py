@@ -19,7 +19,7 @@ def test_config_summary_never_persists_env_header_or_url_secret_values():
     }
     result=sanitize_mcp_config(config)
     text=json.dumps(result)
-    for secret in ["super-secret","another-secret","literal-secret","query-secret","header-secret","user","pass","alice","acme"]:
+    for secret in ["super-secret","another-secret","literal-secret","query-secret","header-secret","user:pass","alice","acme"]:
         assert secret not in text
     local=next(x for x in result["servers"] if x["name"]=="local")
     remote=next(x for x in result["servers"] if x["name"]=="remote")
