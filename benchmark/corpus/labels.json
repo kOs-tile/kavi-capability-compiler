@@ -2903,5 +2903,418 @@
     "dangerous": true,
     "reviewer": "manual-source-review",
     "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:list_users",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:get_user",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:create_user",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:delete_user",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:list_roles",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:create_role",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:create_access_key",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:simulate_principal_policy",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-mysql:run_query",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-mysql:get_table_schema",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-mysql:connect_to_database",
+    "expected_effect": "write",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-mysql:is_database_connected",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-mysql:get_database_connection_info",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-mysql:create_cluster",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-neptune:get_graph_status",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-neptune:get_graph_schema",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-neptune:run_opencypher_query",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-neptune:run_gremlin_query",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iac:validate_cloudformation_template",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iac:check_cloudformation_template_compliance",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iac:troubleshoot_cloudformation_deployment",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iac:get_cloudformation_pre_deploy_validation_instructions",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iac:search_cdk_documentation",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iac:search_cloudformation_documentation",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ecs:build_and_push_image_to_ecr",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ecs:validate_ecs_express_mode_prerequisites",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ecs:delete_app",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ecs:wait_for_service_ready",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ecs:delete_ecs_infrastructure",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ecs:containerize_app",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-elasticache:delete-serverless-cache",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-elasticache:delete-cache-cluster",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-roda:search_datasets",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-roda:list_datasets",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-roda:get_dataset_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-roda:discover_by_organization",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-roda:discover_by_license",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-roda:find_related_datasets",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_get",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_get_many",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_set",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_add",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_replace",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_delete",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_stats",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_flush_all",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-valkey:json_get",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-valkey:json_set",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-valkey:json_arrappend",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-valkey:json_arrpop",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-valkey:json_arrtrim",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:get_resource_schema_information",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:list_resources",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:generate_infrastructure_code",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:explain",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:get_resource",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:update_resource",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:create_resource",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:delete_resource",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
   }
 ]
