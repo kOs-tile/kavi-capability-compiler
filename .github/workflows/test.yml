@@ -61,6 +61,14 @@ jobs:
           JSON
           /tmp/kcc-wheel/bin/kcc manifest /tmp/tools.json --format generic --namespace smoke -o /tmp/manifest.json
           /tmp/kcc-wheel/bin/kcc scan-manifest /tmp/manifest.json -o /tmp/inventory.json
+      - name: Verify optional MCP command fails with install guidance
+        run: |
+          set +e
+          output=$(/tmp/kcc-wheel/bin/kcc discover-stdio python -c 'print(1)' 2>&1)
+          code=$?
+          set -e
+          test "$code" -ne 0
+          echo "$output" | grep -F 'kavi-capability-compiler[mcp]'
 
   pytest:
     runs-on: ubuntu-latest
