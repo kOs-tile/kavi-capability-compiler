@@ -1,11 +1,13 @@
 # KAVI Capability Compiler
 
-> **Status — Active flagship.** M0 and M1 are shipped and CI-backed. M2 is validating live MCP discovery, secret-safe config import, lockfiles, and real authority drift.
+> **Status — Active flagship.** M0, M1, and M2 exit gates are CI-backed and passed. M2 added live MCP discovery, secret-safe config import, deterministic inventory locks, and observed authority-contract drift. The next proving stage is bounded M3 dogfood.
 
 KCC is a framework-agnostic **least-authority compiler for AI agents**.
 
 ```
 discover/scan -> audit -> compile -> execution capsule -> verify/authorize
+                                                   \
+                                                    -> execution evidence
 ```
 
 Given an observed capability surface, explicit task intent, and deterministic policy, KCC compiles a bounded authority artifact for one execution.
@@ -48,6 +50,14 @@ These are benchmark checkpoint measurements, not production security guarantees.
 - bounded discovery timeouts
 - published official MCP compatibility validation
 
+### Execution evidence
+- deterministic `kavi.execution-evidence.v0` envelope
+- binds ORACLE, MNEMOS, SPECTRAFLOW, PHANTOM, and NEPHILIM artifact digests to one execution + capsule
+- evidence envelope integrity verification
+- explicit `authority_granted=false` invariant
+- CLI: `kcc evidence-bind` and `kcc evidence-verify`
+- executable regression proving external evidence cannot expand a compiled KCC grant
+
 ## Security invariant
 
 **Unknown authority never becomes silent authority.**
@@ -81,9 +91,9 @@ kcc discover-config mcp.json my-server \
 
 KCC is not a hosted gateway, IAM replacement, secret manager, or autonomous remediation system. Live discovery does not automatically execute discovered tools. Runtime enforcement is intentionally a small portable primitive.
 
-M2 must finish with reproducible live discovery/drift evidence before Hermes becomes the dogfood target.
+M2's recorded exit gate passes; Hermes is the next bounded dogfood target for M3. The core remains framework-agnostic.
 
-See `docs/ROADMAP.md`, `docs/M2_LIVE_DISCOVERY.md`, and `docs/M2_COMPATIBILITY.md`.
+See `docs/M2_EXIT.md`, `docs/RUNTIME_AUTHORIZATION.md`, and `docs/EXECUTION_EVIDENCE.md`.
 
 ## KAVI ecosystem
 
