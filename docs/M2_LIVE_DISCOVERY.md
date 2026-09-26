@@ -24,10 +24,10 @@ Environment values are passed to the child process only. They are not copied int
 - command basename
 - redacted argument shapes
 - environment variable names
-- URL without userinfo or query values
+- URL origin only (scheme + host + optional port), plus path-segment count and query-key names
 - HTTP header names
 
-Secret values are excluded.
+Secret values are excluded, including URL userinfo, path segment values, query values, environment values, header values, and positional argument values.
 
 ## CLI
 
