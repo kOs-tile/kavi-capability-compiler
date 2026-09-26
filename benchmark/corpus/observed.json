@@ -4573,5 +4573,654 @@
     },
     "annotations": {},
     "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "aws-iam:list_users",
+    "server": "aws-iam",
+    "name": "list_users",
+    "description": "List IAM users",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iam:get_user",
+    "server": "aws-iam",
+    "name": "get_user",
+    "description": "Get an IAM user",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iam:create_user",
+    "server": "aws-iam",
+    "name": "create_user",
+    "description": "Create an IAM user",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iam:delete_user",
+    "server": "aws-iam",
+    "name": "delete_user",
+    "description": "Delete an IAM user",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iam:list_roles",
+    "server": "aws-iam",
+    "name": "list_roles",
+    "description": "List IAM roles",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iam:create_role",
+    "server": "aws-iam",
+    "name": "create_role",
+    "description": "Create an IAM role",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iam:create_access_key",
+    "server": "aws-iam",
+    "name": "create_access_key",
+    "description": "Create an IAM access key",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iam:simulate_principal_policy",
+    "server": "aws-iam",
+    "name": "simulate_principal_policy",
+    "description": "Simulate an IAM principal policy",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-mysql:run_query",
+    "server": "aws-mysql",
+    "name": "run_query",
+    "description": "Run a SQL query against MySQL",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/mysql-mcp-server/awslabs/mysql_mcp_server/server.py"
+  },
+  {
+    "id": "aws-mysql:get_table_schema",
+    "server": "aws-mysql",
+    "name": "get_table_schema",
+    "description": "Fetch table columns and comments from MySQL",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/mysql-mcp-server/awslabs/mysql_mcp_server/server.py"
+  },
+  {
+    "id": "aws-mysql:connect_to_database",
+    "server": "aws-mysql",
+    "name": "connect_to_database",
+    "description": "Connect to a MySQL database",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/mysql-mcp-server/awslabs/mysql_mcp_server/server.py"
+  },
+  {
+    "id": "aws-mysql:is_database_connected",
+    "server": "aws-mysql",
+    "name": "is_database_connected",
+    "description": "Check whether the database is connected",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/mysql-mcp-server/awslabs/mysql_mcp_server/server.py"
+  },
+  {
+    "id": "aws-mysql:get_database_connection_info",
+    "server": "aws-mysql",
+    "name": "get_database_connection_info",
+    "description": "Get database connection information",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/mysql-mcp-server/awslabs/mysql_mcp_server/server.py"
+  },
+  {
+    "id": "aws-mysql:create_cluster",
+    "server": "aws-mysql",
+    "name": "create_cluster",
+    "description": "Create a database cluster",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/mysql-mcp-server/awslabs/mysql_mcp_server/server.py"
+  },
+  {
+    "id": "aws-neptune:get_graph_status",
+    "server": "aws-neptune",
+    "name": "get_graph_status",
+    "description": "Get graph status",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/amazon-neptune-mcp-server/awslabs/amazon_neptune_mcp_server/server.py"
+  },
+  {
+    "id": "aws-neptune:get_graph_schema",
+    "server": "aws-neptune",
+    "name": "get_graph_schema",
+    "description": "Get graph schema",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/amazon-neptune-mcp-server/awslabs/amazon_neptune_mcp_server/server.py"
+  },
+  {
+    "id": "aws-neptune:run_opencypher_query",
+    "server": "aws-neptune",
+    "name": "run_opencypher_query",
+    "description": "Run an openCypher query",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/amazon-neptune-mcp-server/awslabs/amazon_neptune_mcp_server/server.py"
+  },
+  {
+    "id": "aws-neptune:run_gremlin_query",
+    "server": "aws-neptune",
+    "name": "run_gremlin_query",
+    "description": "Run a Gremlin query",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/amazon-neptune-mcp-server/awslabs/amazon_neptune_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iac:validate_cloudformation_template",
+    "server": "aws-iac",
+    "name": "validate_cloudformation_template",
+    "description": "Validate a CloudFormation template",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/aws-iac-mcp-server/awslabs/aws_iac_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iac:check_cloudformation_template_compliance",
+    "server": "aws-iac",
+    "name": "check_cloudformation_template_compliance",
+    "description": "Check CloudFormation template compliance",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/aws-iac-mcp-server/awslabs/aws_iac_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iac:troubleshoot_cloudformation_deployment",
+    "server": "aws-iac",
+    "name": "troubleshoot_cloudformation_deployment",
+    "description": "Troubleshoot a CloudFormation deployment",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/aws-iac-mcp-server/awslabs/aws_iac_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iac:get_cloudformation_pre_deploy_validation_instructions",
+    "server": "aws-iac",
+    "name": "get_cloudformation_pre_deploy_validation_instructions",
+    "description": "Get CloudFormation pre-deploy validation instructions",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/aws-iac-mcp-server/awslabs/aws_iac_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iac:search_cdk_documentation",
+    "server": "aws-iac",
+    "name": "search_cdk_documentation",
+    "description": "Search CDK documentation",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/aws-iac-mcp-server/awslabs/aws_iac_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iac:search_cloudformation_documentation",
+    "server": "aws-iac",
+    "name": "search_cloudformation_documentation",
+    "description": "Search CloudFormation documentation",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/aws-iac-mcp-server/awslabs/aws_iac_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ecs:build_and_push_image_to_ecr",
+    "server": "aws-ecs",
+    "name": "build_and_push_image_to_ecr",
+    "description": "Build and push an image to ECR",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ecs-mcp-server/awslabs/ecs_mcp_server/modules/express.py"
+  },
+  {
+    "id": "aws-ecs:validate_ecs_express_mode_prerequisites",
+    "server": "aws-ecs",
+    "name": "validate_ecs_express_mode_prerequisites",
+    "description": "Validate ECS express mode prerequisites",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ecs-mcp-server/awslabs/ecs_mcp_server/modules/express.py"
+  },
+  {
+    "id": "aws-ecs:delete_app",
+    "server": "aws-ecs",
+    "name": "delete_app",
+    "description": "Delete an ECS application",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ecs-mcp-server/awslabs/ecs_mcp_server/modules/express.py"
+  },
+  {
+    "id": "aws-ecs:wait_for_service_ready",
+    "server": "aws-ecs",
+    "name": "wait_for_service_ready",
+    "description": "Wait for an ECS service to become ready",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ecs-mcp-server/awslabs/ecs_mcp_server/modules/express.py"
+  },
+  {
+    "id": "aws-ecs:delete_ecs_infrastructure",
+    "server": "aws-ecs",
+    "name": "delete_ecs_infrastructure",
+    "description": "Delete ECS infrastructure",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ecs-mcp-server/awslabs/ecs_mcp_server/modules/delete.py"
+  },
+  {
+    "id": "aws-ecs:containerize_app",
+    "server": "aws-ecs",
+    "name": "containerize_app",
+    "description": "Containerize an application",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ecs-mcp-server/awslabs/ecs_mcp_server/modules/containerize.py"
+  },
+  {
+    "id": "aws-elasticache:delete-serverless-cache",
+    "server": "aws-elasticache",
+    "name": "delete-serverless-cache",
+    "description": "Delete an ElastiCache serverless cache",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/elasticache-mcp-server/awslabs/elasticache_mcp_server/tools/serverless/delete.py"
+  },
+  {
+    "id": "aws-elasticache:delete-cache-cluster",
+    "server": "aws-elasticache",
+    "name": "delete-cache-cluster",
+    "description": "Delete an ElastiCache cluster",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/elasticache-mcp-server/awslabs/elasticache_mcp_server/tools/cc/delete.py"
+  },
+  {
+    "id": "aws-roda:search_datasets",
+    "server": "aws-roda",
+    "name": "search_datasets",
+    "description": "Search datasets",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/roda-mcp-server/awslabs/roda_mcp_server/server.py"
+  },
+  {
+    "id": "aws-roda:list_datasets",
+    "server": "aws-roda",
+    "name": "list_datasets",
+    "description": "List datasets",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/roda-mcp-server/awslabs/roda_mcp_server/server.py"
+  },
+  {
+    "id": "aws-roda:get_dataset_details",
+    "server": "aws-roda",
+    "name": "get_dataset_details",
+    "description": "Get dataset details",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/roda-mcp-server/awslabs/roda_mcp_server/server.py"
+  },
+  {
+    "id": "aws-roda:discover_by_organization",
+    "server": "aws-roda",
+    "name": "discover_by_organization",
+    "description": "Discover datasets by organization",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/roda-mcp-server/awslabs/roda_mcp_server/server.py"
+  },
+  {
+    "id": "aws-roda:discover_by_license",
+    "server": "aws-roda",
+    "name": "discover_by_license",
+    "description": "Discover datasets by license",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/roda-mcp-server/awslabs/roda_mcp_server/server.py"
+  },
+  {
+    "id": "aws-roda:find_related_datasets",
+    "server": "aws-roda",
+    "name": "find_related_datasets",
+    "description": "Find related datasets",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/roda-mcp-server/awslabs/roda_mcp_server/server.py"
+  },
+  {
+    "id": "aws-memcached:cache_get",
+    "server": "aws-memcached",
+    "name": "cache_get",
+    "description": "Get a cache value",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-memcached:cache_get_many",
+    "server": "aws-memcached",
+    "name": "cache_get_many",
+    "description": "Get multiple cache values",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-memcached:cache_set",
+    "server": "aws-memcached",
+    "name": "cache_set",
+    "description": "Set a cache value",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-memcached:cache_add",
+    "server": "aws-memcached",
+    "name": "cache_add",
+    "description": "Add a cache value",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-memcached:cache_replace",
+    "server": "aws-memcached",
+    "name": "cache_replace",
+    "description": "Replace a cache value",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-memcached:cache_delete",
+    "server": "aws-memcached",
+    "name": "cache_delete",
+    "description": "Delete a cache value",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-memcached:cache_stats",
+    "server": "aws-memcached",
+    "name": "cache_stats",
+    "description": "Get cache statistics",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-memcached:cache_flush_all",
+    "server": "aws-memcached",
+    "name": "cache_flush_all",
+    "description": "Flush all cache values",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-valkey:json_get",
+    "server": "aws-valkey",
+    "name": "json_get",
+    "description": "Get JSON from Valkey",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/valkey-mcp-server/awslabs/valkey_mcp_server/tools/json.py"
+  },
+  {
+    "id": "aws-valkey:json_set",
+    "server": "aws-valkey",
+    "name": "json_set",
+    "description": "Set JSON in Valkey",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/valkey-mcp-server/awslabs/valkey_mcp_server/tools/json.py"
+  },
+  {
+    "id": "aws-valkey:json_arrappend",
+    "server": "aws-valkey",
+    "name": "json_arrappend",
+    "description": "Append to a JSON array",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/valkey-mcp-server/awslabs/valkey_mcp_server/tools/json.py"
+  },
+  {
+    "id": "aws-valkey:json_arrpop",
+    "server": "aws-valkey",
+    "name": "json_arrpop",
+    "description": "Pop an item from a JSON array",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/valkey-mcp-server/awslabs/valkey_mcp_server/tools/json.py"
+  },
+  {
+    "id": "aws-valkey:json_arrtrim",
+    "server": "aws-valkey",
+    "name": "json_arrtrim",
+    "description": "Trim a JSON array",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/valkey-mcp-server/awslabs/valkey_mcp_server/tools/json.py"
+  },
+  {
+    "id": "aws-ccapi:get_resource_schema_information",
+    "server": "aws-ccapi",
+    "name": "get_resource_schema_information",
+    "description": "Get AWS resource schema information",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ccapi:list_resources",
+    "server": "aws-ccapi",
+    "name": "list_resources",
+    "description": "List AWS resources",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ccapi:generate_infrastructure_code",
+    "server": "aws-ccapi",
+    "name": "generate_infrastructure_code",
+    "description": "Generate infrastructure code",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ccapi:explain",
+    "server": "aws-ccapi",
+    "name": "explain",
+    "description": "Explain AWS resource information",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ccapi:get_resource",
+    "server": "aws-ccapi",
+    "name": "get_resource",
+    "description": "Get an AWS resource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ccapi:update_resource",
+    "server": "aws-ccapi",
+    "name": "update_resource",
+    "description": "Update an AWS resource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ccapi:create_resource",
+    "server": "aws-ccapi",
+    "name": "create_resource",
+    "description": "Create an AWS resource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ccapi:delete_resource",
+    "server": "aws-ccapi",
+    "name": "delete_resource",
+    "description": "Delete an AWS resource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
   }
 ]
