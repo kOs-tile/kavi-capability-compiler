@@ -67,6 +67,7 @@ not the full evidence payloads.
 
 | Producer | Evidence artifact | Digest |
 |---|---|---|
+| KCC live probe | authenticated observed runtime authority surface | `report_fingerprint` |
 | AXIOM | pre-authority capability plan binding snapshot + intent | `plan_fingerprint` |
 | ORACLE | provenance/freshness ledger | `evidence_digest` |
 | MNEMOS | memory admission audit | `admission_fingerprint` |
@@ -118,3 +119,20 @@ kcc evidence-verify execution-evidence.json
 `evidence-verify` exits non-zero when the envelope version, integrity, capsule ID
 shape, or non-authority invariant fails. Producer artifact verification remains a
 separate producer-specific responsibility.
+
+
+### Live runtime authority reference
+
+A successful `kcc probe-kavi` result includes a ready-to-bind reference:
+
+```json
+{
+  "kind": "runtime_authority_surface",
+  "producer": "kcc-kavi-live-probe",
+  "artifact_id": "kavi-dispatch-bridge:<observed_at>",
+  "artifact_digest": "<live probe report_fingerprint>"
+}
+```
+
+The reference contains no bearer material and can be passed directly to
+`evidence-bind` with the rest of the execution evidence set.
