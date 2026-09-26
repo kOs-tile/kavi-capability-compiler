@@ -108,7 +108,7 @@ def test_config_summary_redacts_secret_values_and_url_credentials():
             "env": {"API_KEY": secret},
         },
         "remote": {
-            "url": f"https://user:{secret}@example.com/mcp?token={secret}&mode=fast",
+            "url": f"https://user:{secret}@example.com/mcp/{secret}?token={secret}&mode=fast",
             "headers": {"Authorization": "Bearer " + secret},
         },
     }}
@@ -188,3 +188,13 @@ def test_stdio_discovery_timeout_is_bounded():
     except DiscoveryError as exc:
         assert "stdio discovery failed" in str(exc)
     assert time.monotonic()-started < 3
+
+
+def test_http_failure_does_not_echo_secret_endpoint_values():
+    secret="URL_SECRET_SHOULD_NOT_ECHO"
+    url=f"http://127.0.0.1:1/mcp/{secret}?token={secret}"
+    try:
+        asyncio.run(discover_streamable_http(url,timeout_seconds=0.25))
+        assert False, "expected DiscoveryError"
+    except DiscoveryError as exc:
+        assert secret not in str(exc)
