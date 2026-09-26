@@ -425,5 +425,258 @@
     },
     "annotations": {},
     "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "playwright:browser_tabs",
+    "server": "playwright",
+    "name": "browser_tabs",
+    "description": "List, create, close, or select a browser tab.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_take_screenshot",
+    "server": "playwright",
+    "name": "browser_take_screenshot",
+    "description": "Take a screenshot of the current page.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_console_messages",
+    "server": "playwright",
+    "name": "browser_console_messages",
+    "description": "Returns all console messages",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_network_requests",
+    "server": "playwright",
+    "name": "browser_network_requests",
+    "description": "Returns all network requests since loading the page",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_press_key",
+    "server": "playwright",
+    "name": "browser_press_key",
+    "description": "Press a key on the keyboard",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_select_option",
+    "server": "playwright",
+    "name": "browser_select_option",
+    "description": "Select an option in a dropdown",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_hover",
+    "server": "playwright",
+    "name": "browser_hover",
+    "description": "Hover over element on page",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_drag",
+    "server": "playwright",
+    "name": "browser_drag",
+    "description": "Perform drag and drop between two elements",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_fill_form",
+    "server": "playwright",
+    "name": "browser_fill_form",
+    "description": "Fill multiple form fields",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_handle_dialog",
+    "server": "playwright",
+    "name": "browser_handle_dialog",
+    "description": "Handle a dialog",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_evaluate",
+    "server": "playwright",
+    "name": "browser_evaluate",
+    "description": "Evaluate JavaScript expression on page or element",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_navigate_back",
+    "server": "playwright",
+    "name": "browser_navigate_back",
+    "description": "Go back to the previous page in the history",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_resize",
+    "server": "playwright",
+    "name": "browser_resize",
+    "description": "Resize the browser window",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_wait_for",
+    "server": "playwright",
+    "name": "browser_wait_for",
+    "description": "Wait for text to appear or disappear or a specified time to pass",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_close",
+    "server": "playwright",
+    "name": "browser_close",
+    "description": "Close the page",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_emulate_media",
+    "server": "playwright",
+    "name": "browser_emulate_media",
+    "description": "Emulate CSS media features for the page",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "github:list_commits",
+    "server": "github",
+    "name": "list_commits",
+    "description": "List commits",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_commit",
+    "server": "github",
+    "name": "get_commit",
+    "description": "Get commit details",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:search_code",
+    "server": "github",
+    "name": "search_code",
+    "description": "Fast and precise code search across GitHub repositories",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:search_issues",
+    "server": "github",
+    "name": "search_issues",
+    "description": "Search issues",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:search_pull_requests",
+    "server": "github",
+    "name": "search_pull_requests",
+    "description": "Search pull requests",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:update_issue",
+    "server": "github",
+    "name": "update_issue",
+    "description": "Update an existing issue in a GitHub repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:add_issue_comment",
+    "server": "github",
+    "name": "add_issue_comment",
+    "description": "Add comment to issue or pull request",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
   }
 ]
