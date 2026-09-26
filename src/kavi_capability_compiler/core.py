@@ -8,6 +8,15 @@ def digest(value):
     return hashlib.sha256(canonical(value).encode()).hexdigest()
 
 def classify(tool):
+    # MCP annotations are declared evidence, not proof. Prefer explicit
+    # read-only/destructive declarations over lexical heuristics, while
+    # preserving unknown when the declaration is incomplete.
+    annotations = tool.get("annotations") or {}
+    if annotations.get("readOnlyHint") is True:
+        return "read", 0.95
+    if annotations.get("destructiveHint") is True:
+        return "delete", 0.90
+
     text = " ".join([tool.get("name",""), tool.get("description","")]).lower()
     rules = [
         ("delete", ("delete","remove","destroy","drop")),
@@ -30,10 +39,12 @@ def scan_mcp_snapshot(snapshot):
     for t in tools:
         schema=t.get("inputSchema") or {}
         effect, confidence=classify(t)
-        fp=digest({"name":t.get("name"),"description":t.get("description"),"schema":schema})
+        fp=digest({"name":t.get("name"),"description":t.get("description"),"schema":schema,
+            "annotations":t.get("annotations") or {}})
         caps.append({"id":f"mcp:{server}:{t['name']}","provider":"mcp","server":server,
             "name":t["name"],"description":t.get("description",""),"input_schema":schema,
-            "fingerprint":fp,"effect":effect,"confidence":confidence})
+            "fingerprint":fp,"effect":effect,"confidence":confidence,
+            "annotations":t.get("annotations") or {}})
     inv={"version":"kcc.inventory.v0","capabilities":caps}
     inv["digest"]=digest(inv)
     return inv
