@@ -13,10 +13,20 @@ jobs:
       - run: pytest -q
       - name: Run capability benchmark
         run: python benchmark/run.py | tee benchmark-results.json
+      - name: Run authority reduction benchmark
+        run: python benchmark/authority_reduction.py | tee authority-reduction-results.json
       - name: Enforce zero false-safe seed gate
         run: |
           python - <<'PY'
           import json
           r=json.load(open("benchmark-results.json"))
           assert r["false_safe_count"] == 0, r
+          PY
+      - name: Enforce authority reduction gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("authority-reduction-results.json"))
+          assert r["tasks"] >= 10, r
+          assert r["mean_authority_reduction"] >= 0.90, r
           PY
