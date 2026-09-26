@@ -87,3 +87,27 @@ KCC capsule before accepting the audit chain.
 A memory, market signal, browser extraction, drift alert, or world-state value
 can affect planning or trigger approval, but cannot create a grant absent from
 the KCC capsule.
+
+
+## CLI
+
+Bind producer references to an already-compiled capsule:
+
+```bash
+kcc evidence-bind capsule.json \
+  --execution-id exec-123 \
+  --evidence evidence-refs.json \
+  --capability mcp:browser:browser_tabs \
+  --operation list \
+  -o execution-evidence.json
+```
+
+Verify the envelope itself:
+
+```bash
+kcc evidence-verify execution-evidence.json
+```
+
+`evidence-verify` exits non-zero when the envelope version, integrity, capsule ID
+shape, or non-authority invariant fails. Producer artifact verification remains a
+separate producer-specific responsibility.
