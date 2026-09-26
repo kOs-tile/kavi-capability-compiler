@@ -1074,5 +1074,38 @@
     },
     "annotations": {},
     "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_teams",
+    "server": "github",
+    "name": "get_teams",
+    "description": "Get teams",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_repository_tree",
+    "server": "github",
+    "name": "get_repository_tree",
+    "description": "Get repository tree",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:list_branches",
+    "server": "github",
+    "name": "list_branches",
+    "description": "List branches",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
   }
 ]
