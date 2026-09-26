@@ -1,0 +1,5369 @@
+[
+  {
+    "id": "filesystem:read_text_file",
+    "server": "filesystem",
+    "name": "read_text_file",
+    "description": "Read complete contents of a file as text",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:read_media_file",
+    "server": "filesystem",
+    "name": "read_media_file",
+    "description": "Read a media file",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:read_multiple_files",
+    "server": "filesystem",
+    "name": "read_multiple_files",
+    "description": "Read multiple files simultaneously",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:list_directory",
+    "server": "filesystem",
+    "name": "list_directory",
+    "description": "List directory contents",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:search_files",
+    "server": "filesystem",
+    "name": "search_files",
+    "description": "Search files",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:write_file",
+    "server": "filesystem",
+    "name": "write_file",
+    "description": "Create new file or overwrite existing",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": false,
+      "idempotentHint": true,
+      "destructiveHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:edit_file",
+    "server": "filesystem",
+    "name": "edit_file",
+    "description": "Edit a file",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": false,
+      "idempotentHint": false,
+      "destructiveHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:move_file",
+    "server": "filesystem",
+    "name": "move_file",
+    "description": "Move or rename a file",
+    "inputSchema": {},
+    "annotations": {
+      "readOnlyHint": false,
+      "idempotentHint": false,
+      "destructiveHint": true,
+      "openWorldHint": false
+    },
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "fetch:fetch",
+    "server": "fetch",
+    "name": "fetch",
+    "description": "Fetches a URL from the internet and extracts contents",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/fetch/README.md"
+  },
+  {
+    "id": "playwright:browser_navigate",
+    "server": "playwright",
+    "name": "browser_navigate",
+    "description": "Navigate to a URL",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_snapshot",
+    "server": "playwright",
+    "name": "browser_snapshot",
+    "description": "Capture accessibility snapshot",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_click",
+    "server": "playwright",
+    "name": "browser_click",
+    "description": "Click an element",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_type",
+    "server": "playwright",
+    "name": "browser_type",
+    "description": "Type text into an element",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "github:get_file_contents",
+    "server": "github",
+    "name": "get_file_contents",
+    "description": "Get file contents from a repository",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:issue_read",
+    "server": "github",
+    "name": "issue_read",
+    "description": "Read an issue",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:create_pull_request",
+    "server": "github",
+    "name": "create_pull_request",
+    "description": "Create a pull request",
+    "inputSchema": {},
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "memory:add_observations",
+    "server": "memory",
+    "name": "add_observations",
+    "description": "Add new observations to existing entities in the knowledge graph",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/index.ts"
+  },
+  {
+    "id": "time:get_current_time",
+    "server": "time",
+    "name": "get_current_time",
+    "description": "Get current time in a specific timezone or system timezone.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/time/README.md"
+  },
+  {
+    "id": "git:git_status",
+    "server": "git",
+    "name": "git_status",
+    "description": "Shows the working tree status",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "playwright:browser_run_code_unsafe",
+    "server": "playwright",
+    "name": "browser_run_code_unsafe",
+    "description": "Run a Playwright code snippet. Unsafe: executes arbitrary JavaScript in the Playwright server process and is RCE-equivalent.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_file_upload",
+    "server": "playwright",
+    "name": "browser_file_upload",
+    "description": "Upload one or multiple files",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "github:create_issue",
+    "server": "github",
+    "name": "create_issue",
+    "description": "Create a new issue in a GitHub repository with a title and optional body.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/pkg/github/issues_granular.go"
+  },
+  {
+    "id": "github:delete_file",
+    "server": "github",
+    "name": "delete_file",
+    "description": "Delete a file from a GitHub repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/pkg/github/repositories.go"
+  },
+  {
+    "id": "memory:create_entities",
+    "server": "memory",
+    "name": "create_entities",
+    "description": "Create multiple new entities in the knowledge graph",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "memory:create_relations",
+    "server": "memory",
+    "name": "create_relations",
+    "description": "Create multiple new relations between entities",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "memory:delete_entities",
+    "server": "memory",
+    "name": "delete_entities",
+    "description": "Remove entities and their relations",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "memory:delete_observations",
+    "server": "memory",
+    "name": "delete_observations",
+    "description": "Remove specific observations from entities",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "memory:delete_relations",
+    "server": "memory",
+    "name": "delete_relations",
+    "description": "Remove specific relations from the graph",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "memory:read_graph",
+    "server": "memory",
+    "name": "read_graph",
+    "description": "Read the entire knowledge graph",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "memory:search_nodes",
+    "server": "memory",
+    "name": "search_nodes",
+    "description": "Search for nodes based on query",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "memory:open_nodes",
+    "server": "memory",
+    "name": "open_nodes",
+    "description": "Retrieve specific nodes by name",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/memory/README.md"
+  },
+  {
+    "id": "git:git_diff_unstaged",
+    "server": "git",
+    "name": "git_diff_unstaged",
+    "description": "Shows changes in working directory not yet staged",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_diff_staged",
+    "server": "git",
+    "name": "git_diff_staged",
+    "description": "Shows changes that are staged for commit",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_diff",
+    "server": "git",
+    "name": "git_diff",
+    "description": "Shows changes comparing current state with target",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_commit",
+    "server": "git",
+    "name": "git_commit",
+    "description": "Records changes to the repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_add",
+    "server": "git",
+    "name": "git_add",
+    "description": "Adds file contents to the staging area",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_reset",
+    "server": "git",
+    "name": "git_reset",
+    "description": "Unstages all staged changes",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_log",
+    "server": "git",
+    "name": "git_log",
+    "description": "Shows the commit logs with optional date filtering",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_create_branch",
+    "server": "git",
+    "name": "git_create_branch",
+    "description": "Creates a new branch",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "playwright:browser_tabs",
+    "server": "playwright",
+    "name": "browser_tabs",
+    "description": "List, create, close, or select a browser tab.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_take_screenshot",
+    "server": "playwright",
+    "name": "browser_take_screenshot",
+    "description": "Take a screenshot of the current page.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_console_messages",
+    "server": "playwright",
+    "name": "browser_console_messages",
+    "description": "Returns all console messages",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_network_requests",
+    "server": "playwright",
+    "name": "browser_network_requests",
+    "description": "Returns all network requests since loading the page",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_press_key",
+    "server": "playwright",
+    "name": "browser_press_key",
+    "description": "Press a key on the keyboard",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_select_option",
+    "server": "playwright",
+    "name": "browser_select_option",
+    "description": "Select an option in a dropdown",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_hover",
+    "server": "playwright",
+    "name": "browser_hover",
+    "description": "Hover over element on page",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_drag",
+    "server": "playwright",
+    "name": "browser_drag",
+    "description": "Perform drag and drop between two elements",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_fill_form",
+    "server": "playwright",
+    "name": "browser_fill_form",
+    "description": "Fill multiple form fields",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_handle_dialog",
+    "server": "playwright",
+    "name": "browser_handle_dialog",
+    "description": "Handle a dialog",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_evaluate",
+    "server": "playwright",
+    "name": "browser_evaluate",
+    "description": "Evaluate JavaScript expression on page or element",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_navigate_back",
+    "server": "playwright",
+    "name": "browser_navigate_back",
+    "description": "Go back to the previous page in the history",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_resize",
+    "server": "playwright",
+    "name": "browser_resize",
+    "description": "Resize the browser window",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_wait_for",
+    "server": "playwright",
+    "name": "browser_wait_for",
+    "description": "Wait for text to appear or disappear or a specified time to pass",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_close",
+    "server": "playwright",
+    "name": "browser_close",
+    "description": "Close the page",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_emulate_media",
+    "server": "playwright",
+    "name": "browser_emulate_media",
+    "description": "Emulate CSS media features for the page",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "github:list_commits",
+    "server": "github",
+    "name": "list_commits",
+    "description": "List commits",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_commit",
+    "server": "github",
+    "name": "get_commit",
+    "description": "Get commit details",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:search_code",
+    "server": "github",
+    "name": "search_code",
+    "description": "Fast and precise code search across GitHub repositories",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:search_issues",
+    "server": "github",
+    "name": "search_issues",
+    "description": "Search issues",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:search_pull_requests",
+    "server": "github",
+    "name": "search_pull_requests",
+    "description": "Search pull requests",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:update_issue",
+    "server": "github",
+    "name": "update_issue",
+    "description": "Update an existing issue in a GitHub repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:add_issue_comment",
+    "server": "github",
+    "name": "add_issue_comment",
+    "description": "Add comment to issue or pull request",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:fork_repository",
+    "server": "github",
+    "name": "fork_repository",
+    "description": "Fork repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:create_or_update_file",
+    "server": "github",
+    "name": "create_or_update_file",
+    "description": "Create or update a single file in a GitHub repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:push_files",
+    "server": "github",
+    "name": "push_files",
+    "description": "Push multiple files to a GitHub repository in a single commit",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:create_branch",
+    "server": "github",
+    "name": "create_branch",
+    "description": "Create a new branch in a GitHub repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:merge_pull_request",
+    "server": "github",
+    "name": "merge_pull_request",
+    "description": "Merge pull request",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:pull_request_read",
+    "server": "github",
+    "name": "pull_request_read",
+    "description": "Get details for a single pull request",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:pull_request_review_write",
+    "server": "github",
+    "name": "pull_request_review_write",
+    "description": "Write operations on pull request reviews",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:request_copilot_review",
+    "server": "github",
+    "name": "request_copilot_review",
+    "description": "Request Copilot review",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:search_repositories",
+    "server": "github",
+    "name": "search_repositories",
+    "description": "Search repositories",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:search_users",
+    "server": "github",
+    "name": "search_users",
+    "description": "Search users",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_issue_comments",
+    "server": "github",
+    "name": "get_issue_comments",
+    "description": "Get comments for a GitHub issue",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:list_issues",
+    "server": "github",
+    "name": "list_issues",
+    "description": "List issues",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:create_repository",
+    "server": "github",
+    "name": "create_repository",
+    "description": "Create repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "filesystem:create_directory",
+    "server": "filesystem",
+    "name": "create_directory",
+    "description": "Create new directory or ensure it exists",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:list_directory_with_sizes",
+    "server": "filesystem",
+    "name": "list_directory_with_sizes",
+    "description": "List directory contents including file sizes",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:directory_tree",
+    "server": "filesystem",
+    "name": "directory_tree",
+    "description": "Get recursive JSON tree structure of directory contents",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:get_file_info",
+    "server": "filesystem",
+    "name": "get_file_info",
+    "description": "Get detailed file/directory metadata",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:list_allowed_directories",
+    "server": "filesystem",
+    "name": "list_allowed_directories",
+    "description": "List all directories the server is allowed to access",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:read_file",
+    "server": "filesystem",
+    "name": "read_file",
+    "description": "Read complete contents of a file as text",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "playwright:browser_find",
+    "server": "playwright",
+    "name": "browser_find",
+    "description": "Search the accessibility snapshot of the current page",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_drop",
+    "server": "playwright",
+    "name": "browser_drop",
+    "description": "Drop files or MIME-typed data onto an element",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "playwright:browser_network_request",
+    "server": "playwright",
+    "name": "browser_network_request",
+    "description": "Show network request details",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/microsoft/playwright-mcp/blob/e87bb897e15a6f2af402afb0f10b45eced9e1f9b/README.md"
+  },
+  {
+    "id": "git:git_show",
+    "server": "git",
+    "name": "git_show",
+    "description": "Shows the contents of a commit",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_checkout",
+    "server": "git",
+    "name": "git_checkout",
+    "description": "Switches branches",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "git:git_branch",
+    "server": "git",
+    "name": "git_branch",
+    "description": "List Git branches",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/git/README.md"
+  },
+  {
+    "id": "time:convert_time",
+    "server": "time",
+    "name": "convert_time",
+    "description": "Convert time between timezones",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/time/README.md"
+  },
+  {
+    "id": "sequentialthinking:sequentialthinking",
+    "server": "sequentialthinking",
+    "name": "sequentialthinking",
+    "description": "A detailed tool for dynamic and reflective problem-solving through thoughts",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/sequentialthinking/README.md"
+  },
+  {
+    "id": "github:get_label",
+    "server": "github",
+    "name": "get_label",
+    "description": "Get a specific label from a repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:list_label",
+    "server": "github",
+    "name": "list_label",
+    "description": "List labels from a repository",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_release_by_tag",
+    "server": "github",
+    "name": "get_release_by_tag",
+    "description": "Get a release by tag name",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:list_releases",
+    "server": "github",
+    "name": "list_releases",
+    "description": "List releases",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_tag",
+    "server": "github",
+    "name": "get_tag",
+    "description": "Get tag details",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:list_tags",
+    "server": "github",
+    "name": "list_tags",
+    "description": "List tags",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_latest_release",
+    "server": "github",
+    "name": "get_latest_release",
+    "description": "Get latest release",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_team_members",
+    "server": "github",
+    "name": "get_team_members",
+    "description": "Get team members",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_me",
+    "server": "github",
+    "name": "get_me",
+    "description": "Get my user profile",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_teams",
+    "server": "github",
+    "name": "get_teams",
+    "description": "Get teams",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:get_repository_tree",
+    "server": "github",
+    "name": "get_repository_tree",
+    "description": "Get repository tree",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "github:list_branches",
+    "server": "github",
+    "name": "list_branches",
+    "description": "List branches",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "notion-openapi:get-user",
+    "server": "notion-openapi",
+    "name": "get-user",
+    "description": "Retrieve a user",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:get-users",
+    "server": "notion-openapi",
+    "name": "get-users",
+    "description": "List all users",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:get-self",
+    "server": "notion-openapi",
+    "name": "get-self",
+    "description": "Retrieve your token's bot user",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:post-search",
+    "server": "notion-openapi",
+    "name": "post-search",
+    "description": "Search by title",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:get-block-children",
+    "server": "notion-openapi",
+    "name": "get-block-children",
+    "description": "Retrieve block children",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:patch-block-children",
+    "server": "notion-openapi",
+    "name": "patch-block-children",
+    "description": "Append block children",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:retrieve-a-block",
+    "server": "notion-openapi",
+    "name": "retrieve-a-block",
+    "description": "Retrieve a block",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:update-a-block",
+    "server": "notion-openapi",
+    "name": "update-a-block",
+    "description": "Update a block",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:delete-a-block",
+    "server": "notion-openapi",
+    "name": "delete-a-block",
+    "description": "Delete a block",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:retrieve-a-page",
+    "server": "notion-openapi",
+    "name": "retrieve-a-page",
+    "description": "Retrieve a page",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:patch-page",
+    "server": "notion-openapi",
+    "name": "patch-page",
+    "description": "Update page properties",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:post-page",
+    "server": "notion-openapi",
+    "name": "post-page",
+    "description": "Create a page",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:retrieve-a-page-property",
+    "server": "notion-openapi",
+    "name": "retrieve-a-page-property",
+    "description": "Retrieve a page property item",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:retrieve-a-comment",
+    "server": "notion-openapi",
+    "name": "retrieve-a-comment",
+    "description": "Retrieve comments",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:create-a-comment",
+    "server": "notion-openapi",
+    "name": "create-a-comment",
+    "description": "Create a comment in a page or discussion thread",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:query-data-source",
+    "server": "notion-openapi",
+    "name": "query-data-source",
+    "description": "Query a data source using filters and sorts",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:retrieve-a-data-source",
+    "server": "notion-openapi",
+    "name": "retrieve-a-data-source",
+    "description": "Retrieve metadata and schema for a data source",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:update-a-data-source",
+    "server": "notion-openapi",
+    "name": "update-a-data-source",
+    "description": "Update properties of a data source",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:create-a-data-source",
+    "server": "notion-openapi",
+    "name": "create-a-data-source",
+    "description": "Create a new data source",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:list-data-source-templates",
+    "server": "notion-openapi",
+    "name": "list-data-source-templates",
+    "description": "List templates in a data source",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:retrieve-a-database",
+    "server": "notion-openapi",
+    "name": "retrieve-a-database",
+    "description": "Retrieve a database",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:move-page",
+    "server": "notion-openapi",
+    "name": "move-page",
+    "description": "Move a page to a different parent location",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:retrieve-page-markdown",
+    "server": "notion-openapi",
+    "name": "retrieve-page-markdown",
+    "description": "Retrieve the full content of a Notion page as Markdown",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "notion-openapi:update-page-markdown",
+    "server": "notion-openapi",
+    "name": "update-page-markdown",
+    "description": "Update the content of a Notion page using Markdown",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/makenotion/notion-mcp-server/blob/730ae781ba28beeaf0865025a3f2ed4c25ea2387/scripts/notion-openapi.json"
+  },
+  {
+    "id": "slack:conversations_history",
+    "server": "slack",
+    "name": "conversations_history",
+    "description": "Get messages from a channel or DM",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:conversations_replies",
+    "server": "slack",
+    "name": "conversations_replies",
+    "description": "Get a thread of messages posted to a conversation",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:conversations_add_message",
+    "server": "slack",
+    "name": "conversations_add_message",
+    "description": "Add a message to a channel, private channel, or direct message",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:conversations_search_messages",
+    "server": "slack",
+    "name": "conversations_search_messages",
+    "description": "Search messages in channels, threads, and DMs using filters",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:channels_list",
+    "server": "slack",
+    "name": "channels_list",
+    "description": "Get list of channels",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:reactions_add",
+    "server": "slack",
+    "name": "reactions_add",
+    "description": "Add an emoji reaction to a message",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:reactions_remove",
+    "server": "slack",
+    "name": "reactions_remove",
+    "description": "Remove an emoji reaction from a message",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:users_search",
+    "server": "slack",
+    "name": "users_search",
+    "description": "Search for users by name, email, or display name",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:usergroups_list",
+    "server": "slack",
+    "name": "usergroups_list",
+    "description": "List all user groups in the workspace",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:usergroups_create",
+    "server": "slack",
+    "name": "usergroups_create",
+    "description": "Create a new user group in the workspace",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:usergroups_update",
+    "server": "slack",
+    "name": "usergroups_update",
+    "description": "Update an existing user group's metadata",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:usergroups_users_update",
+    "server": "slack",
+    "name": "usergroups_users_update",
+    "description": "Replace the members of a user group",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:usergroups_me",
+    "server": "slack",
+    "name": "usergroups_me",
+    "description": "List, join, or leave user groups",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:conversations_unreads",
+    "server": "slack",
+    "name": "conversations_unreads",
+    "description": "Get unread messages across channels",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:conversations_mark",
+    "server": "slack",
+    "name": "conversations_mark",
+    "description": "Mark a channel or DM as read",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:saved_list",
+    "server": "slack",
+    "name": "saved_list",
+    "description": "List saved items from Save for Later",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:saved_update",
+    "server": "slack",
+    "name": "saved_update",
+    "description": "Update a saved item or reminder",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "slack:saved_clear_completed",
+    "server": "slack",
+    "name": "saved_clear_completed",
+    "description": "Clear all completed saved items",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/korotovsky/slack-mcp-server/blob/b88c0de3f706f4f07337c9eda7133c736d1c9524/README.md"
+  },
+  {
+    "id": "cloudflare-blog:search_posts",
+    "server": "cloudflare-blog",
+    "name": "search_posts",
+    "description": "Search Cloudflare Blog posts",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "source": "https://github.com/cloudflare/mcp-server-cloudflare/blob/1d7a16b25db74ed44539cd5079e2db46b42f08db/apps/cloudflare-blog/src/tools/blog.tools.ts"
+  },
+  {
+    "id": "cloudflare-blog:list_posts",
+    "server": "cloudflare-blog",
+    "name": "list_posts",
+    "description": "List Cloudflare Blog posts in reverse chronological order",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "source": "https://github.com/cloudflare/mcp-server-cloudflare/blob/1d7a16b25db74ed44539cd5079e2db46b42f08db/apps/cloudflare-blog/src/tools/blog.tools.ts"
+  },
+  {
+    "id": "cloudflare-blog:get_post",
+    "server": "cloudflare-blog",
+    "name": "get_post",
+    "description": "Get a single Cloudflare Blog post by slug",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "source": "https://github.com/cloudflare/mcp-server-cloudflare/blob/1d7a16b25db74ed44539cd5079e2db46b42f08db/apps/cloudflare-blog/src/tools/blog.tools.ts"
+  },
+  {
+    "id": "cloudflare-blog:list_tags",
+    "server": "cloudflare-blog",
+    "name": "list_tags",
+    "description": "List all tags used on the Cloudflare Blog",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "source": "https://github.com/cloudflare/mcp-server-cloudflare/blob/1d7a16b25db74ed44539cd5079e2db46b42f08db/apps/cloudflare-blog/src/tools/blog.tools.ts"
+  },
+  {
+    "id": "cloudflare-stack:list_libraries",
+    "server": "cloudflare-stack",
+    "name": "list_libraries",
+    "description": "List developer-stack documentation libraries",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "source": "https://github.com/cloudflare/mcp-server-cloudflare/blob/1d7a16b25db74ed44539cd5079e2db46b42f08db/apps/stack-mcp/src/tools/stack.tools.ts"
+  },
+  {
+    "id": "cloudflare-stack:search_dev_stack",
+    "server": "cloudflare-stack",
+    "name": "search_dev_stack",
+    "description": "Search current documentation for developer tools",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "source": "https://github.com/cloudflare/mcp-server-cloudflare/blob/1d7a16b25db74ed44539cd5079e2db46b42f08db/apps/stack-mcp/src/tools/stack.tools.ts"
+  },
+  {
+    "id": "dbhub:execute_sql",
+    "server": "dbhub",
+    "name": "execute_sql",
+    "description": "Execute SQL queries with transaction support and safety controls",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/bytebase/dbhub/blob/7b9c63b0376b5d9fd998674c025e833d8ba07d0b/README.md"
+  },
+  {
+    "id": "dbhub:search_objects",
+    "server": "dbhub",
+    "name": "search_objects",
+    "description": "Search and explore database schemas, tables, columns, indexes, and procedures",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/bytebase/dbhub/blob/7b9c63b0376b5d9fd998674c025e833d8ba07d0b/README.md"
+  },
+  {
+    "id": "dbhub:explain_sql",
+    "server": "dbhub",
+    "name": "explain_sql",
+    "description": "Explain SQL execution without running the statement",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/bytebase/dbhub/blob/7b9c63b0376b5d9fd998674c025e833d8ba07d0b/README.md"
+  },
+  {
+    "id": "dbhub:health_check",
+    "server": "dbhub",
+    "name": "health_check",
+    "description": "Check database connectivity and server health",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/bytebase/dbhub/blob/7b9c63b0376b5d9fd998674c025e833d8ba07d0b/README.md"
+  },
+  {
+    "id": "redis:set",
+    "server": "redis",
+    "name": "set",
+    "description": "Set a Redis string value with an optional expiration time",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/string.py"
+  },
+  {
+    "id": "redis:get",
+    "server": "redis",
+    "name": "get",
+    "description": "Get a Redis string value",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/string.py"
+  },
+  {
+    "id": "redis:hset",
+    "server": "redis",
+    "name": "hset",
+    "description": "Set a field in a hash stored at key",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/hash.py"
+  },
+  {
+    "id": "redis:hget",
+    "server": "redis",
+    "name": "hget",
+    "description": "Get the value of a field in a Redis hash",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/hash.py"
+  },
+  {
+    "id": "redis:hdel",
+    "server": "redis",
+    "name": "hdel",
+    "description": "Delete a field from a Redis hash",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/hash.py"
+  },
+  {
+    "id": "redis:hgetall",
+    "server": "redis",
+    "name": "hgetall",
+    "description": "Get all fields and values from a Redis hash",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/hash.py"
+  },
+  {
+    "id": "redis:hexists",
+    "server": "redis",
+    "name": "hexists",
+    "description": "Check if a field exists in a Redis hash",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/hash.py"
+  },
+  {
+    "id": "redis:set_vector_in_hash",
+    "server": "redis",
+    "name": "set_vector_in_hash",
+    "description": "Store a vector as a field in a Redis hash",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/hash.py"
+  },
+  {
+    "id": "redis:get_vector_from_hash",
+    "server": "redis",
+    "name": "get_vector_from_hash",
+    "description": "Retrieve a vector from a Redis hash",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/hash.py"
+  },
+  {
+    "id": "redis:lpush",
+    "server": "redis",
+    "name": "lpush",
+    "description": "Push a value onto the left of a Redis list",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/list.py"
+  },
+  {
+    "id": "redis:rpush",
+    "server": "redis",
+    "name": "rpush",
+    "description": "Push a value onto the right of a Redis list",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/list.py"
+  },
+  {
+    "id": "redis:lpop",
+    "server": "redis",
+    "name": "lpop",
+    "description": "Remove and return the first element from a Redis list",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/list.py"
+  },
+  {
+    "id": "redis:rpop",
+    "server": "redis",
+    "name": "rpop",
+    "description": "Remove and return the last element from a Redis list",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/list.py"
+  },
+  {
+    "id": "redis:lrange",
+    "server": "redis",
+    "name": "lrange",
+    "description": "Get elements from a Redis list within a range",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/list.py"
+  },
+  {
+    "id": "redis:llen",
+    "server": "redis",
+    "name": "llen",
+    "description": "Get the length of a Redis list",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/list.py"
+  },
+  {
+    "id": "redis:lrem",
+    "server": "redis",
+    "name": "lrem",
+    "description": "Remove elements from a Redis list",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/list.py"
+  },
+  {
+    "id": "redis:sadd",
+    "server": "redis",
+    "name": "sadd",
+    "description": "Add a value to a Redis set",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/set.py"
+  },
+  {
+    "id": "redis:srem",
+    "server": "redis",
+    "name": "srem",
+    "description": "Remove a value from a Redis set",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/set.py"
+  },
+  {
+    "id": "redis:smembers",
+    "server": "redis",
+    "name": "smembers",
+    "description": "Get all members of a Redis set",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/set.py"
+  },
+  {
+    "id": "redis:json_set",
+    "server": "redis",
+    "name": "json_set",
+    "description": "Set a JSON value in Redis at a path",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/json.py"
+  },
+  {
+    "id": "redis:json_get",
+    "server": "redis",
+    "name": "json_get",
+    "description": "Retrieve a JSON value from Redis at a path",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/json.py"
+  },
+  {
+    "id": "redis:json_del",
+    "server": "redis",
+    "name": "json_del",
+    "description": "Delete a JSON value from Redis at a path",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/json.py"
+  },
+  {
+    "id": "redis:delete",
+    "server": "redis",
+    "name": "delete",
+    "description": "Delete a Redis key",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/misc.py"
+  },
+  {
+    "id": "redis:type",
+    "server": "redis",
+    "name": "type",
+    "description": "Return the type of the value stored at a key",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/misc.py"
+  },
+  {
+    "id": "redis:expire",
+    "server": "redis",
+    "name": "expire",
+    "description": "Set an expiration time for a Redis key",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/misc.py"
+  },
+  {
+    "id": "redis:rename",
+    "server": "redis",
+    "name": "rename",
+    "description": "Rename a Redis key",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/misc.py"
+  },
+  {
+    "id": "redis:scan_keys",
+    "server": "redis",
+    "name": "scan_keys",
+    "description": "Scan keys in the Redis database",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/misc.py"
+  },
+  {
+    "id": "redis:scan_all_keys",
+    "server": "redis",
+    "name": "scan_all_keys",
+    "description": "Scan and return all keys matching a pattern",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/misc.py"
+  },
+  {
+    "id": "redis:search_redis_documents",
+    "server": "redis",
+    "name": "search_redis_documents",
+    "description": "Search Redis documentation and knowledge base",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/misc.py"
+  },
+  {
+    "id": "redis:xadd",
+    "server": "redis",
+    "name": "xadd",
+    "description": "Add an entry to a Redis stream",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/stream.py"
+  },
+  {
+    "id": "redis:xrange",
+    "server": "redis",
+    "name": "xrange",
+    "description": "Read entries from a Redis stream",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/stream.py"
+  },
+  {
+    "id": "redis:xdel",
+    "server": "redis",
+    "name": "xdel",
+    "description": "Delete an entry from a Redis stream",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/stream.py"
+  },
+  {
+    "id": "redis:xgroup_create",
+    "server": "redis",
+    "name": "xgroup_create",
+    "description": "Create a consumer group for a Redis stream",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/stream.py"
+  },
+  {
+    "id": "redis:xgroup_destroy",
+    "server": "redis",
+    "name": "xgroup_destroy",
+    "description": "Destroy a consumer group for a Redis stream",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/stream.py"
+  },
+  {
+    "id": "redis:xreadgroup",
+    "server": "redis",
+    "name": "xreadgroup",
+    "description": "Read entries using a Redis consumer group",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/stream.py"
+  },
+  {
+    "id": "redis:xack",
+    "server": "redis",
+    "name": "xack",
+    "description": "Acknowledge processed stream entries",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/stream.py"
+  },
+  {
+    "id": "redis:publish",
+    "server": "redis",
+    "name": "publish",
+    "description": "Publish a message to a Redis channel",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/pub_sub.py"
+  },
+  {
+    "id": "redis:subscribe",
+    "server": "redis",
+    "name": "subscribe",
+    "description": "Subscribe to a Redis channel",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/pub_sub.py"
+  },
+  {
+    "id": "redis:psubscribe",
+    "server": "redis",
+    "name": "psubscribe",
+    "description": "Subscribe to Redis channels using a pattern",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/pub_sub.py"
+  },
+  {
+    "id": "redis:read_messages",
+    "server": "redis",
+    "name": "read_messages",
+    "description": "Read pending pub/sub messages",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/pub_sub.py"
+  },
+  {
+    "id": "redis:unsubscribe",
+    "server": "redis",
+    "name": "unsubscribe",
+    "description": "Unsubscribe and close a pub/sub subscription",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/pub_sub.py"
+  },
+  {
+    "id": "redis:zadd",
+    "server": "redis",
+    "name": "zadd",
+    "description": "Add a member to a Redis sorted set",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/sorted_set.py"
+  },
+  {
+    "id": "redis:zrange",
+    "server": "redis",
+    "name": "zrange",
+    "description": "Retrieve a range of members from a Redis sorted set",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/sorted_set.py"
+  },
+  {
+    "id": "redis:zrem",
+    "server": "redis",
+    "name": "zrem",
+    "description": "Remove a member from a Redis sorted set",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/sorted_set.py"
+  },
+  {
+    "id": "redis:dbsize",
+    "server": "redis",
+    "name": "dbsize",
+    "description": "Get the number of keys stored in the Redis database",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/server_management.py"
+  },
+  {
+    "id": "redis:info",
+    "server": "redis",
+    "name": "info",
+    "description": "Get Redis server information and statistics",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/server_management.py"
+  },
+  {
+    "id": "redis:client_list",
+    "server": "redis",
+    "name": "client_list",
+    "description": "Get a list of connected Redis clients",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/redis/mcp-redis/blob/813ba95dbbdd670445f331049333b40294de64ef/src/tools/server_management.py"
+  },
+  {
+    "id": "mongodb:aggregate",
+    "server": "mongodb",
+    "name": "aggregate",
+    "description": "Run an aggregation against a MongoDB collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:aggregate-db",
+    "server": "mongodb",
+    "name": "aggregate-db",
+    "description": "Run an aggregation against a MongoDB database",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:collection-indexes",
+    "server": "mongodb",
+    "name": "collection-indexes",
+    "description": "Describe indexes for a collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:collection-schema",
+    "server": "mongodb",
+    "name": "collection-schema",
+    "description": "Describe schema for a collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:collection-storage-size",
+    "server": "mongodb",
+    "name": "collection-storage-size",
+    "description": "Get the size of a collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:connect",
+    "server": "mongodb",
+    "name": "connect",
+    "description": "Connect to a MongoDB instance",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:count",
+    "server": "mongodb",
+    "name": "count",
+    "description": "Get the number of documents in a collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:create-collection",
+    "server": "mongodb",
+    "name": "create-collection",
+    "description": "Create a new collection in a database",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:create-index",
+    "server": "mongodb",
+    "name": "create-index",
+    "description": "Create an index for a collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:db-stats",
+    "server": "mongodb",
+    "name": "db-stats",
+    "description": "Return statistics for a database",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:delete-many",
+    "server": "mongodb",
+    "name": "delete-many",
+    "description": "Remove documents that match a filter",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:disconnect",
+    "server": "mongodb",
+    "name": "disconnect",
+    "description": "Close a MongoDB connection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:drop-collection",
+    "server": "mongodb",
+    "name": "drop-collection",
+    "description": "Remove a collection or view and its indexes",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:drop-database",
+    "server": "mongodb",
+    "name": "drop-database",
+    "description": "Remove a database and associated data",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:drop-index",
+    "server": "mongodb",
+    "name": "drop-index",
+    "description": "Drop an index",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:explain",
+    "server": "mongodb",
+    "name": "explain",
+    "description": "Return query execution-plan statistics",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:export",
+    "server": "mongodb",
+    "name": "export",
+    "description": "Export query or aggregation results",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:find",
+    "server": "mongodb",
+    "name": "find",
+    "description": "Run a find query against a collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:insert-many",
+    "server": "mongodb",
+    "name": "insert-many",
+    "description": "Insert documents into a MongoDB collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:list-collections",
+    "server": "mongodb",
+    "name": "list-collections",
+    "description": "List collections for a database",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:list-connections",
+    "server": "mongodb",
+    "name": "list-connections",
+    "description": "List active MongoDB connections",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:list-databases",
+    "server": "mongodb",
+    "name": "list-databases",
+    "description": "List databases",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:mongodb-logs",
+    "server": "mongodb",
+    "name": "mongodb-logs",
+    "description": "Return recent mongod events",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:rename-collection",
+    "server": "mongodb",
+    "name": "rename-collection",
+    "description": "Rename a collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:update-many",
+    "server": "mongodb",
+    "name": "update-many",
+    "description": "Update documents matching a filter",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-connect-cluster",
+    "server": "mongodb",
+    "name": "atlas-connect-cluster",
+    "description": "Connect to a MongoDB Atlas cluster",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-create-access-list",
+    "server": "mongodb",
+    "name": "atlas-create-access-list",
+    "description": "Allow IP/CIDR ranges to access Atlas clusters",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-create-cluster",
+    "server": "mongodb",
+    "name": "atlas-create-cluster",
+    "description": "Create a MongoDB Atlas cluster",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-create-db-user",
+    "server": "mongodb",
+    "name": "atlas-create-db-user",
+    "description": "Create an Atlas database user",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-create-free-cluster",
+    "server": "mongodb",
+    "name": "atlas-create-free-cluster",
+    "description": "Create a free Atlas cluster",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-create-project",
+    "server": "mongodb",
+    "name": "atlas-create-project",
+    "description": "Create an Atlas project",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-get-performance-advisor",
+    "server": "mongodb",
+    "name": "atlas-get-performance-advisor",
+    "description": "Get Atlas performance advisor recommendations",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-get-regions",
+    "server": "mongodb",
+    "name": "atlas-get-regions",
+    "description": "List supported Atlas regions",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-inspect-access-list",
+    "server": "mongodb",
+    "name": "atlas-inspect-access-list",
+    "description": "Inspect Atlas access-list entries",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-inspect-cluster",
+    "server": "mongodb",
+    "name": "atlas-inspect-cluster",
+    "description": "Inspect Atlas cluster metadata",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-list-alerts",
+    "server": "mongodb",
+    "name": "atlas-list-alerts",
+    "description": "List Atlas project alerts",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-list-clusters",
+    "server": "mongodb",
+    "name": "atlas-list-clusters",
+    "description": "List Atlas clusters",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-list-db-users",
+    "server": "mongodb",
+    "name": "atlas-list-db-users",
+    "description": "List Atlas database users",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-list-orgs",
+    "server": "mongodb",
+    "name": "atlas-list-orgs",
+    "description": "List Atlas organizations",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-list-projects",
+    "server": "mongodb",
+    "name": "atlas-list-projects",
+    "description": "List Atlas projects",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-load-sample-dataset",
+    "server": "mongodb",
+    "name": "atlas-load-sample-dataset",
+    "description": "Load a sample dataset into an Atlas cluster",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-pause-resume-cluster",
+    "server": "mongodb",
+    "name": "atlas-pause-resume-cluster",
+    "description": "Pause or resume a dedicated Atlas cluster",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-streams-build",
+    "server": "mongodb",
+    "name": "atlas-streams-build",
+    "description": "Create Atlas Stream Processing resources",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-streams-discover",
+    "server": "mongodb",
+    "name": "atlas-streams-discover",
+    "description": "Discover and inspect Atlas Stream Processing resources",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-streams-manage",
+    "server": "mongodb",
+    "name": "atlas-streams-manage",
+    "description": "Manage Atlas Stream Processing resources",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-streams-teardown",
+    "server": "mongodb",
+    "name": "atlas-streams-teardown",
+    "description": "Delete Atlas Stream Processing resources",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-upgrade-cluster",
+    "server": "mongodb",
+    "name": "atlas-upgrade-cluster",
+    "description": "Upgrade or scale an Atlas cluster",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-local-connect-deployment",
+    "server": "mongodb",
+    "name": "atlas-local-connect-deployment",
+    "description": "Connect to an Atlas Local deployment",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-local-create-deployment",
+    "server": "mongodb",
+    "name": "atlas-local-create-deployment",
+    "description": "Create an Atlas Local deployment",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-local-delete-deployment",
+    "server": "mongodb",
+    "name": "atlas-local-delete-deployment",
+    "description": "Delete an Atlas Local deployment",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:atlas-local-list-deployments",
+    "server": "mongodb",
+    "name": "atlas-local-list-deployments",
+    "description": "List Atlas Local deployments",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:list-knowledge-sources",
+    "server": "mongodb",
+    "name": "list-knowledge-sources",
+    "description": "List MongoDB Assistant knowledge sources",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "mongodb:search-knowledge",
+    "server": "mongodb",
+    "name": "search-knowledge",
+    "description": "Search MongoDB Assistant knowledge",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server/blob/2895f6aa13f71c91de409951c9dd68db4f5d8c0c/README.md"
+  },
+  {
+    "id": "grafana:list_teams",
+    "server": "grafana",
+    "name": "list_teams",
+    "description": "List all teams",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_users_by_org",
+    "server": "grafana",
+    "name": "list_users_by_org",
+    "description": "List all users in an organization",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_all_roles",
+    "server": "grafana",
+    "name": "list_all_roles",
+    "description": "List all Grafana roles",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_role_details",
+    "server": "grafana",
+    "name": "get_role_details",
+    "description": "Get details for a Grafana role",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_role_assignments",
+    "server": "grafana",
+    "name": "get_role_assignments",
+    "description": "List assignments for a role",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_user_roles",
+    "server": "grafana",
+    "name": "list_user_roles",
+    "description": "List roles for users",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_team_roles",
+    "server": "grafana",
+    "name": "list_team_roles",
+    "description": "List roles for teams",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_resource_permissions",
+    "server": "grafana",
+    "name": "get_resource_permissions",
+    "description": "List permissions for a resource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_resource_description",
+    "server": "grafana",
+    "name": "get_resource_description",
+    "description": "Describe a Grafana resource type",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:user_info",
+    "server": "grafana",
+    "name": "user_info",
+    "description": "Current identity, capabilities, and accessible organizations",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:search_dashboards",
+    "server": "grafana",
+    "name": "search_dashboards",
+    "description": "Search for dashboards by query, folder UID, tag, or starred",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:search_folders",
+    "server": "grafana",
+    "name": "search_folders",
+    "description": "Search for folders by query string",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_dashboard_by_uid",
+    "server": "grafana",
+    "name": "get_dashboard_by_uid",
+    "description": "Get a dashboard by uid, optionally a saved version",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_dashboard_versions",
+    "server": "grafana",
+    "name": "list_dashboard_versions",
+    "description": "List saved versions of a dashboard (version, author, time, message)",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:update_dashboard",
+    "server": "grafana",
+    "name": "update_dashboard",
+    "description": "Update or create a new dashboard",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_dashboard_panel_queries",
+    "server": "grafana",
+    "name": "get_dashboard_panel_queries",
+    "description": "Get panel title, queries, datasource UID and type from a dashboard",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:run_panel_query",
+    "server": "grafana",
+    "name": "run_panel_query",
+    "description": "Execute one or more dashboard panel queries",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_dashboard_property",
+    "server": "grafana",
+    "name": "get_dashboard_property",
+    "description": "Extract specific parts of a dashboard using JSONPath expressions",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_dashboard_summary",
+    "server": "grafana",
+    "name": "get_dashboard_summary",
+    "description": "Get a compact summary of a dashboard without full JSON",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:create_folder",
+    "server": "grafana",
+    "name": "create_folder",
+    "description": "Create a Grafana folder with a title and optional UID",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_datasources",
+    "server": "grafana",
+    "name": "list_datasources",
+    "description": "List datasources",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_datasource",
+    "server": "grafana",
+    "name": "get_datasource",
+    "description": "Get a datasource by UID or name",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_query_examples",
+    "server": "grafana",
+    "name": "get_query_examples",
+    "description": "Get example queries for a datasource type",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:query_prometheus",
+    "server": "grafana",
+    "name": "query_prometheus",
+    "description": "Execute a query against a Prometheus datasource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_prometheus_metric_metadata",
+    "server": "grafana",
+    "name": "list_prometheus_metric_metadata",
+    "description": "List metric metadata",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_prometheus_metric_names",
+    "server": "grafana",
+    "name": "list_prometheus_metric_names",
+    "description": "List available metric names",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_prometheus_label_names",
+    "server": "grafana",
+    "name": "list_prometheus_label_names",
+    "description": "List label names matching a selector",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_prometheus_label_values",
+    "server": "grafana",
+    "name": "list_prometheus_label_values",
+    "description": "List values for a specific label",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:query_prometheus_histogram",
+    "server": "grafana",
+    "name": "query_prometheus_histogram",
+    "description": "Calculate histogram percentile values",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_incidents",
+    "server": "grafana",
+    "name": "list_incidents",
+    "description": "List incidents in Grafana Incident, optionally with their custom field values",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:create_incident",
+    "server": "grafana",
+    "name": "create_incident",
+    "description": "Create an incident in Grafana Incident, optionally setting custom fields",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:add_activity_to_incident",
+    "server": "grafana",
+    "name": "add_activity_to_incident",
+    "description": "Add an activity item to an incident in Grafana Incident",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:update_incident",
+    "server": "grafana",
+    "name": "update_incident",
+    "description": "Update an incident in Grafana Incident (status, severity, title, or custom fields)",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_incident",
+    "server": "grafana",
+    "name": "get_incident",
+    "description": "Get a single incident by ID, including its custom fields",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_incident_custom_fields",
+    "server": "grafana",
+    "name": "list_incident_custom_fields",
+    "description": "List the custom fields configured for incidents, with their types and select options",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:query_loki_logs",
+    "server": "grafana",
+    "name": "query_loki_logs",
+    "description": "Query and retrieve logs using LogQL (either log or metric queries)",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_loki_label_names",
+    "server": "grafana",
+    "name": "list_loki_label_names",
+    "description": "List all available label names in logs",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_loki_label_values",
+    "server": "grafana",
+    "name": "list_loki_label_values",
+    "description": "List values for a specific log label",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:query_loki_stats",
+    "server": "grafana",
+    "name": "query_loki_stats",
+    "description": "Get statistics about log streams",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:query_loki_patterns",
+    "server": "grafana",
+    "name": "query_loki_patterns",
+    "description": "Query detected log patterns to identify common structures",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:query_influxdb",
+    "server": "grafana",
+    "name": "query_influxdb",
+    "description": "Query InfluxDB using InfluxQL (v1) or Flux (v2)",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_sql_databases",
+    "server": "grafana",
+    "name": "list_sql_databases",
+    "description": "List databases, schemas, or catalogs from a SQL datasource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_sql_tables",
+    "server": "grafana",
+    "name": "list_sql_tables",
+    "description": "List tables in a SQL datasource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:describe_sql_table",
+    "server": "grafana",
+    "name": "describe_sql_table",
+    "description": "Get column schema for a table",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:query_sql",
+    "server": "grafana",
+    "name": "query_sql",
+    "description": "Execute SQL queries with macro substitution",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_cloudwatch_namespaces",
+    "server": "grafana",
+    "name": "list_cloudwatch_namespaces",
+    "description": "List available AWS CloudWatch namespaces",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_cloudwatch_metrics",
+    "server": "grafana",
+    "name": "list_cloudwatch_metrics",
+    "description": "List metrics in a namespace",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_cloudwatch_dimensions",
+    "server": "grafana",
+    "name": "list_cloudwatch_dimensions",
+    "description": "List dimensions for a metric",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_cloudwatch_dimension_values",
+    "server": "grafana",
+    "name": "list_cloudwatch_dimension_values",
+    "description": "List values for a dimension key",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:query_cloudwatch",
+    "server": "grafana",
+    "name": "query_cloudwatch",
+    "description": "Execute CloudWatch metric queries",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_cloud_logging_projects",
+    "server": "grafana",
+    "name": "list_cloud_logging_projects",
+    "description": "List GCP projects readable by a Google Cloud Logging datasource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_cloud_logging_buckets",
+    "server": "grafana",
+    "name": "list_cloud_logging_buckets",
+    "description": "List log buckets in a GCP project",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_cloud_logging_views",
+    "server": "grafana",
+    "name": "list_cloud_logging_views",
+    "description": "List log views in a log bucket",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:query_cloud_logging",
+    "server": "grafana",
+    "name": "query_cloud_logging",
+    "description": "Query logs with the Cloud Logging query language",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:query_elasticsearch",
+    "server": "grafana",
+    "name": "query_elasticsearch",
+    "description": "Query Elasticsearch using Lucene syntax or Query DSL",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:query_quickwit",
+    "server": "grafana",
+    "name": "query_quickwit",
+    "description": "Query Quickwit using Lucene syntax or Query DSL",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:alerting_manage_rules",
+    "server": "grafana",
+    "name": "alerting_manage_rules",
+    "description": "Manage alert rules (list, get, versions, create, update, delete)",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:alerting_manage_routing",
+    "server": "grafana",
+    "name": "alerting_manage_routing",
+    "description": "Manage notification policies, contact points, and time intervals",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:alerting_manage_silences",
+    "server": "grafana",
+    "name": "alerting_manage_silences",
+    "description": "Manage alerting silences (list, get, create, update, expire)",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_oncall_schedules",
+    "server": "grafana",
+    "name": "list_oncall_schedules",
+    "description": "List schedules from Grafana OnCall",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_oncall_shift",
+    "server": "grafana",
+    "name": "get_oncall_shift",
+    "description": "Get details for a specific OnCall shift",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_current_oncall_users",
+    "server": "grafana",
+    "name": "get_current_oncall_users",
+    "description": "Get users currently on-call for a specific schedule",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_oncall_teams",
+    "server": "grafana",
+    "name": "list_oncall_teams",
+    "description": "List teams from Grafana OnCall",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_oncall_users",
+    "server": "grafana",
+    "name": "list_oncall_users",
+    "description": "List users from Grafana OnCall",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_alert_groups",
+    "server": "grafana",
+    "name": "list_alert_groups",
+    "description": "List alert groups from Grafana OnCall with filtering options",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_alert_group",
+    "server": "grafana",
+    "name": "get_alert_group",
+    "description": "Get a specific alert group from Grafana OnCall by its ID",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:update_alert_group",
+    "server": "grafana",
+    "name": "update_alert_group",
+    "description": "Acknowledge, unacknowledge, resolve, or unresolve an alert group",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_sift_investigation",
+    "server": "grafana",
+    "name": "get_sift_investigation",
+    "description": "Retrieve an existing Sift investigation by its UUID",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_sift_analysis",
+    "server": "grafana",
+    "name": "get_sift_analysis",
+    "description": "Retrieve a specific analysis from a Sift investigation",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_sift_investigations",
+    "server": "grafana",
+    "name": "list_sift_investigations",
+    "description": "Retrieve a list of Sift investigations with an optional limit",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:find_error_pattern_logs",
+    "server": "grafana",
+    "name": "find_error_pattern_logs",
+    "description": "Finds elevated error patterns in Loki logs.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:find_slow_requests",
+    "server": "grafana",
+    "name": "find_slow_requests",
+    "description": "Finds slow requests from the relevant tempo datasources.",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_pyroscope_label_names",
+    "server": "grafana",
+    "name": "list_pyroscope_label_names",
+    "description": "List label names matching a selector",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_pyroscope_label_values",
+    "server": "grafana",
+    "name": "list_pyroscope_label_values",
+    "description": "List label values matching a selector for a label name",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_pyroscope_profile_types",
+    "server": "grafana",
+    "name": "list_pyroscope_profile_types",
+    "description": "List available profile types",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:query_pyroscope",
+    "server": "grafana",
+    "name": "query_pyroscope",
+    "description": "Query profiles, metrics, or both from Pyroscope",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:search_tempo_traces",
+    "server": "grafana",
+    "name": "search_tempo_traces",
+    "description": "Search for traces using TraceQL queries",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:query_tempo_metrics",
+    "server": "grafana",
+    "name": "query_tempo_metrics",
+    "description": "Compute trace-derived metrics (instant value or time series)",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_tempo_trace",
+    "server": "grafana",
+    "name": "get_tempo_trace",
+    "description": "Fetch a complete trace by ID",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:diff_tempo_traces",
+    "server": "grafana",
+    "name": "diff_tempo_traces",
+    "description": "Compare two traces",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_tempo_attribute_names",
+    "server": "grafana",
+    "name": "list_tempo_attribute_names",
+    "description": "List available trace attribute names",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_tempo_attribute_values",
+    "server": "grafana",
+    "name": "list_tempo_attribute_values",
+    "description": "List values for a specific trace attribute",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_tempo_traceql_docs",
+    "server": "grafana",
+    "name": "get_tempo_traceql_docs",
+    "description": "Retrieve TraceQL reference documentation with examples",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_assertions",
+    "server": "grafana",
+    "name": "get_assertions",
+    "description": "Get assertion summary for a given entity",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:ask_assistant",
+    "server": "grafana",
+    "name": "ask_assistant",
+    "description": "Send a prompt to Grafana Assistant and return the full text reply (multi-turn via `contextId`)",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:generate_deeplink",
+    "server": "grafana",
+    "name": "generate_deeplink",
+    "description": "Generate accurate deeplink URLs for Grafana resources",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_annotations",
+    "server": "grafana",
+    "name": "get_annotations",
+    "description": "Fetch annotations with filters",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:create_annotation",
+    "server": "grafana",
+    "name": "create_annotation",
+    "description": "Create a new annotation (standard or Graphite format)",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:update_annotation",
+    "server": "grafana",
+    "name": "update_annotation",
+    "description": "Update specific fields of an annotation (partial update)",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:delete_annotation",
+    "server": "grafana",
+    "name": "delete_annotation",
+    "description": "Delete an annotation by ID",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_annotation_tags",
+    "server": "grafana",
+    "name": "get_annotation_tags",
+    "description": "List annotation tags with optional filtering",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_snapshots",
+    "server": "grafana",
+    "name": "list_snapshots",
+    "description": "List dashboard snapshots with optional query and limit filters",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_snapshot",
+    "server": "grafana",
+    "name": "get_snapshot",
+    "description": "Get snapshot metadata and dashboard payload by snapshot key",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:create_snapshot",
+    "server": "grafana",
+    "name": "create_snapshot",
+    "description": "Create a dashboard snapshot from a full dashboard payload",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:delete_snapshot",
+    "server": "grafana",
+    "name": "delete_snapshot",
+    "description": "Delete a dashboard snapshot by snapshot key",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_panel_image",
+    "server": "grafana",
+    "name": "get_panel_image",
+    "description": "Render a stored dashboard or panel — or a provisioning preview from a repository branch — as a PNG image",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:list_provisioning_repositories",
+    "server": "grafana",
+    "name": "list_provisioning_repositories",
+    "description": "List provisioning repositories (e.g. git-sync sources) with their source URL, branch, sync state, and health",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:validate_provisioning_file",
+    "server": "grafana",
+    "name": "validate_provisioning_file",
+    "description": "Dry-run-apply a file from a provisioning repository and report admission validation errors",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:search_docs",
+    "server": "grafana",
+    "name": "search_docs",
+    "description": "Search Grafana documentation or list product groups (omit query to list products)",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "grafana:get_doc",
+    "server": "grafana",
+    "name": "get_doc",
+    "description": "Fetch a documentation page; set outline_only for headings, or section for bounded retrieval",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/grafana/mcp-grafana/blob/6cdd5d1d1e45783203d3a9445e771758aa1c7a6e/docs/sources/reference/mcp-tools-table.md"
+  },
+  {
+    "id": "sentry:whoami",
+    "server": "sentry",
+    "name": "whoami",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:find_organizations",
+    "server": "sentry",
+    "name": "find_organizations",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:find_teams",
+    "server": "sentry",
+    "name": "find_teams",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:find_projects",
+    "server": "sentry",
+    "name": "find_projects",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:find_releases",
+    "server": "sentry",
+    "name": "find_releases",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_release_details",
+    "server": "sentry",
+    "name": "get_release_details",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:find_dashboards",
+    "server": "sentry",
+    "name": "find_dashboards",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_dashboard_details",
+    "server": "sentry",
+    "name": "get_dashboard_details",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:find_monitors",
+    "server": "sentry",
+    "name": "find_monitors",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_monitor_details",
+    "server": "sentry",
+    "name": "get_monitor_details",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:find_uptime_monitors",
+    "server": "sentry",
+    "name": "find_uptime_monitors",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_uptime_monitor_details",
+    "server": "sentry",
+    "name": "get_uptime_monitor_details",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:find_metric_monitors",
+    "server": "sentry",
+    "name": "find_metric_monitors",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_metric_monitor_details",
+    "server": "sentry",
+    "name": "get_metric_monitor_details",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:create_metric_monitor",
+    "server": "sentry",
+    "name": "create_metric_monitor",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:update_metric_monitor",
+    "server": "sentry",
+    "name": "update_metric_monitor",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:delete_metric_monitor",
+    "server": "sentry",
+    "name": "delete_metric_monitor",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:create_uptime_monitor",
+    "server": "sentry",
+    "name": "create_uptime_monitor",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:update_uptime_monitor",
+    "server": "sentry",
+    "name": "update_uptime_monitor",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:delete_uptime_monitor",
+    "server": "sentry",
+    "name": "delete_uptime_monitor",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:find_alert_rules",
+    "server": "sentry",
+    "name": "find_alert_rules",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_alert_rule",
+    "server": "sentry",
+    "name": "get_alert_rule",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_alert_options",
+    "server": "sentry",
+    "name": "get_alert_options",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:update_alert_rule",
+    "server": "sentry",
+    "name": "update_alert_rule",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:create_alert_rule",
+    "server": "sentry",
+    "name": "create_alert_rule",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:delete_alert_rule",
+    "server": "sentry",
+    "name": "delete_alert_rule",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_issue_details",
+    "server": "sentry",
+    "name": "get_issue_details",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_event_stacktrace",
+    "server": "sentry",
+    "name": "get_event_stacktrace",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_issue_activity",
+    "server": "sentry",
+    "name": "get_issue_activity",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_issue_breadcrumbs",
+    "server": "sentry",
+    "name": "get_issue_breadcrumbs",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_issue_user_reports",
+    "server": "sentry",
+    "name": "get_issue_user_reports",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_issue_tag_values",
+    "server": "sentry",
+    "name": "get_issue_tag_values",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_trace_details",
+    "server": "sentry",
+    "name": "get_trace_details",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_span_details",
+    "server": "sentry",
+    "name": "get_span_details",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_replay_details",
+    "server": "sentry",
+    "name": "get_replay_details",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_event_attachment",
+    "server": "sentry",
+    "name": "get_event_attachment",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:update_issue",
+    "server": "sentry",
+    "name": "update_issue",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:search_events",
+    "server": "sentry",
+    "name": "search_events",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:create_team",
+    "server": "sentry",
+    "name": "create_team",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:create_project",
+    "server": "sentry",
+    "name": "create_project",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:update_project",
+    "server": "sentry",
+    "name": "update_project",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:add_team_to_project",
+    "server": "sentry",
+    "name": "add_team_to_project",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:remove_team_from_project",
+    "server": "sentry",
+    "name": "remove_team_from_project",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:create_dsn",
+    "server": "sentry",
+    "name": "create_dsn",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:find_dsns",
+    "server": "sentry",
+    "name": "find_dsns",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:update_dsn",
+    "server": "sentry",
+    "name": "update_dsn",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:analyze_issue_with_seer",
+    "server": "sentry",
+    "name": "analyze_issue_with_seer",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:search_docs",
+    "server": "sentry",
+    "name": "search_docs",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_doc",
+    "server": "sentry",
+    "name": "get_doc",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:search_issues",
+    "server": "sentry",
+    "name": "search_issues",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:search_issue_events",
+    "server": "sentry",
+    "name": "search_issue_events",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_profile",
+    "server": "sentry",
+    "name": "get_profile",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_profile_details",
+    "server": "sentry",
+    "name": "get_profile_details",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_sentry_mcp_info",
+    "server": "sentry",
+    "name": "get_sentry_mcp_info",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_sentry_resource",
+    "server": "sentry",
+    "name": "get_sentry_resource",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_snapshot",
+    "server": "sentry",
+    "name": "get_snapshot",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_snapshot_image",
+    "server": "sentry",
+    "name": "get_snapshot_image",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_latest_base_snapshot",
+    "server": "sentry",
+    "name": "get_latest_base_snapshot",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:get_agent_conversation_details",
+    "server": "sentry",
+    "name": "get_agent_conversation_details",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:search_agent_conversations",
+    "server": "sentry",
+    "name": "search_agent_conversations",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:add_issue_note",
+    "server": "sentry",
+    "name": "add_issue_note",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "sentry:onboarding_status_update",
+    "server": "sentry",
+    "name": "onboarding_status_update",
+    "description": "",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/getsentry/sentry-mcp/blob/7486ab14cef470a97d3e37e446af04567aab87a0/packages/mcp-core/src/tools/catalog/index.ts"
+  },
+  {
+    "id": "aws-iam:list_users",
+    "server": "aws-iam",
+    "name": "list_users",
+    "description": "List IAM users",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iam:get_user",
+    "server": "aws-iam",
+    "name": "get_user",
+    "description": "Get an IAM user",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iam:create_user",
+    "server": "aws-iam",
+    "name": "create_user",
+    "description": "Create an IAM user",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iam:delete_user",
+    "server": "aws-iam",
+    "name": "delete_user",
+    "description": "Delete an IAM user",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iam:list_roles",
+    "server": "aws-iam",
+    "name": "list_roles",
+    "description": "List IAM roles",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iam:create_role",
+    "server": "aws-iam",
+    "name": "create_role",
+    "description": "Create an IAM role",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iam:create_access_key",
+    "server": "aws-iam",
+    "name": "create_access_key",
+    "description": "Create an IAM access key",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iam:simulate_principal_policy",
+    "server": "aws-iam",
+    "name": "simulate_principal_policy",
+    "description": "Simulate an IAM principal policy",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/iam-mcp-server/awslabs/iam_mcp_server/server.py"
+  },
+  {
+    "id": "aws-mysql:run_query",
+    "server": "aws-mysql",
+    "name": "run_query",
+    "description": "Run a SQL query against MySQL",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/mysql-mcp-server/awslabs/mysql_mcp_server/server.py"
+  },
+  {
+    "id": "aws-mysql:get_table_schema",
+    "server": "aws-mysql",
+    "name": "get_table_schema",
+    "description": "Fetch table columns and comments from MySQL",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/mysql-mcp-server/awslabs/mysql_mcp_server/server.py"
+  },
+  {
+    "id": "aws-mysql:connect_to_database",
+    "server": "aws-mysql",
+    "name": "connect_to_database",
+    "description": "Connect to a MySQL database",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/mysql-mcp-server/awslabs/mysql_mcp_server/server.py"
+  },
+  {
+    "id": "aws-mysql:is_database_connected",
+    "server": "aws-mysql",
+    "name": "is_database_connected",
+    "description": "Check whether the database is connected",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/mysql-mcp-server/awslabs/mysql_mcp_server/server.py"
+  },
+  {
+    "id": "aws-mysql:get_database_connection_info",
+    "server": "aws-mysql",
+    "name": "get_database_connection_info",
+    "description": "Get database connection information",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/mysql-mcp-server/awslabs/mysql_mcp_server/server.py"
+  },
+  {
+    "id": "aws-mysql:create_cluster",
+    "server": "aws-mysql",
+    "name": "create_cluster",
+    "description": "Create a database cluster",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/mysql-mcp-server/awslabs/mysql_mcp_server/server.py"
+  },
+  {
+    "id": "aws-neptune:get_graph_status",
+    "server": "aws-neptune",
+    "name": "get_graph_status",
+    "description": "Get graph status",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/amazon-neptune-mcp-server/awslabs/amazon_neptune_mcp_server/server.py"
+  },
+  {
+    "id": "aws-neptune:get_graph_schema",
+    "server": "aws-neptune",
+    "name": "get_graph_schema",
+    "description": "Get graph schema",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/amazon-neptune-mcp-server/awslabs/amazon_neptune_mcp_server/server.py"
+  },
+  {
+    "id": "aws-neptune:run_opencypher_query",
+    "server": "aws-neptune",
+    "name": "run_opencypher_query",
+    "description": "Run an openCypher query",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/amazon-neptune-mcp-server/awslabs/amazon_neptune_mcp_server/server.py"
+  },
+  {
+    "id": "aws-neptune:run_gremlin_query",
+    "server": "aws-neptune",
+    "name": "run_gremlin_query",
+    "description": "Run a Gremlin query",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/amazon-neptune-mcp-server/awslabs/amazon_neptune_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iac:validate_cloudformation_template",
+    "server": "aws-iac",
+    "name": "validate_cloudformation_template",
+    "description": "Validate a CloudFormation template",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/aws-iac-mcp-server/awslabs/aws_iac_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iac:check_cloudformation_template_compliance",
+    "server": "aws-iac",
+    "name": "check_cloudformation_template_compliance",
+    "description": "Check CloudFormation template compliance",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/aws-iac-mcp-server/awslabs/aws_iac_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iac:troubleshoot_cloudformation_deployment",
+    "server": "aws-iac",
+    "name": "troubleshoot_cloudformation_deployment",
+    "description": "Troubleshoot a CloudFormation deployment",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/aws-iac-mcp-server/awslabs/aws_iac_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iac:get_cloudformation_pre_deploy_validation_instructions",
+    "server": "aws-iac",
+    "name": "get_cloudformation_pre_deploy_validation_instructions",
+    "description": "Get CloudFormation pre-deploy validation instructions",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/aws-iac-mcp-server/awslabs/aws_iac_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iac:search_cdk_documentation",
+    "server": "aws-iac",
+    "name": "search_cdk_documentation",
+    "description": "Search CDK documentation",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/aws-iac-mcp-server/awslabs/aws_iac_mcp_server/server.py"
+  },
+  {
+    "id": "aws-iac:search_cloudformation_documentation",
+    "server": "aws-iac",
+    "name": "search_cloudformation_documentation",
+    "description": "Search CloudFormation documentation",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/aws-iac-mcp-server/awslabs/aws_iac_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ecs:build_and_push_image_to_ecr",
+    "server": "aws-ecs",
+    "name": "build_and_push_image_to_ecr",
+    "description": "Build and push an image to ECR",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ecs-mcp-server/awslabs/ecs_mcp_server/modules/express.py"
+  },
+  {
+    "id": "aws-ecs:validate_ecs_express_mode_prerequisites",
+    "server": "aws-ecs",
+    "name": "validate_ecs_express_mode_prerequisites",
+    "description": "Validate ECS express mode prerequisites",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ecs-mcp-server/awslabs/ecs_mcp_server/modules/express.py"
+  },
+  {
+    "id": "aws-ecs:delete_app",
+    "server": "aws-ecs",
+    "name": "delete_app",
+    "description": "Delete an ECS application",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ecs-mcp-server/awslabs/ecs_mcp_server/modules/express.py"
+  },
+  {
+    "id": "aws-ecs:wait_for_service_ready",
+    "server": "aws-ecs",
+    "name": "wait_for_service_ready",
+    "description": "Wait for an ECS service to become ready",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ecs-mcp-server/awslabs/ecs_mcp_server/modules/express.py"
+  },
+  {
+    "id": "aws-ecs:delete_ecs_infrastructure",
+    "server": "aws-ecs",
+    "name": "delete_ecs_infrastructure",
+    "description": "Delete ECS infrastructure",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ecs-mcp-server/awslabs/ecs_mcp_server/modules/delete.py"
+  },
+  {
+    "id": "aws-ecs:containerize_app",
+    "server": "aws-ecs",
+    "name": "containerize_app",
+    "description": "Containerize an application",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ecs-mcp-server/awslabs/ecs_mcp_server/modules/containerize.py"
+  },
+  {
+    "id": "aws-elasticache:delete-serverless-cache",
+    "server": "aws-elasticache",
+    "name": "delete-serverless-cache",
+    "description": "Delete an ElastiCache serverless cache",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/elasticache-mcp-server/awslabs/elasticache_mcp_server/tools/serverless/delete.py"
+  },
+  {
+    "id": "aws-elasticache:delete-cache-cluster",
+    "server": "aws-elasticache",
+    "name": "delete-cache-cluster",
+    "description": "Delete an ElastiCache cluster",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/elasticache-mcp-server/awslabs/elasticache_mcp_server/tools/cc/delete.py"
+  },
+  {
+    "id": "aws-roda:search_datasets",
+    "server": "aws-roda",
+    "name": "search_datasets",
+    "description": "Search datasets",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/roda-mcp-server/awslabs/roda_mcp_server/server.py"
+  },
+  {
+    "id": "aws-roda:list_datasets",
+    "server": "aws-roda",
+    "name": "list_datasets",
+    "description": "List datasets",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/roda-mcp-server/awslabs/roda_mcp_server/server.py"
+  },
+  {
+    "id": "aws-roda:get_dataset_details",
+    "server": "aws-roda",
+    "name": "get_dataset_details",
+    "description": "Get dataset details",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/roda-mcp-server/awslabs/roda_mcp_server/server.py"
+  },
+  {
+    "id": "aws-roda:discover_by_organization",
+    "server": "aws-roda",
+    "name": "discover_by_organization",
+    "description": "Discover datasets by organization",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/roda-mcp-server/awslabs/roda_mcp_server/server.py"
+  },
+  {
+    "id": "aws-roda:discover_by_license",
+    "server": "aws-roda",
+    "name": "discover_by_license",
+    "description": "Discover datasets by license",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/roda-mcp-server/awslabs/roda_mcp_server/server.py"
+  },
+  {
+    "id": "aws-roda:find_related_datasets",
+    "server": "aws-roda",
+    "name": "find_related_datasets",
+    "description": "Find related datasets",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/roda-mcp-server/awslabs/roda_mcp_server/server.py"
+  },
+  {
+    "id": "aws-memcached:cache_get",
+    "server": "aws-memcached",
+    "name": "cache_get",
+    "description": "Get a cache value",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-memcached:cache_get_many",
+    "server": "aws-memcached",
+    "name": "cache_get_many",
+    "description": "Get multiple cache values",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-memcached:cache_set",
+    "server": "aws-memcached",
+    "name": "cache_set",
+    "description": "Set a cache value",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-memcached:cache_add",
+    "server": "aws-memcached",
+    "name": "cache_add",
+    "description": "Add a cache value",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-memcached:cache_replace",
+    "server": "aws-memcached",
+    "name": "cache_replace",
+    "description": "Replace a cache value",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-memcached:cache_delete",
+    "server": "aws-memcached",
+    "name": "cache_delete",
+    "description": "Delete a cache value",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-memcached:cache_stats",
+    "server": "aws-memcached",
+    "name": "cache_stats",
+    "description": "Get cache statistics",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-memcached:cache_flush_all",
+    "server": "aws-memcached",
+    "name": "cache_flush_all",
+    "description": "Flush all cache values",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/memcached-mcp-server/awslabs/memcached_mcp_server/tools/cache.py"
+  },
+  {
+    "id": "aws-valkey:json_get",
+    "server": "aws-valkey",
+    "name": "json_get",
+    "description": "Get JSON from Valkey",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/valkey-mcp-server/awslabs/valkey_mcp_server/tools/json.py"
+  },
+  {
+    "id": "aws-valkey:json_set",
+    "server": "aws-valkey",
+    "name": "json_set",
+    "description": "Set JSON in Valkey",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/valkey-mcp-server/awslabs/valkey_mcp_server/tools/json.py"
+  },
+  {
+    "id": "aws-valkey:json_arrappend",
+    "server": "aws-valkey",
+    "name": "json_arrappend",
+    "description": "Append to a JSON array",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/valkey-mcp-server/awslabs/valkey_mcp_server/tools/json.py"
+  },
+  {
+    "id": "aws-valkey:json_arrpop",
+    "server": "aws-valkey",
+    "name": "json_arrpop",
+    "description": "Pop an item from a JSON array",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/valkey-mcp-server/awslabs/valkey_mcp_server/tools/json.py"
+  },
+  {
+    "id": "aws-valkey:json_arrtrim",
+    "server": "aws-valkey",
+    "name": "json_arrtrim",
+    "description": "Trim a JSON array",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/valkey-mcp-server/awslabs/valkey_mcp_server/tools/json.py"
+  },
+  {
+    "id": "aws-ccapi:get_resource_schema_information",
+    "server": "aws-ccapi",
+    "name": "get_resource_schema_information",
+    "description": "Get AWS resource schema information",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ccapi:list_resources",
+    "server": "aws-ccapi",
+    "name": "list_resources",
+    "description": "List AWS resources",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ccapi:generate_infrastructure_code",
+    "server": "aws-ccapi",
+    "name": "generate_infrastructure_code",
+    "description": "Generate infrastructure code",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ccapi:explain",
+    "server": "aws-ccapi",
+    "name": "explain",
+    "description": "Explain AWS resource information",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ccapi:get_resource",
+    "server": "aws-ccapi",
+    "name": "get_resource",
+    "description": "Get an AWS resource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ccapi:update_resource",
+    "server": "aws-ccapi",
+    "name": "update_resource",
+    "description": "Update an AWS resource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ccapi:create_resource",
+    "server": "aws-ccapi",
+    "name": "create_resource",
+    "description": "Create an AWS resource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-ccapi:delete_resource",
+    "server": "aws-ccapi",
+    "name": "delete_resource",
+    "description": "Delete an AWS resource",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/ccapi-mcp-server/awslabs/ccapi_mcp_server/server.py"
+  },
+  {
+    "id": "aws-documentdb:find",
+    "server": "aws-documentdb",
+    "name": "find",
+    "description": "Query documents from a DocumentDB collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/documentdb-mcp-server/README.md"
+  },
+  {
+    "id": "aws-documentdb:aggregate",
+    "server": "aws-documentdb",
+    "name": "aggregate",
+    "description": "Run an aggregation pipeline; pipelines may contain write stages unless read-only mode blocks them",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/documentdb-mcp-server/README.md"
+  },
+  {
+    "id": "aws-documentdb:insert",
+    "server": "aws-documentdb",
+    "name": "insert",
+    "description": "Insert documents into a DocumentDB collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/documentdb-mcp-server/README.md"
+  },
+  {
+    "id": "aws-documentdb:update",
+    "server": "aws-documentdb",
+    "name": "update",
+    "description": "Update documents in a DocumentDB collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/documentdb-mcp-server/README.md"
+  },
+  {
+    "id": "aws-documentdb:delete",
+    "server": "aws-documentdb",
+    "name": "delete",
+    "description": "Delete documents from a DocumentDB collection",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/documentdb-mcp-server/README.md"
+  },
+  {
+    "id": "aws-cloudtrail:lookup_events",
+    "server": "aws-cloudtrail",
+    "name": "lookup_events",
+    "description": "Look up CloudTrail management events",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/cloudtrail-mcp-server/README.md"
+  },
+  {
+    "id": "aws-cloudtrail:lake_query",
+    "server": "aws-cloudtrail",
+    "name": "lake_query",
+    "description": "Run analytics queries against CloudTrail Lake",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/cloudtrail-mcp-server/README.md"
+  },
+  {
+    "id": "aws-cloudtrail:get_query_status",
+    "server": "aws-cloudtrail",
+    "name": "get_query_status",
+    "description": "Get CloudTrail Lake query status",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/cloudtrail-mcp-server/README.md"
+  },
+  {
+    "id": "aws-cloudtrail:get_query_results",
+    "server": "aws-cloudtrail",
+    "name": "get_query_results",
+    "description": "Get CloudTrail Lake query results",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/cloudtrail-mcp-server/README.md"
+  },
+  {
+    "id": "aws-cloudtrail:list_event_data_stores",
+    "server": "aws-cloudtrail",
+    "name": "list_event_data_stores",
+    "description": "List CloudTrail Lake event data stores",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/cloudtrail-mcp-server/README.md"
+  },
+  {
+    "id": "aws-bedrock-kb:ListKnowledgeBases",
+    "server": "aws-bedrock-kb",
+    "name": "ListKnowledgeBases",
+    "description": "List available Bedrock knowledge bases and data sources",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/bedrock-kb-retrieval-mcp-server/awslabs/bedrock_kb_retrieval_mcp_server/server.py"
+  },
+  {
+    "id": "aws-bedrock-kb:QueryKnowledgeBases",
+    "server": "aws-bedrock-kb",
+    "name": "QueryKnowledgeBases",
+    "description": "Query an Amazon Bedrock knowledge base using natural language",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/bedrock-kb-retrieval-mcp-server/awslabs/bedrock_kb_retrieval_mcp_server/server.py"
+  },
+  {
+    "id": "aws-bedrock-kb:AgenticQueryKnowledgeBases",
+    "server": "aws-bedrock-kb",
+    "name": "AgenticQueryKnowledgeBases",
+    "description": "Run agentic retrieval over managed Bedrock knowledge bases",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/awslabs/mcp/blob/1941e37b5d4d16c07814cbc340f6692e92ca1ee2/src/bedrock-kb-retrieval-mcp-server/awslabs/bedrock_kb_retrieval_mcp_server/server.py"
+  }
+]

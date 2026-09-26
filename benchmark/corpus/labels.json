@@ -1,0 +1,3411 @@
+[
+  {
+    "id": "filesystem:read_text_file",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:read_media_file",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:read_multiple_files",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:list_directory",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:search_files",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:write_file",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:edit_file",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:move_file",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "fetch:fetch",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_navigate",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_snapshot",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_click",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_type",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_file_contents",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:issue_read",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:create_pull_request",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:add_observations",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "time:get_current_time",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_status",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_run_code_unsafe",
+    "expected_effect": "execute",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_file_upload",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:create_issue",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:delete_file",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:create_entities",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:create_relations",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:delete_entities",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:delete_observations",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:delete_relations",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:read_graph",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:search_nodes",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "memory:open_nodes",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_diff_unstaged",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_diff_staged",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_diff",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_commit",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_add",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_reset",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_log",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_create_branch",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_tabs",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_take_screenshot",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_console_messages",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_network_requests",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_press_key",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_select_option",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_hover",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_drag",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_fill_form",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_handle_dialog",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_evaluate",
+    "expected_effect": "execute",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_navigate_back",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_resize",
+    "expected_effect": "write",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_wait_for",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_close",
+    "expected_effect": "write",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_emulate_media",
+    "expected_effect": "write",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:list_commits",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_commit",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:search_code",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:search_issues",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:search_pull_requests",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:update_issue",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:add_issue_comment",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:fork_repository",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:create_or_update_file",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:push_files",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:create_branch",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:merge_pull_request",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:pull_request_read",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:pull_request_review_write",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:request_copilot_review",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:search_repositories",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:search_users",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_issue_comments",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:list_issues",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:create_repository",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:create_directory",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:list_directory_with_sizes",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:directory_tree",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:get_file_info",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:list_allowed_directories",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:read_file",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_find",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_drop",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "playwright:browser_network_request",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_show",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_checkout",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "git:git_branch",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "time:convert_time",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "sequentialthinking:sequentialthinking",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_label",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:list_label",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_release_by_tag",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:list_releases",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_tag",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:list_tags",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_latest_release",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_team_members",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_me",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_teams",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_repository_tree",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:list_branches",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "notion-openapi:get-user",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:get-users",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:get-self",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:post-search",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:get-block-children",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:patch-block-children",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:retrieve-a-block",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:update-a-block",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:delete-a-block",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:retrieve-a-page",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:patch-page",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:post-page",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:retrieve-a-page-property",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:retrieve-a-comment",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:create-a-comment",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:query-data-source",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:retrieve-a-data-source",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:update-a-data-source",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:create-a-data-source",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:list-data-source-templates",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:retrieve-a-database",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:move-page",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:retrieve-page-markdown",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "notion-openapi:update-page-markdown",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:conversations_history",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:conversations_replies",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:conversations_add_message",
+    "expected_effect": "external_message",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:conversations_search_messages",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:channels_list",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:reactions_add",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:reactions_remove",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:users_search",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:usergroups_list",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:usergroups_create",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:usergroups_update",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:usergroups_users_update",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:usergroups_me",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:conversations_unreads",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:conversations_mark",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:saved_list",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:saved_update",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "slack:saved_clear_completed",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "cloudflare-blog:search_posts",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "cloudflare-blog:list_posts",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "cloudflare-blog:get_post",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "cloudflare-blog:list_tags",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "cloudflare-stack:list_libraries",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "cloudflare-stack:search_dev_stack",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "dbhub:execute_sql",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "dbhub:search_objects",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "dbhub:explain_sql",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "dbhub:health_check",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:set",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:get",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:hset",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:hget",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:hdel",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:hgetall",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:hexists",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:set_vector_in_hash",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:get_vector_from_hash",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:lpush",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:rpush",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:lpop",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:rpop",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:lrange",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:llen",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:lrem",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:sadd",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:srem",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:smembers",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:json_set",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:json_get",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:json_del",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:delete",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:type",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:expire",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:rename",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:scan_keys",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:scan_all_keys",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:search_redis_documents",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:xadd",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:xrange",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:xdel",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:xgroup_create",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:xgroup_destroy",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:xreadgroup",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:xack",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:publish",
+    "expected_effect": "external_message",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:subscribe",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:psubscribe",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:read_messages",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:unsubscribe",
+    "expected_effect": "write",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:zadd",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:zrange",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:zrem",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:dbsize",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:info",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "redis:client_list",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:aggregate",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:aggregate-db",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:collection-indexes",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:collection-schema",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:collection-storage-size",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:connect",
+    "expected_effect": "write",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:count",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:create-collection",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:create-index",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:db-stats",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:delete-many",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:disconnect",
+    "expected_effect": "write",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:drop-collection",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:drop-database",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:drop-index",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:explain",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:export",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:find",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:insert-many",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:list-collections",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:list-connections",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:list-databases",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:mongodb-logs",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:rename-collection",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:update-many",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-connect-cluster",
+    "expected_effect": "write",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-create-access-list",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-create-cluster",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-create-db-user",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-create-free-cluster",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-create-project",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-get-performance-advisor",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-get-regions",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-inspect-access-list",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-inspect-cluster",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-list-alerts",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-list-clusters",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-list-db-users",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-list-orgs",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-list-projects",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-load-sample-dataset",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-pause-resume-cluster",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-streams-build",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-streams-discover",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-streams-manage",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-streams-teardown",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-upgrade-cluster",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-local-connect-deployment",
+    "expected_effect": "write",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-local-create-deployment",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-local-delete-deployment",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:atlas-local-list-deployments",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:list-knowledge-sources",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "mongodb:search-knowledge",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_teams",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_users_by_org",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_all_roles",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_role_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_role_assignments",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_user_roles",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_team_roles",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_resource_permissions",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_resource_description",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:user_info",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:search_dashboards",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:search_folders",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_dashboard_by_uid",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_dashboard_versions",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:update_dashboard",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_dashboard_panel_queries",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:run_panel_query",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_dashboard_property",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_dashboard_summary",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:create_folder",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_datasources",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_datasource",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_query_examples",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:query_prometheus",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_prometheus_metric_metadata",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_prometheus_metric_names",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_prometheus_label_names",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_prometheus_label_values",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:query_prometheus_histogram",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_incidents",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:create_incident",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:add_activity_to_incident",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:update_incident",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_incident",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_incident_custom_fields",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:query_loki_logs",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_loki_label_names",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_loki_label_values",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:query_loki_stats",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:query_loki_patterns",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:query_influxdb",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_sql_databases",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_sql_tables",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:describe_sql_table",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:query_sql",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_cloudwatch_namespaces",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_cloudwatch_metrics",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_cloudwatch_dimensions",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_cloudwatch_dimension_values",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:query_cloudwatch",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_cloud_logging_projects",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_cloud_logging_buckets",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_cloud_logging_views",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:query_cloud_logging",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:query_elasticsearch",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:query_quickwit",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:alerting_manage_rules",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:alerting_manage_routing",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:alerting_manage_silences",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_oncall_schedules",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_oncall_shift",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_current_oncall_users",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_oncall_teams",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_oncall_users",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_alert_groups",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_alert_group",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:update_alert_group",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_sift_investigation",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_sift_analysis",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_sift_investigations",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:find_error_pattern_logs",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:find_slow_requests",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_pyroscope_label_names",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_pyroscope_label_values",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_pyroscope_profile_types",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:query_pyroscope",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:search_tempo_traces",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:query_tempo_metrics",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_tempo_trace",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:diff_tempo_traces",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_tempo_attribute_names",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_tempo_attribute_values",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_tempo_traceql_docs",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_assertions",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:ask_assistant",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:generate_deeplink",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_annotations",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:create_annotation",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:update_annotation",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:delete_annotation",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_annotation_tags",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_snapshots",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_snapshot",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:create_snapshot",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:delete_snapshot",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_panel_image",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:list_provisioning_repositories",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:validate_provisioning_file",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:search_docs",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "grafana:get_doc",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:whoami",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:find_organizations",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:find_teams",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:find_projects",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:find_releases",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_release_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:find_dashboards",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_dashboard_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:find_monitors",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_monitor_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:find_uptime_monitors",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_uptime_monitor_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:find_metric_monitors",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_metric_monitor_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:create_metric_monitor",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:update_metric_monitor",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:delete_metric_monitor",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:create_uptime_monitor",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:update_uptime_monitor",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:delete_uptime_monitor",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:find_alert_rules",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_alert_rule",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_alert_options",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:update_alert_rule",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:create_alert_rule",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:delete_alert_rule",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_issue_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_event_stacktrace",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_issue_activity",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_issue_breadcrumbs",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_issue_user_reports",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_issue_tag_values",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_trace_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_span_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_replay_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_event_attachment",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:update_issue",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:search_events",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:create_team",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:create_project",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:update_project",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:add_team_to_project",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:remove_team_from_project",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:create_dsn",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:find_dsns",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:update_dsn",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:analyze_issue_with_seer",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:search_docs",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_doc",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:search_issues",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:search_issue_events",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_profile",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_profile_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_sentry_mcp_info",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_sentry_resource",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_snapshot",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_snapshot_image",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_latest_base_snapshot",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:get_agent_conversation_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:search_agent_conversations",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:add_issue_note",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "sentry:onboarding_status_update",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:list_users",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:get_user",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:create_user",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:delete_user",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:list_roles",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:create_role",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:create_access_key",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iam:simulate_principal_policy",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-mysql:run_query",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-mysql:get_table_schema",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-mysql:connect_to_database",
+    "expected_effect": "write",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-mysql:is_database_connected",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-mysql:get_database_connection_info",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-mysql:create_cluster",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-neptune:get_graph_status",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-neptune:get_graph_schema",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-neptune:run_opencypher_query",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-neptune:run_gremlin_query",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iac:validate_cloudformation_template",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iac:check_cloudformation_template_compliance",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iac:troubleshoot_cloudformation_deployment",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iac:get_cloudformation_pre_deploy_validation_instructions",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iac:search_cdk_documentation",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-iac:search_cloudformation_documentation",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ecs:build_and_push_image_to_ecr",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ecs:validate_ecs_express_mode_prerequisites",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ecs:delete_app",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ecs:wait_for_service_ready",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ecs:delete_ecs_infrastructure",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ecs:containerize_app",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-elasticache:delete-serverless-cache",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-elasticache:delete-cache-cluster",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-roda:search_datasets",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-roda:list_datasets",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-roda:get_dataset_details",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-roda:discover_by_organization",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-roda:discover_by_license",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-roda:find_related_datasets",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_get",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_get_many",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_set",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_add",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_replace",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_delete",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_stats",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-memcached:cache_flush_all",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-valkey:json_get",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-valkey:json_set",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-valkey:json_arrappend",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-valkey:json_arrpop",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-valkey:json_arrtrim",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:get_resource_schema_information",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:list_resources",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:generate_infrastructure_code",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:explain",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:get_resource",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:update_resource",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:create_resource",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-ccapi:delete_resource",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-documentdb:find",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-documentdb:aggregate",
+    "expected_effect": "unknown",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-documentdb:insert",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-documentdb:update",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-documentdb:delete",
+    "expected_effect": "delete",
+    "dangerous": true,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-cloudtrail:lookup_events",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-cloudtrail:lake_query",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-cloudtrail:get_query_status",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-cloudtrail:get_query_results",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-cloudtrail:list_event_data_stores",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-bedrock-kb:ListKnowledgeBases",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-bedrock-kb:QueryKnowledgeBases",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  },
+  {
+    "id": "aws-bedrock-kb:AgenticQueryKnowledgeBases",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "manual-source-review",
+    "label_version": "m1.v0.2"
+  }
+]

@@ -11,3 +11,50 @@ jobs:
       - run: python -m pip install -e .
       - run: python -m pip install pytest
       - run: pytest -q
+      - name: Validate benchmark corpus
+        run: python benchmark/validate_corpus.py | tee corpus-validation.json
+      - name: Run capability benchmark
+        run: python benchmark/run.py | tee benchmark-results.json
+      - name: Run authority reduction benchmark
+        run: python benchmark/authority_reduction.py | tee authority-reduction-results.json
+      - name: Run drift recall benchmark
+        run: python benchmark/drift.py | tee drift-results.json
+      - name: Run latency benchmark
+        run: python benchmark/latency.py | tee latency-results.json
+      - name: Enforce zero false-safe seed gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("benchmark-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["unknown_rate"] <= 0.15, r
+          assert r["overblocking_rate"] <= 0.05, r
+          assert r["accuracy"] >= 0.85, r
+          PY
+      - name: Enforce drift recall gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("drift-results.json"))
+          assert r["servers"] >= 30, r
+          assert r["drift_recall"] == 1.0, r
+          PY
+      - name: Enforce latency sanity gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("latency-results.json"))
+          assert r["compile"]["p95_ms"] < 10, r
+          assert r["authorize"]["p95_ms"] < 2, r
+          PY
+      - name: Enforce authority reduction gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("authority-reduction-results.json"))
+          assert r["tasks"] >= 10, r
+          assert r["mean_authority_reduction"] >= 0.90, r
+          assert r["inventory_capabilities"] >= 450, r
+          assert r["unnecessary_authority_removed"] >= 4500, r
+          PY
