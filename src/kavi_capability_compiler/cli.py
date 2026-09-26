@@ -5,6 +5,7 @@ from .core import scan_mcp_snapshot,audit_inventory,compile_capsule,verify_capsu
 from .discovery import discover_stdio, discover_streamable_http, discover_config_server
 from .config import sanitize_mcp_config
 from .evidence import build_execution_evidence, verify_execution_evidence
+from .live_probe import LiveProbeError, probe_kavi_bridge
 
 def load(p): return json.loads(Path(p).read_text())
 def save(v,p):
@@ -28,6 +29,7 @@ def main():
     p=sub.add_parser("config-summary"); p.add_argument("input"); p.add_argument("-o","--output")
     p=sub.add_parser("evidence-bind"); p.add_argument("capsule"); p.add_argument("--execution-id",required=True); p.add_argument("--evidence",required=True); p.add_argument("--capability"); p.add_argument("--operation"); p.add_argument("-o","--output")
     p=sub.add_parser("evidence-verify"); p.add_argument("input")
+    p=sub.add_parser("probe-kavi"); p.add_argument("--endpoint",required=True); p.add_argument("--token-env",default="KAVI_DISPATCH_TOKEN"); p.add_argument("--timeout",type=float,default=10.0); p.add_argument("-o","--output")
     a=ap.parse_args()
     if a.cmd=="scan": save(scan_mcp_snapshot(load(a.input)),a.output)
     elif a.cmd=="audit": save(audit_inventory(load(a.input)),a.output)
@@ -67,6 +69,22 @@ def main():
     elif a.cmd=="evidence-verify":
         r=verify_execution_evidence(load(a.input)); save(r,None)
         raise SystemExit(0 if r["valid"] else 4)
+    elif a.cmd=="probe-kavi":
+        try:
+            r=probe_kavi_bridge(
+                a.endpoint,
+                token_env=a.token_env,
+                timeout=a.timeout,
+            )
+            save(r,a.output)
+        except LiveProbeError as e:
+            save({
+                "status":"blocked",
+                "code":e.code,
+                "message":str(e),
+                "secret_material_in_artifact":False,
+            },None)
+            raise SystemExit(5)
     else:
         params=json.loads(a.parameters) if a.parameters else {}
         r=authorize_call(load(a.capsule),a.capability,a.operation,params); save(r,None)
