@@ -101,3 +101,50 @@ M3B has two independent paths:
 2. **Hermes-local adapter**
    - only after an actual Hermes capability/tool export or registry is available;
    - do not derive a fake Hermes surface from chat history or unrelated KAVI state.
+
+
+## M3B probe readiness
+
+The authenticated live-observation path is now implemented without widening the
+production bridge.
+
+`kcc probe-kavi`:
+
+1. requires an HTTPS MCP endpoint;
+2. reads the bearer only from a named environment variable (default
+   `KAVI_DISPATCH_TOKEN`);
+3. performs only `initialize`, `tools/list`, and one read-only
+   `get_operator_snapshot` call;
+4. converts the observed live tool list into KCC inventory IR;
+5. records the operator response only as source + SHA-256 digest, not raw snapshot;
+6. emits a canonical `kcc.kavi-live-probe.v0` report fingerprint;
+7. never returns or fingerprints bearer material;
+8. exposes no CLI flag for passing the token value.
+
+Current production health evidence was rechecked on September 26, 2026:
+
+- endpoint: `https://kavi-dispatch-bridge.vercel.app/api/health`
+- HTTP: 200
+- `ok=true`
+- service: `kavi-dispatch-bridge`
+- version: `0.1.0`
+- `configured=true`
+- authority: `kOs-tile/kavi-codex-state`
+
+The connected Vercel read surface does not expose the bridge bearer value, and
+authoritative Shared Execution Control contains no immutable PASS result proving
+the authenticated deployment-verification task ran. Therefore the authenticated
+M3B observation remains **pending credential availability in an authorized secure
+runtime**. It is not marked PASS from health metadata alone.
+
+Secure runtime command:
+
+```bash
+KAVI_DISPATCH_TOKEN=... \
+kcc probe-kavi \
+  --endpoint https://kavi-dispatch-bridge.vercel.app/api/mcp \
+  -o kavi-live-probe.json
+```
+
+The token should be injected by the runtime/secret store, not typed into shell
+history or committed to a file.
