@@ -103,6 +103,38 @@ class Guard:
             raise AuthorityDenied(decision)
         return decision
 
+    def dispatch_sync(
+        self,
+        capability_id: str,
+        dispatcher: Callable[[dict[str, Any]], Any],
+        *,
+        operation: str | None = None,
+        parameters: Mapping[str, Any] | None = None,
+        now: int | None = None,
+    ) -> dict[str, Any]:
+        """Authorize then invoke a synchronous host dispatcher."""
+        params=dict(parameters or {})
+        decision=self.require(
+            capability_id,
+            operation=operation,
+            parameters=params,
+            now=now,
+        )
+        result=dispatcher(params)
+        if inspect.isawaitable(result):
+            if inspect.iscoroutine(result):
+                result.close()
+            raise TypeError("dispatcher returned awaitable; use await Guard.dispatch(...)")
+        return {
+            "executed":True,
+            "sdk_version":SDK_VERSION,
+            "capsule_id":self.capsule_id,
+            "capability_id":capability_id,
+            "operation":operation,
+            "decision":decision,
+            "result":result,
+        }
+
     async def dispatch(
         self,
         capability_id: str,
