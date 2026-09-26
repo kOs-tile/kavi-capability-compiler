@@ -67,3 +67,18 @@ def test_host_can_distinguish_approval_handoff_from_denial():
         assert False, "expected ApprovalRequired"
     except kcc.ApprovalRequired as exc:
         assert exc.decision["reason"]=="approval_required"
+
+
+def test_sync_dispatch_works_without_event_loop():
+    inv=_inventory()
+    ids={x["name"]:x["id"] for x in inv["capabilities"]}
+    cap=kcc.compile_capsule(inv,{"capabilities":[ids["get_record"]]},{"default":"allow"},now=100)
+    guard=kcc.Guard.from_capsule(cap)
+    calls=[]
+    def dispatch(params):
+        calls.append(dict(params))
+        return {"ok":True}
+    out=guard.dispatch_sync(ids["get_record"],dispatch,parameters={"id":"1"},now=101)
+    assert out["executed"] is True
+    assert out["result"]=={"ok":True}
+    assert calls==[{"id":"1"}]
