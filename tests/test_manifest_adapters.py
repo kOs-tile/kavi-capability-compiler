@@ -136,3 +136,51 @@ def test_duplicate_identity_in_same_namespace_fails_closed():
         assert False, "expected duplicate identity failure"
     except ValueError as exc:
         assert "Duplicate capability identity" in str(exc)
+
+
+import asyncio
+from kavi_capability_compiler.adapters import adapt_capabilities, SUPPORTED_SOURCE_FORMATS
+from kavi_capability_compiler.runtime import AuthorityDenied, guarded_dispatch
+
+
+def test_adapter_dispatch_contract_supports_all_declared_formats():
+    payloads={
+        "generic":{"tools":[{"name":"get_record","description":DESC_GET,"input_schema":SCHEMA_GET}]},
+        "mcp":{"tools":[{"name":"get_record","description":DESC_GET,"inputSchema":SCHEMA_GET}]},
+        "openai":{"tools":[{"type":"function","function":{"name":"get_record","description":DESC_GET,"parameters":SCHEMA_GET}}]},
+        "anthropic":{"tools":[{"name":"get_record","description":DESC_GET,"input_schema":SCHEMA_GET}]},
+        "openapi":{"openapi":"3.1.0","paths":{"/records/get":{"post":{"operationId":"get_record","description":DESC_GET,"requestBody":{"content":{"application/json":{"schema":SCHEMA_GET}}}}}}},
+    }
+    manifests=[adapt_capabilities(kind,payloads[kind],namespace="records") for kind in SUPPORTED_SOURCE_FORMATS]
+    assert len({m["digest"] for m in manifests})==1
+
+
+def test_generic_runtime_guard_is_source_format_independent():
+    manifests=_formats()
+    dispatched=[]
+    async def dispatcher(params):
+        dispatched.append(dict(params))
+        return {"ok":True}
+
+    for manifest in manifests:
+        inv=scan_manifest(manifest)
+        ids={x["name"]:x["id"] for x in inv["capabilities"]}
+        cap=compile_capsule(
+            inv,
+            {"task":"Read one record","capabilities":[ids["get_record"]]},
+            {"default":"allow"},
+            now=100,
+        )
+        out=asyncio.run(guarded_dispatch(
+            cap,ids["get_record"],dispatcher,parameters={"id":"a"},now=101
+        ))
+        assert out["executed"] is True
+        before=len(dispatched)
+        try:
+            asyncio.run(guarded_dispatch(
+                cap,ids["update_record"],dispatcher,parameters={"id":"a","value":"b"},now=101
+            ))
+            assert False, "expected AuthorityDenied"
+        except AuthorityDenied as exc:
+            assert exc.decision["reason"]=="capability_not_granted"
+        assert len(dispatched)==before
