@@ -9,7 +9,7 @@ The surrounding public research repositories are intentionally being narrowed in
 | Repository | Role | Relationship to KCC | Current contract status |
 |---|---|---|---|
 | `kavi-capability-compiler` | least-authority compiler + call authorization primitive | authority plane | implemented, benchmarked in M1 |
-| `axiom` | skill discovery / synthesis / evaluation foundry | capability producer | **implemented adapter**: promoted skills export an MCP-shaped snapshot for KCC scanning |
+| `axiom` | skill discovery / synthesis / evaluation foundry | capability producer | KCC bundle + deterministic pre-authority `plan_fingerprint` implemented; planning evidence grants no authority |
 | `mnemos` | provenance-aware persistent memory | state/memory plane | admission audit implemented; can be referenced by execution evidence digest |
 | `oracle` | provenance-aware current-world context ingestion | evidence/context plane | evidence ledger + canonical digest implemented; digest can be bound to execution evidence |
 | `spectraflow` | behavior + authority-drift observability | observability plane | KCC correlation + observational authority-drift evaluator implemented |
