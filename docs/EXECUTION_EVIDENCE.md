@@ -18,6 +18,12 @@ canonical KCC capsule by digest.
   "operation": "list",
   "evidence": [
     {
+      "kind": "capability_plan",
+      "producer": "axiom",
+      "artifact_id": "plan-123",
+      "artifact_digest": "<AXIOM plan_fingerprint>"
+    },
+    {
       "kind": "context",
       "producer": "oracle",
       "artifact_id": "state-2026-09-26T17:00:00Z",
@@ -61,6 +67,7 @@ not the full evidence payloads.
 
 | Producer | Evidence artifact | Digest |
 |---|---|---|
+| AXIOM | pre-authority capability plan binding snapshot + intent | `plan_fingerprint` |
 | ORACLE | provenance/freshness ledger | `evidence_digest` |
 | MNEMOS | memory admission audit | `admission_fingerprint` |
 | SPECTRAFLOW | authority-drift evaluation | `evaluation_fingerprint` |
