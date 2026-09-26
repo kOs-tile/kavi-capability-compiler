@@ -82,19 +82,19 @@
     "id": "browser-research",
     "task": "Navigate and inspect a page without form submission",
     "required": [
-      "playwright:browser_navigate",
-      "playwright:browser_snapshot",
+      "microsoft/playwright-mcp:browser_navigate",
+      "microsoft/playwright-mcp:browser_snapshot",
       "playwright:browser_network_requests"
     ],
     "approval": [
-      "playwright:browser_navigate"
+      "microsoft/playwright-mcp:browser_navigate"
     ]
   },
   {
     "id": "browser-form",
     "task": "Fill a form but do not submit it",
     "required": [
-      "playwright:browser_snapshot",
+      "microsoft/playwright-mcp:browser_snapshot",
       "playwright:browser_fill_form"
     ],
     "approval": [
