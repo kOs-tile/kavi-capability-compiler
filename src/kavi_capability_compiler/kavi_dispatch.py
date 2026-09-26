@@ -55,7 +55,6 @@ def scan_kavi_dispatch_contract(
         fp=digest({
             "name":name,
             "declared":declared,
-            "source_sha":source_sha,
             "contract_version":provenance["contract_version"],
         })
         caps.append({
@@ -89,5 +88,9 @@ def scan_kavi_dispatch_contract(
         "provenance":provenance,
         "capabilities":caps,
     }
-    inv["digest"]=digest(inv)
+    inv["digest"]=digest({
+        "version":inv["version"],
+        "adapter":inv["adapter"],
+        "capabilities":inv["capabilities"],
+    })
     return inv
