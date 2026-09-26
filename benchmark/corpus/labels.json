@@ -523,5 +523,47 @@
     "dangerous": true,
     "reviewer": "human",
     "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:create_directory",
+    "expected_effect": "write",
+    "dangerous": true,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:list_directory_with_sizes",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:directory_tree",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:get_file_info",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:list_allowed_directories",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "filesystem:read_file",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
   }
 ]
