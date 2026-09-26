@@ -1,7 +1,9 @@
-import argparse, json
+import argparse, asyncio, json
 from pathlib import Path
 from . import __version__
 from .core import scan_mcp_snapshot,audit_inventory,compile_capsule,verify_capsule,inventory_lock,diff_inventory_lock,authorize_call
+from .config import sanitize_mcp_config
+from .discovery import discover_stdio, discover_streamable_http
 
 def load(p): return json.loads(Path(p).read_text())
 def save(v,p):
@@ -19,6 +21,9 @@ def main():
     p=sub.add_parser("lock"); p.add_argument("inventory"); p.add_argument("-o","--output")
     p=sub.add_parser("diff"); p.add_argument("lock"); p.add_argument("--inventory",required=True)
     p=sub.add_parser("authorize"); p.add_argument("capsule"); p.add_argument("--capability",required=True); p.add_argument("--operation"); p.add_argument("--parameters")
+    p=sub.add_parser("config-summary"); p.add_argument("input"); p.add_argument("-o","--output")
+    p=sub.add_parser("discover-stdio"); p.add_argument("command"); p.add_argument("args",nargs="*"); p.add_argument("--server-name"); p.add_argument("-o","--output")
+    p=sub.add_parser("discover-http"); p.add_argument("url"); p.add_argument("--server-name"); p.add_argument("-o","--output")
     a=ap.parse_args()
     if a.cmd=="scan": save(scan_mcp_snapshot(load(a.input)),a.output)
     elif a.cmd=="audit": save(audit_inventory(load(a.input)),a.output)
@@ -30,7 +35,13 @@ def main():
     elif a.cmd=="diff":
         r=diff_inventory_lock(load(a.lock),load(a.inventory)); save(r,None)
         raise SystemExit(0 if r["clean"] else 2)
-    else:
+    elif a.cmd=="authorize":
         params=json.loads(a.parameters) if a.parameters else {}
         r=authorize_call(load(a.capsule),a.capability,a.operation,params); save(r,None)
         raise SystemExit(0 if r["allowed"] else 3)
+    elif a.cmd=="config-summary":
+        save(sanitize_mcp_config(load(a.input)),a.output)
+    elif a.cmd=="discover-stdio":
+        save(asyncio.run(discover_stdio(a.command,a.args,server_name=a.server_name)),a.output)
+    else:
+        save(asyncio.run(discover_streamable_http(a.url,server_name=a.server_name)),a.output)
