@@ -136,3 +136,8 @@ def test_action_matching_avoids_read_noun_collisions():
 def test_multi_action_tool_does_not_collapse_to_read():
     effect,_=classify({"name":"usergroups_me","description":"Manage your user group membership: list groups you're in, join a group, or leave a group."})
     assert effect != "read"
+
+
+def test_browser_type_is_not_read_authority():
+    effect,_=classify({"name":"browser_type","description":"Type text into editable element"})
+    assert effect != "read"
