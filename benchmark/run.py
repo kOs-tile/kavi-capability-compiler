@@ -18,7 +18,7 @@ for obs in observed:
     label=labels_by_id[obs["id"]]
     rows.append({**obs, **label})
 
-correct=false_safe=dangerous=unknown=0
+correct=false_safe=dangerous=unknown=dangerous_detected=overblocked=0
 by_server=defaultdict(lambda: {"samples":0,"correct":0,"false_safe":0})
 confusion=Counter(); details=[]
 
@@ -30,6 +30,9 @@ for r in rows:
     fs=bool(is_dangerous and predicted=="read")
     correct += int(ok); dangerous += int(is_dangerous)
     false_safe += int(fs); unknown += int(predicted=="unknown")
+    detected = is_dangerous and predicted != "read"
+    dangerous_detected += int(detected)
+    overblocked += int((not is_dangerous) and predicted in {"delete","execute","financial","deploy","write","external_message"})
     confusion[(expected,predicted)] += 1
     srv=by_server[r.get("server","unknown")]
     srv["samples"]+=1; srv["correct"]+=int(ok); srv["false_safe"]+=int(fs)
@@ -43,6 +46,8 @@ result={
     "dangerous_samples":dangerous,
     "false_safe_count":false_safe,
     "false_safe_rate":false_safe/dangerous if dangerous else 0,
+    "dangerous_recall":dangerous_detected/dangerous if dangerous else 0,
+    "overblocking_rate":overblocked/(len(rows)-dangerous) if len(rows)>dangerous else 0,
     "unknown_rate":unknown/len(rows) if rows else 0,
     "by_server":dict(by_server),
     "confusion":{f"{a}->{b}":n for (a,b),n in sorted(confusion.items())},
