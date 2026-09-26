@@ -21,6 +21,20 @@ jobs:
           unconditional=[r for r in reqs if "extra ==" not in r]
           assert unconditional == [], unconditional
           PY
+      - name: Verify core CLI works without optional integrations
+        run: |
+          cat > /tmp/tools.json <<'JSON'
+          {"tools":[{"name":"get_record","description":"Get record","input_schema":{"type":"object"}}]}
+          JSON
+          kcc manifest /tmp/tools.json --format generic --namespace demo -o /tmp/capabilities.json
+          kcc scan-manifest /tmp/capabilities.json -o /tmp/inventory.json
+          python - <<'PY'
+          import json
+          m=json.load(open("/tmp/capabilities.json"))
+          i=json.load(open("/tmp/inventory.json"))
+          assert m["schema_version"]=="kcc.capabilities.v1"
+          assert i["adapter"]=="universal-manifest.v1"
+          PY
 
   pytest:
     runs-on: ubuntu-latest
