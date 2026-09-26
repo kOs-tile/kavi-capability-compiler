@@ -82,3 +82,22 @@ def test_streamable_http_live_discovery_builds_inventory():
         except subprocess.TimeoutExpired:
             proc.kill()
             proc.wait(timeout=3)
+
+
+def test_live_stdio_discovery_detects_added_removed_and_changed_authority():
+    from kavi_capability_compiler.core import inventory_lock, diff_inventory_lock
+
+    base=asyncio.run(
+        discover_stdio(sys.executable,[str(FIXTURE)],env={"KCC_FIXTURE_VARIANT":"base"})
+    )["inventory"]
+    lock=inventory_lock(base)
+
+    drift=asyncio.run(
+        discover_stdio(sys.executable,[str(FIXTURE)],env={"KCC_FIXTURE_VARIANT":"drift"})
+    )["inventory"]
+    diff=diff_inventory_lock(lock,drift)
+
+    assert diff["clean"] is False
+    assert diff["added"] == ["mcp:kcc-discovery-fixture:create_item"]
+    assert diff["removed"] == ["mcp:kcc-discovery-fixture:delete_item"]
+    assert diff["changed"] == ["mcp:kcc-discovery-fixture:lookup_item"]
