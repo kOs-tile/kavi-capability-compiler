@@ -1,0 +1,27 @@
+{
+  "version": "kcc.m2.discovery-holdout.v0",
+  "sealed_before_first_run": true,
+  "server": {
+    "id": "everything",
+    "package": "@modelcontextprotocol/server-everything",
+    "published_version": "2026.8.31",
+    "source_repository": "modelcontextprotocol/servers",
+    "expected_tools": [
+      {
+        "name": "echo",
+        "source_file": "src/everything/tools/echo.ts",
+        "source_blob_sha": "0658e831954f99868a6b494f4c1351ccbbd9aa3a"
+      },
+      {
+        "name": "get-sum",
+        "source_file": "src/everything/tools/get-sum.ts",
+        "source_blob_sha": "470293bf6f555f9206001b4a90e1e152cd6c48a2"
+      },
+      {
+        "name": "get-env",
+        "source_file": "src/everything/tools/get-env.ts",
+        "source_blob_sha": "55eabfaa9796318311a759e6daabf25c54106f49"
+      }
+    ]
+  }
+}

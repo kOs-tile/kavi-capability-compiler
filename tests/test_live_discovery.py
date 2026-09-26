@@ -198,3 +198,29 @@ def test_http_failure_does_not_echo_secret_endpoint_values():
         assert False, "expected DiscoveryError"
     except DiscoveryError as exc:
         assert secret not in str(exc)
+
+
+def test_vscode_servers_and_serverurl_config_shapes_are_sanitized():
+    secret="VSCODE_SECRET"
+    cfg={"servers":{
+        "stdio":{"command":"npx","args":["-y","pkg"],"env":{"TOKEN":secret}},
+        "http":{"serverUrl":f"https://example.com/mcp/{secret}?key={secret}","headers":{"X-Token":secret}},
+    }}
+    safe=sanitize_mcp_config(cfg)
+    encoded=json.dumps(safe)
+    assert secret not in encoded
+    by_name={x["name"]:x for x in safe["servers"]}
+    assert by_name["stdio"]["transport"]=="stdio"
+    assert by_name["http"]["transport"]=="streamable-http"
+    assert by_name["http"]["origin"]=="https://example.com"
+    assert by_name["http"]["path_segments"]==2
+    assert by_name["http"]["query_keys"]==["key"]
+
+
+def test_invalid_config_shapes_fail_closed():
+    for cfg in ({}, {"mcpServers":[]}, {"mcpServers":{"bad":{}}}):
+        try:
+            sanitize_mcp_config(cfg)
+            assert False, f"expected ValueError for {cfg}"
+        except ValueError:
+            pass

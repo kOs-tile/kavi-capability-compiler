@@ -1,0 +1,44 @@
+{
+  "version": "kcc.real-mcp-compat.v0",
+  "frozen_before_result": true,
+  "servers": [
+    {
+      "id": "filesystem",
+      "package": "@modelcontextprotocol/server-filesystem",
+      "published_version": "2026.8.31",
+      "source_repository": "modelcontextprotocol/servers",
+      "source_file": "src/filesystem/README.md",
+      "source_blob_sha": "5a7ffe791d2988146286e72870d0d2a3f4f8cff0",
+      "expected_tools": [
+        "read_text_file",
+        "write_file",
+        "list_directory"
+      ]
+    },
+    {
+      "id": "memory",
+      "package": "@modelcontextprotocol/server-memory",
+      "published_version": "2026.8.31",
+      "source_repository": "modelcontextprotocol/servers",
+      "source_file": "src/memory/README.md",
+      "source_blob_sha": "de7be2c060013ecf96e18f33ff8df7df700d09aa",
+      "expected_tools": [
+        "read_graph",
+        "create_entities",
+        "delete_entities"
+      ]
+    },
+    {
+      "id": "sequential-thinking",
+      "package": "@modelcontextprotocol/server-sequential-thinking",
+      "published_version": "2026.8.31",
+      "source_repository": "modelcontextprotocol/servers",
+      "source_file": "src/sequentialthinking/index.ts",
+      "source_blob_sha": "1ae09d1db850159627921b7647f484a075ada09c",
+      "expected_tools": [
+        "sequentialthinking"
+      ],
+      "note": "README heading/tool prose says sequential_thinking, but runtime registration and published tools/list use sequentialthinking."
+    }
+  ]
+}
