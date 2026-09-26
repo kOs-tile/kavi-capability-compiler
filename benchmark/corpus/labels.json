@@ -621,5 +621,68 @@
     "dangerous": false,
     "reviewer": "human",
     "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_label",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:list_label",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_release_by_tag",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:list_releases",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_tag",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:list_tags",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_latest_release",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_team_members",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
+  },
+  {
+    "id": "github:get_me",
+    "expected_effect": "read",
+    "dangerous": false,
+    "reviewer": "human",
+    "label_version": "m1.v0.1"
   }
 ]
