@@ -10,10 +10,10 @@ The surrounding public research repositories are intentionally being narrowed in
 |---|---|---|---|
 | `kavi-capability-compiler` | least-authority compiler + call authorization primitive | authority plane | implemented, benchmarked in M1 |
 | `axiom` | skill discovery / synthesis / evaluation foundry | capability producer | **implemented adapter**: promoted skills export an MCP-shaped snapshot for KCC scanning |
-| `mnemos` | persistent typed memory research | state/memory plane | independent; no authority is implied by retrieved memory |
-| `oracle` | provenance-aware current-world context ingestion | evidence/context plane | independent; values expose truth provenance, but no direct KCC adapter yet |
-| `spectraflow` | LLM telemetry + semantic drift research | observability plane | independent; does not grant or expand authority |
-| `phantom` | deterministic browser extraction toolkit | tool/data plane | independent; browser actions would still require an authority adapter before protected execution |
+| `mnemos` | provenance-aware persistent memory | state/memory plane | admission audit implemented; can be referenced by execution evidence digest |
+| `oracle` | provenance-aware current-world context ingestion | evidence/context plane | evidence ledger + canonical digest implemented; digest can be bound to execution evidence |
+| `spectraflow` | behavior + authority-drift observability | observability plane | KCC correlation + observational authority-drift evaluator implemented |
+| `phantom` | provider-agnostic browser extraction verification | tool/data plane | extraction contracts + drift reports + evidence fingerprints implemented |
 | `nephilim` | evidence-first on-chain pattern detection lab | domain research/data plane | independent; detector output is evidence, not trading authority |
 | `taxflow-crm` | vertical SaaS portfolio/demo | application demo | intentionally outside the KCC core path |
 
@@ -64,3 +64,14 @@ Before another direct integration is added, it should satisfy all of the followi
 5. The integration has a regression test and CI evidence in both the producer contract and KCC-facing fixture/harness.
 
 These are target gates, not claims that every subsystem already meets them.
+
+
+## Execution evidence envelope
+
+KCC now provides a non-authority `kavi.execution-evidence.v0` envelope that binds
+external subsystem artifact digests to one execution and one capsule. See
+[`EXECUTION_EVIDENCE.md`](EXECUTION_EVIDENCE.md).
+
+This is an audit contract, not a permission contract. The envelope always states
+`authority_granted=false`; only the bound KCC capsule and runtime authorization
+primitive define execution authority.
