@@ -29,9 +29,11 @@ def _safe_url(value: Any) -> dict[str, Any]:
     host=p.hostname or ""
     if p.port:
         host=f"{host}:{p.port}"
-    safe=urlunsplit((p.scheme,host,p.path,"",""))
+    origin=urlunsplit((p.scheme,host,"","",""))
+    segments=[x for x in p.path.split("/") if x]
     return {
-        "url":safe,
+        "origin":origin,
+        "path_segments":len(segments),
         "query_keys":sorted({k for k,_ in parse_qsl(p.query,keep_blank_values=True)}),
         "had_userinfo":bool(p.username or p.password),
     }
