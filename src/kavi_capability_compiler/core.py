@@ -1,5 +1,5 @@
 from __future__ import annotations
-import fnmatch, hashlib, json, time
+import fnmatch, hashlib, json, re, time
 
 def canonical(value):
     return json.dumps(value, sort_keys=True, separators=(",", ":"))
@@ -7,51 +7,92 @@ def canonical(value):
 def digest(value):
     return hashlib.sha256(canonical(value).encode()).hexdigest()
 
+def _tokens(value):
+    return re.findall(r"[a-z0-9]+", str(value).lower())
+
+def _phrase(text, phrase):
+    pattern=r"(?<![a-z0-9])"+r"\\s+".join(re.escape(x) for x in phrase.split())+r"(?![a-z0-9])"
+    return bool(re.search(pattern,text.lower()))
+
 def analyze_capability(tool):
     annotations = dict(tool.get("annotations") or {})
-    text = " ".join([tool.get("name",""), tool.get("description","")]).lower()
+    name = tool.get("name","")
+    description = tool.get("description","")
+    name_tokens = _tokens(name)
+    desc_tokens = _tokens(description)
+    leading = desc_tokens[0] if desc_tokens else ""
     evidence = []
     for key, value in annotations.items():
         if value is not None:
             evidence.append({"kind":"annotation","key":key,"value":value})
 
-    dangerous_rules = [
-        ("delete", ("delete","remove","destroy","drop")),
-        ("deploy", ("deploy","publish production")),
-        ("execute", ("rce-equivalent","arbitrary javascript","evaluate javascript","exec","shell","command","run process")),
-        ("financial", ("payment","transfer","trade","purchase")),
-    ]
-    effect = None
-    confidence = 0.0
-    for candidate, words in dangerous_rules:
-        matched = [w for w in words if w in text]
-        if matched:
-            effect, confidence = candidate, 0.95
-            evidence.append({"kind":"lexical","effect":candidate,"matches":matched,"confidence":confidence})
-            break
+    delete_actions={"delete","remove","destroy","drop","clear","flush","pop","trim","teardown"}
+    execute_actions={"exec","execute","evaluate","shell"}
+    financial_actions={"payment","transfer","trade","purchase"}
+    write_actions={"create","update","write","edit","merge","upload","add","append","set","put",
+        "insert","rename","push","mark","ack","acknowledge","connect","disconnect","pause","resume",
+        "upgrade","build","replace","touch","expire","move","patch","containerize","join","leave"}
+    read_actions={"read","get","list","search","fetch","inspect","status","snapshot","show","find",
+        "query","describe","count","scan","preview","discover","check","validate","explain","diff",
+        "log","wait","simulate","type","info","retrieve"}
+    external_actions={"send","publish"}
 
-    mixed_markers = ("list, create, close", "list/create/close", "create, close, or select")
-    if effect is None and any(m in text for m in mixed_markers):
-        effect, confidence = "mixed", 0.85
-        evidence.append({"kind":"lexical","effect":"mixed","matches":["multi-operation description"],"confidence":confidence})
+    # Name action evidence is preferred over incidental nouns in descriptions.
+    # Destructive/high-impact actions take precedence.
+    effect=None; confidence=0.0
+    matches=[x for x in name_tokens if x in delete_actions]
+    if matches or leading in delete_actions:
+        effect,confidence="delete",0.95
+        evidence.append({"kind":"lexical","source":"action","effect":"delete","matches":matches or [leading],"confidence":confidence})
+    elif any(x in execute_actions for x in name_tokens) or leading in execute_actions or _phrase(description,"rce equivalent") or _phrase(description,"arbitrary javascript"):
+        matches=[x for x in name_tokens if x in execute_actions]
+        effect,confidence="execute",0.95
+        evidence.append({"kind":"lexical","source":"action","effect":"execute","matches":matches or [leading or "explicit execution evidence"],"confidence":confidence})
+    elif any(x in financial_actions for x in name_tokens) or leading in financial_actions:
+        matches=[x for x in name_tokens if x in financial_actions]
+        effect,confidence="financial",0.95
+        evidence.append({"kind":"lexical","source":"action","effect":"financial","matches":matches or [leading],"confidence":confidence})
+    elif "deploy" in name_tokens or leading=="deploy" or _phrase(description,"publish production"):
+        effect,confidence="deploy",0.95
+        evidence.append({"kind":"lexical","source":"action","effect":"deploy","matches":["deploy"],"confidence":confidence})
 
+    # Generic manage/run-query surfaces are context dependent unless bounded later.
+    if effect is None and ("manage" in name_tokens or leading=="manage" or ("run" in name_tokens and "query" in name_tokens)):
+        effect,confidence="mixed",0.85
+        evidence.append({"kind":"lexical","source":"action","effect":"mixed","matches":["context-dependent operation"],"confidence":confidence})
+
+    if effect is None:
+        write_matches=[x for x in name_tokens if x in write_actions or x in {"lpush","rpush","hset","sadd","zadd","xadd"}]
+        external_match=("message" in name_tokens and any(x in {"add","send","post"} for x in name_tokens)) or any(x in external_actions for x in name_tokens)
+        if external_match:
+            effect,confidence="external_message",0.85
+            evidence.append({"kind":"lexical","source":"name_action","effect":effect,"matches":[x for x in name_tokens if x in external_actions or x in {"message","send","post"}],"confidence":confidence})
+        elif write_matches:
+            effect,confidence="write",0.85
+            evidence.append({"kind":"lexical","source":"name_action","effect":effect,"matches":write_matches,"confidence":confidence})
+        else:
+            read_matches=[x for x in name_tokens if x in read_actions]
+            if read_matches:
+                effect,confidence="read",0.85
+                evidence.append({"kind":"lexical","source":"name_action","effect":effect,"matches":read_matches,"confidence":confidence})
+
+    # Only use the description's leading action when the tool name is inconclusive.
+    if effect is None:
+        if leading in write_actions:
+            effect,confidence="write",0.75
+        elif leading in read_actions:
+            effect,confidence="read",0.75
+        elif leading in external_actions:
+            effect,confidence="external_message",0.75
+        if effect is not None:
+            evidence.append({"kind":"lexical","source":"description_leading_action","effect":effect,"matches":[leading],"confidence":confidence})
+
+    # Declared metadata is evidence, not authority, and is consulted only after
+    # explicit action evidence.
     if effect is None and annotations.get("destructiveHint") is True:
         effect, confidence = "write", 0.90
     if effect is None and annotations.get("readOnlyHint") is True:
         effect, confidence = "read", 0.90
-
-    if effect is None:
-        rules = [
-            ("external_message", ("send email","send message","post message")),
-            ("write", ("create","update","write","edit","merge","upload","add observation","commit","checkout","switches branches")),
-            ("read", ("read","get","list","search","fetch","inspect","status","snapshot","show","convert time")),
-        ]
-        for candidate, words in rules:
-            matched = [w for w in words if w in text]
-            if matched:
-                effect, confidence = candidate, 0.8
-                evidence.append({"kind":"lexical","effect":candidate,"matches":matched,"confidence":confidence})
-                break
 
     if effect is None:
         effect = "unknown"
