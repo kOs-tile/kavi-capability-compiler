@@ -1,5 +1,8 @@
 # KAVI Capability Compiler
 
+> **Status — Active flagship.** M0 is shipped and CI-backed; M1 is focused on benchmarking the least-authority thesis against heterogeneous real MCP capability surfaces.
+
+
 KCC is a framework-agnostic **least-authority compiler for AI agents**.
 
 ```
@@ -51,3 +54,5 @@ kcc verify capsule.json --inventory inventory.json
 M0 is a working compiler kernel, not a validated security product. It does **not** yet claim semantic proof of tool behavior, runtime enforcement, signed capsules, live MCP discovery, or production-grade classifier accuracy.
 
 M1 is explicitly designed to test whether the product thesis survives real MCP data. See `docs/ROADMAP.md`.
+
+Earlier KAVI capability experiments and the ideas retained or rejected here are documented in `docs/RESEARCH_LINEAGE.md`.
