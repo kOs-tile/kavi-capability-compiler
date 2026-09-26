@@ -9,7 +9,7 @@ from .core import (
     verify_capsule,
 )
 from .manifest import SCHEMA_VERSION, build_manifest, scan_manifest
-from .runtime import AuthorityDenied
+from .runtime import ApprovalRequired, AuthorityDenied, CapabilityDenied
 from .sdk import Guard, SDK_VERSION
 
 __all__ = [
@@ -27,4 +27,6 @@ __all__ = [
     "diff_inventory_lock",
     "Guard",
     "AuthorityDenied",
+    "ApprovalRequired",
+    "CapabilityDenied",
 ]
