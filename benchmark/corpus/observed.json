@@ -821,5 +821,71 @@
     },
     "annotations": {},
     "source": "https://github.com/github/github-mcp-server/blob/85598ba6e1256f7ebf4867b95d63b833c4549264/README.md"
+  },
+  {
+    "id": "filesystem:create_directory",
+    "server": "filesystem",
+    "name": "create_directory",
+    "description": "Create new directory or ensure it exists",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:list_directory_with_sizes",
+    "server": "filesystem",
+    "name": "list_directory_with_sizes",
+    "description": "List directory contents including file sizes",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:directory_tree",
+    "server": "filesystem",
+    "name": "directory_tree",
+    "description": "Get recursive JSON tree structure of directory contents",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:get_file_info",
+    "server": "filesystem",
+    "name": "get_file_info",
+    "description": "Get detailed file/directory metadata",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:list_allowed_directories",
+    "server": "filesystem",
+    "name": "list_allowed_directories",
+    "description": "List all directories the server is allowed to access",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
+  },
+  {
+    "id": "filesystem:read_file",
+    "server": "filesystem",
+    "name": "read_file",
+    "description": "Read complete contents of a file as text",
+    "inputSchema": {
+      "type": "object"
+    },
+    "annotations": {},
+    "source": "https://github.com/modelcontextprotocol/servers/blob/f46d9578190b476b3501923ea8977d899e8db2cb/src/filesystem/README.md"
   }
 ]
