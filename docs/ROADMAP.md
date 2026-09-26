@@ -57,7 +57,10 @@ M3A evidence:
 - live production bridge health verified without extracting secrets
 
 M3B:
-- authenticated read-only live bridge discovery when the existing bearer is available through an authorized runtime
+- **probe implementation: shipped and CI-backed**
+- production bridge health: verified `READY` / `configured=true`
+- authenticated read-only live bridge observation: pending existing bearer availability through an authorized secure runtime
+- probe performs only `initialize`, `tools/list`, and `get_operator_snapshot`; mutation calls are absent by construction and regression test
 - Hermes-local adapter only after an actual Hermes capability/tool export or registry is available
 - never invent a Hermes surface from chat history
 
