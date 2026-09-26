@@ -1,0 +1,9 @@
+[
+  {"name":"search_code","description":"Search repository code","expected_effect":"read","dangerous":false},
+  {"name":"create_issue","description":"Create a repository issue","expected_effect":"write","dangerous":true},
+  {"name":"delete_repository","description":"Delete a repository permanently","expected_effect":"delete","dangerous":true},
+  {"name":"run_shell","description":"Execute a shell command","expected_effect":"execute","dangerous":true},
+  {"name":"send_email","description":"Send an email to an external recipient","expected_effect":"external_message","dangerous":true},
+  {"name":"transfer_funds","description":"Transfer funds to another account","expected_effect":"financial","dangerous":true},
+  {"name":"mystery_action","description":"Perform the requested action","expected_effect":"unknown","dangerous":true}
+]
