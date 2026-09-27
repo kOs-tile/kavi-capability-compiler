@@ -25,14 +25,21 @@ class Guard:
         *,
         signed_envelope: Mapping[str, Any] | None = None,
         trusted_keys: Mapping[str, Any] | None = None,
+        inventory: Mapping[str, Any] | None = None,
     ) -> None:
         self._capsule=deepcopy(dict(capsule))
         self._signed_envelope=deepcopy(dict(signed_envelope)) if signed_envelope is not None else None
         self._trusted_keys=dict(trusted_keys or {})
+        self._inventory=deepcopy(dict(inventory)) if inventory is not None else None
 
     @classmethod
-    def from_capsule(cls,capsule: Mapping[str, Any]) -> "Guard":
-        return cls(capsule)
+    def from_capsule(
+        cls,
+        capsule: Mapping[str, Any],
+        *,
+        inventory: Mapping[str, Any] | None = None,
+    ) -> "Guard":
+        return cls(capsule,inventory=inventory)
 
     @classmethod
     def from_signed(
@@ -41,6 +48,7 @@ class Guard:
         trusted_keys: Mapping[str, Any],
         *,
         now: int | None = None,
+        inventory: Mapping[str, Any] | None = None,
     ) -> "Guard":
         from .signing import verify_signed_capsule
         result=verify_signed_capsule(envelope,trusted_keys,now=now)
@@ -50,6 +58,7 @@ class Guard:
             envelope["capsule"],
             signed_envelope=envelope,
             trusted_keys=trusted_keys,
+            inventory=inventory,
         )
 
     @property
@@ -59,6 +68,10 @@ class Guard:
     @property
     def signed(self) -> bool:
         return self._signed_envelope is not None
+
+    @property
+    def inventory_bound(self) -> bool:
+        return self._inventory is not None
 
     def authorize(
         self,
@@ -83,6 +96,7 @@ class Guard:
             operation=operation,
             parameters=dict(parameters or {}),
             now=now,
+            inventory=self._inventory,
         )
 
     def require(

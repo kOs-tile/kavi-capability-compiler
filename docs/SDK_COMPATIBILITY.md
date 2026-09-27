@@ -24,6 +24,8 @@ For the `0.1.x` line:
 - the core install remains usable without optional MCP or signing dependencies
 - a denied or approval-required call never reaches the caller-supplied dispatcher
 - unknown or unsupported authority is rejected or routed to approval; it is never silently granted
+- `Guard.from_capsule(..., inventory=...)` and `Guard.from_signed(..., inventory=...)` may bind execution to the current capability inventory
+- when parameter constraints are present, their keys bound the runtime parameter names that are authorized
 
 ## Exception semantics
 
@@ -40,7 +42,7 @@ Every KCC authorization exception:
 
 `CapabilityDenied` is raised only when policy explicitly places the requested capability in the capsule's denial set and the reason is `capability_denied`.
 
-All other authorization failures, including invalid integrity, unsupported capsule version, missing fail-closed marker, expiry, missing grants, operation violations, and parameter violations, raise `AuthorityDenied`.
+All other authorization failures, including invalid integrity, unsupported capsule version, missing fail-closed marker, invalid inventory binding, inventory drift, expiry, missing grants, operation violations, and parameter violations, raise `AuthorityDenied`.
 
 Dispatcher exceptions are not converted into authorization exceptions after a call has been authorized.
 
@@ -61,6 +63,12 @@ Signing refuses a capsule that:
 - does not set `fail_closed` to true
 
 Verification binds trust to host-supplied public keys. The envelope's `key_id` identifies a key but cannot make that key trusted.
+
+## Replay and mediation boundary
+
+A valid capsule may authorize more than one tool call until it expires. KCC v0.1 does not maintain a distributed replay database. Hosts that require one-shot execution or cross-service replay prevention must bind a unique execution identity and maintain replay state outside KCC.
+
+KCC also cannot prevent a host from directly invoking its own dispatcher without routing the call through Guard. The enforcement claim applies to calls that cross the KCC Guard boundary.
 
 ## Compatibility boundary
 
