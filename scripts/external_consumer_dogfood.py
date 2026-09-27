@@ -4,6 +4,7 @@ import argparse
 import json
 import platform
 import subprocess
+import sys
 from importlib import metadata
 from pathlib import Path
 
@@ -207,8 +208,10 @@ def main() -> None:
     package_path = Path(kcc.__file__).resolve()
     assert "site-packages" in package_path.parts, package_path
 
+    cli_executable = Path(sys.executable).with_name("kcc")
+    assert cli_executable.is_file(), cli_executable
     cli = subprocess.run(
-        ["kcc", "--version"],
+        [str(cli_executable), "--version"],
         check=True,
         capture_output=True,
         text=True,
