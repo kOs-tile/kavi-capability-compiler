@@ -268,4 +268,4 @@ def test_streamable_http_rejects_non_http_schemes():
         ))
         assert False, "expected ValueError"
     except ValueError as exc:
-        assert "must use http or https" in str(exc)
+        assert "must use http:// or https://" in str(exc)
