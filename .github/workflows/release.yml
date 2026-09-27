@@ -14,6 +14,8 @@ on:
       - "CHANGELOG.md"
       - "docs/RELEASE_NOTES_V0.1.md"
       - "docs/RELEASE_CHECKLIST.md"
+      - "docs/DISTRIBUTION_V0.1.md"
+      - "docs/EMBEDDED_SDK.md"
       - "SECURITY.md"
   workflow_dispatch:
     inputs:
