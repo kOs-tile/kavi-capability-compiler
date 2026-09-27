@@ -12,12 +12,24 @@ EXPECTED_DIRECT_WHEEL=(
     "https://github.com/kOs-tile/kavi-capability-compiler/releases/download/"
     "v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
 )
+EXPECTED_PAGES_INDEX=(
+    "https://kos-tile.github.io/kavi-capability-compiler/simple/"
+)
 
 
 def require(path: str, needle: str) -> None:
     text=Path(path).read_text()
     if needle not in text:
         raise SystemExit(f"{path}: missing required release marker: {needle}")
+
+
+def forbid_exact_lines(path: str, forbidden: set[str]) -> None:
+    lines={line.strip() for line in Path(path).read_text().splitlines()}
+    bad=sorted(lines.intersection(forbidden))
+    if bad:
+        raise SystemExit(
+            f"{path}: stale unsupported install command(s): {bad}"
+        )
 
 
 def main() -> None:
@@ -49,7 +61,29 @@ def main() -> None:
         )
 
     require("README.md",EXPECTED_DIRECT_WHEEL)
+    require("README.md",EXPECTED_PAGES_INDEX)
+    require("docs/EMBEDDED_SDK.md",EXPECTED_DIRECT_WHEEL)
+    require("docs/EMBEDDED_SDK.md",EXPECTED_PAGES_INDEX)
+
+    for extra in ("mcp","signing","all"):
+        marker=f'kavi-capability-compiler[{extra}] @ {EXPECTED_DIRECT_WHEEL}'
+        require("README.md",marker)
+        require("docs/EMBEDDED_SDK.md",marker)
+
+    forbid_exact_lines(
+        "docs/EMBEDDED_SDK.md",
+        {
+            "pip install kavi-capability-compiler",
+            'pip install "kavi-capability-compiler[mcp]"',
+            'pip install "kavi-capability-compiler[signing]"',
+            'pip install "kavi-capability-compiler[all]"',
+        },
+    )
+
     require("docs/RELEASE_NOTES_V0.1.md",EXPECTED_DIRECT_WHEEL)
+    require("docs/DISTRIBUTION_V0.1.md","The GitHub Pages Simple Repository is live")
+    require("docs/RELEASE_NOTES_V0.1.md","The live standards-compliant Simple Repository index")
+    require("docs/M5_EXIT.md","**Historical checkpoint.**")
     require("SECURITY.md","cryptography>=50.0.1,<51")
     require("SECURITY.md","Remote Streamable HTTP discovery requires HTTPS.")
 
@@ -60,6 +94,7 @@ def main() -> None:
         "tag":EXPECTED_TAG,
         "requires_python":project["requires-python"],
         "distribution":"github-release-first",
+        "public_install_docs":"verified",
         "pass":True,
     }
     print(json.dumps(result,sort_keys=True))

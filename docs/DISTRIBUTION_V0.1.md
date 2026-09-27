@@ -26,7 +26,7 @@ This URL points to the versioned `v0.1.0` release asset rather than a mutable br
 
 KCC includes a generator for the Python Simple Repository API. The generated project page links directly to the immutable GitHub Release assets and includes each artifact's SHA-256 digest in the URL fragment.
 
-After GitHub Pages is enabled with GitHub Actions as the publishing source, run the manual `deploy-simple-index` workflow. That workflow:
+The GitHub Pages Simple Repository is live and is deployed from the manual `deploy-simple-index` workflow. That workflow:
 
 1. downloads only the fixed `v0.1.0` release assets,
 2. verifies `SHA256SUMS`,

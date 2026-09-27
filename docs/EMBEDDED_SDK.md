@@ -41,19 +41,29 @@ Guard
 
 ## Minimal install
 
+The v0.1.0 core package is available through KCC's live GitHub Pages Simple Repository:
+
 ```bash
-pip install kavi-capability-compiler
+python -m pip install --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/ kavi-capability-compiler
+```
+
+You can also install the exact versioned GitHub Release wheel directly:
+
+```bash
+python -m pip install https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl
 ```
 
 The default package has no required runtime dependencies outside the Python standard library.
 
-Optional integrations:
+Optional integrations use the exact published wheel with PEP 508 extras metadata:
 
 ```bash
-pip install "kavi-capability-compiler[mcp]"
-pip install "kavi-capability-compiler[signing]"
-pip install "kavi-capability-compiler[all]"
+python -m pip install "kavi-capability-compiler[mcp] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
+python -m pip install "kavi-capability-compiler[signing] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
+python -m pip install "kavi-capability-compiler[all] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
 ```
+
+The KCC Pages index intentionally contains KCC artifacts only. When an optional extra is installed from the direct wheel URL, pip resolves that extra's third-party dependencies from the normal package index.
 
 MCP discovery is optional. Signed capsules are optional. Neither is required to embed the core compiler and guard.
 
@@ -127,10 +137,10 @@ See `SDK_COMPATIBILITY.md` for the frozen v0.1 contracts and exception semantics
 
 ## Signed capsules
 
-For distributed stacks where the compiler and executor are separate processes or services, install the optional signing extra:
+For distributed stacks where the compiler and executor are separate processes or services, install the optional signing extra from the exact published wheel:
 
 ```bash
-pip install "kavi-capability-compiler[signing]"
+python -m pip install "kavi-capability-compiler[signing] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
 ```
 
 KCC signs the exact capsule with Ed25519.

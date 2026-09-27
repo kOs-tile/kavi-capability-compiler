@@ -62,7 +62,7 @@ Until the PyPI mirror is available, install the exact v0.1.0 wheel from this Git
 python -m pip install https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl
 ```
 
-The release includes the wheel, source distribution, and `SHA256SUMS`. An optional standards-compliant Simple Repository index can expose these same release assets through GitHub Pages without rebuilding them.
+The release includes the wheel, source distribution, and `SHA256SUMS`. The live standards-compliant Simple Repository index exposes these same release assets through GitHub Pages without rebuilding them.
 
 ## Important limits
 

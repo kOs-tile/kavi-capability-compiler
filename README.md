@@ -86,16 +86,24 @@ Python 3.11+.
 
 Default install is the embedded core SDK and has no required third-party runtime dependencies.
 
-For v0.1.0 before the PyPI mirror is available, install the versioned GitHub Release wheel directly:
+For v0.1.0, the GitHub Pages Simple Repository is live. Install the zero-dependency core by project name:
+
+```bash
+python -m pip install --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/ kavi-capability-compiler
+```
+
+Or install the exact versioned GitHub Release wheel directly:
 
 ```bash
 python -m pip install https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl
 ```
 
-After the optional GitHub Pages Simple Repository index is enabled, pip can also install by project name:
+Optional extras use the exact same published wheel while pip resolves their third-party dependencies from the normal package index:
 
 ```bash
-python -m pip install --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/ kavi-capability-compiler
+python -m pip install "kavi-capability-compiler[mcp] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
+python -m pip install "kavi-capability-compiler[signing] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
+python -m pip install "kavi-capability-compiler[all] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
 ```
 
 PyPI may be added later as a mirror of the exact same verified v0.1.0 artifacts; v0.1.0 will not be rebuilt for PyPI.
