@@ -1,5 +1,8 @@
 import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parents[2]))
 
 from kavi_capability_compiler.core import authorize_call, compile_capsule
 from case_studies.kavi.kavi_dispatch import scan_kavi_dispatch_contract
