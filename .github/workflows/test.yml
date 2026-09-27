@@ -33,6 +33,7 @@ jobs:
           m=json.load(open("/tmp/capabilities.json"))
           i=json.load(open("/tmp/inventory.json"))
           assert m["schema_version"]=="kcc.capabilities.v1"
+          assert i["version"]=="kcc.inventory.v1"
           assert i["adapter"]=="universal-manifest.v1"
           PY
 
@@ -57,8 +58,1314 @@ jobs:
           sdist=$(ls dist/*.tar.gz)
           tar -tzf "$sdist" | grep '/CHANGELOG.md$'
           tar -tzf "$sdist" | grep '/docs/INTEGRATION_RECIPES.md$'
-          tar -tzf "$sdist" | grep '/schemas/kcc.capabilities.v1.schema.json$'
-          tar -tzf "$sdist" | grep '/examples/integrations_smoke.py$'
+          tar -tzf "$sdist" | grep '/schemas/kcc.capabilities.v1.schema.json
+      - name: Install wheel without dependencies
+        run: |
+          python -m venv /tmp/kcc-wheel
+          /tmp/kcc-wheel/bin/pip install --no-deps dist/*.whl
+      - name: Smoke embedded SDK and core CLI from wheel
+        run: |
+          /tmp/kcc-wheel/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          from importlib import metadata
+          assert kcc.__version__=="0.1.0"
+          assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          assert kcc.INVENTORY_VERSION=="kcc.inventory.v1"
+          assert kcc.INVENTORY_LOCK_VERSION=="kcc.inventory-lock.v1"
+          assert kcc.CAPSULE_VERSION=="kcc.capsule.v1"
+          assert callable(kcc.Guard)
+          assert metadata.version("kavi-capability-compiler")=="0.1.0"
+          import importlib.util
+          assert metadata.metadata("kavi-capability-compiler")["Requires-Python"]==">=3.11"
+          assert kcc.schema_names()==(
+              "kcc.capabilities.v1",
+              "kcc.capsule.v1",
+              "kcc.inventory-lock.v1",
+              "kcc.inventory.v1",
+              "kcc.signed-capsule.v1",
+          )
+          assert kcc.get_schema("kcc.capabilities.v1")["title"]=="KCC Universal Capability Manifest"
+          assert kcc.get_schema("kcc.inventory.v1")["title"]=="KCC Capability Inventory"
+          assert kcc.get_schema("kcc.inventory-lock.v1")["title"]=="KCC Inventory Lock"
+          assert kcc.get_schema("kcc.capsule.v1")["title"]=="KCC Execution Capsule"
+          signed=kcc.get_schema("kcc.signed-capsule.v1")
+          assert signed["properties"]["capsule"]["$ref"]=="kcc.capsule.v1.schema.json"
+          assert importlib.util.find_spec("kavi_capability_compiler.kavi_dispatch") is None
+          assert importlib.util.find_spec("kavi_capability_compiler.live_probe") is None
+          PY
+          cat > /tmp/tools.json <<'JSON'
+          {"tools":[{"name":"read","description":"Read","input_schema":{"type":"object"}}]}
+          JSON
+          /tmp/kcc-wheel/bin/kcc manifest /tmp/tools.json --format generic --namespace smoke -o /tmp/manifest.json
+          /tmp/kcc-wheel/bin/kcc scan-manifest /tmp/manifest.json -o /tmp/inventory.json
+          /tmp/kcc-wheel/bin/python - <<'PY'
+          import json
+          inventory=json.load(open("/tmp/inventory.json"))
+          assert inventory["version"]=="kcc.inventory.v1"
+          PY
+      - name: Verify optional MCP command fails with install guidance
+        run: |
+          set +e
+          output=$(/tmp/kcc-wheel/bin/kcc discover-stdio python 2>&1)
+          code=$?
+          set -e
+          test "$code" -ne 0
+          echo "$output" | grep -F 'kavi-capability-compiler[mcp]'
+      - name: Install MCP extra independently
+        run: |
+          python -m venv /tmp/kcc-mcp
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-mcp/bin/pip install "${wheel}[mcp]"
+          /tmp/kcc-mcp/bin/python - <<'PY'
+          import mcp, httpx2
+          import kavi_capability_compiler as kcc
+          assert kcc.__version__=="0.1.0"
+          PY
+      - name: Install signing extra independently
+        run: |
+          python -m venv /tmp/kcc-signing
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-signing/bin/pip install "${wheel}[signing]"
+          /tmp/kcc-signing/bin/python - <<'PY'
+          import cryptography
+          from kavi_capability_compiler.signing import generate_ed25519_keypair
+          private, public = generate_ed25519_keypair()
+          assert len(private)==32 and len(public)==32
+          PY
+
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e ".[all]"
+      - run: python -m pip install pytest
+      - run: pytest -q
+      - name: Run executable integration recipes
+        run: python examples/integrations_smoke.py
+      - name: Run live discovery integration tests
+        run: pytest -q tests/test_live_discovery.py
+      - name: Run pinned official MCP compatibility
+        run: python benchmark/real_mcp_compat.py | tee real-mcp-compat.json
+      - name: Enforce official MCP compatibility
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-compat.json"))
+          assert r["servers"] == 3, r
+          assert r["all_nonempty"], r
+          assert r["all_expected_tools_present"], r
+          PY
+      - name: Run published MCP version drift
+        run: python benchmark/real_mcp_drift.py | tee real-mcp-drift.json
+      - name: Enforce published MCP drift detection
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-drift.json"))
+          assert not r["clean"], r
+          assert r["drift_event_count"] >= 1, r
+          PY
+      - name: Run sealed M2 discovery holdout
+        run: python benchmark/m2_discovery_holdout.py | tee m2-discovery-holdout.json
+      - name: Run KAVI control-plane dogfood
+        run: python benchmark/kavi_dogfood/run.py | tee kavi-dogfood.json
+      - name: Enforce KAVI dogfood authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("kavi-dogfood.json"))
+          assert r["inventory_capabilities"] == 5, r
+          assert r["declared_mutations"] == 2, r
+          assert r["compiled_grants"] == 1, r
+          assert r["authority_reduction"] == 0.8, r
+          assert r["capsule_status"] == "ready", r
+          assert r["allowed_inside_capsule"], r
+          assert r["enqueue_blocked"], r
+          assert r["approve_blocked"], r
+          assert r["mutation_grants"] == [], r
+          PY
+      - name: Run framework equivalence benchmark
+        run: python benchmark/framework_equivalence.py | tee framework-equivalence.json
+      - name: Enforce framework equivalence
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("framework-equivalence.json"))
+          assert r["formats"] == 5, r
+          assert r["manifest_digest_count"] == 1, r
+          assert r["inventory_digest_count"] == 1, r
+          assert r["all_same_grants"], r
+          assert r["all_allowed_executed"], r
+          assert r["all_outside_blocked"], r
+          assert r["denied_dispatches_total"] == 0, r
+          PY
+      - name: Validate benchmark corpus
+        run: python benchmark/validate_corpus.py | tee corpus-validation.json
+      - name: Run sealed holdout benchmark
+        run: python benchmark/holdout_eval.py | tee holdout-results.json
+      - name: Run capability benchmark
+        run: python benchmark/run.py | tee benchmark-results.json
+      - name: Run authority reduction benchmark
+        run: python benchmark/authority_reduction.py | tee authority-reduction-results.json
+      - name: Run drift recall benchmark
+        run: python benchmark/drift.py | tee drift-results.json
+      - name: Run latency benchmark
+        run: python benchmark/latency.py | tee latency-results.json
+      - name: Enforce revealed-holdout regression floor
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("holdout-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["accuracy"] >= 0.75, r
+          assert r["unknown_rate"] <= 0.30, r
+          PY
+      - name: Enforce zero false-safe seed gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("benchmark-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["unknown_rate"] <= 0.15, r
+          assert r["overblocking_rate"] <= 0.05, r
+          assert r["accuracy"] >= 0.85, r
+          PY
+      - name: Enforce drift recall gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("drift-results.json"))
+          assert r["servers"] >= 30, r
+          assert r["drift_recall"] == 1.0, r
+          PY
+      - name: Enforce latency sanity gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("latency-results.json"))
+          assert r["compile"]["p95_ms"] < 10, r
+          assert r["authorize"]["p95_ms"] < 2, r
+          PY
+      - name: Enforce authority reduction gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("authority-reduction-results.json"))
+          assert r["tasks"] >= 10, r
+          assert r["mean_authority_reduction"] >= 0.90, r
+          assert r["inventory_capabilities"] >= 450, r
+          assert r["unnecessary_authority_removed"] >= 4500, r
+          PY
+
+          tar -tzf "$sdist" | grep '/schemas/kcc.inventory.v1.schema.json
+      - name: Install wheel without dependencies
+        run: |
+          python -m venv /tmp/kcc-wheel
+          /tmp/kcc-wheel/bin/pip install --no-deps dist/*.whl
+      - name: Smoke embedded SDK and core CLI from wheel
+        run: |
+          /tmp/kcc-wheel/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          from importlib import metadata
+          assert kcc.__version__=="0.1.0"
+          assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          assert callable(kcc.Guard)
+          assert metadata.version("kavi-capability-compiler")=="0.1.0"
+          import importlib.util
+          assert metadata.metadata("kavi-capability-compiler")["Requires-Python"]==">=3.11"
+          assert kcc.get_schema("kcc.capabilities.v1")["title"]=="KCC Universal Capability Manifest"
+          assert importlib.util.find_spec("kavi_capability_compiler.kavi_dispatch") is None
+          assert importlib.util.find_spec("kavi_capability_compiler.live_probe") is None
+          PY
+          cat > /tmp/tools.json <<'JSON'
+          {"tools":[{"name":"read","description":"Read","input_schema":{"type":"object"}}]}
+          JSON
+          /tmp/kcc-wheel/bin/kcc manifest /tmp/tools.json --format generic --namespace smoke -o /tmp/manifest.json
+          /tmp/kcc-wheel/bin/kcc scan-manifest /tmp/manifest.json -o /tmp/inventory.json
+      - name: Verify optional MCP command fails with install guidance
+        run: |
+          set +e
+          output=$(/tmp/kcc-wheel/bin/kcc discover-stdio python 2>&1)
+          code=$?
+          set -e
+          test "$code" -ne 0
+          echo "$output" | grep -F 'kavi-capability-compiler[mcp]'
+      - name: Install MCP extra independently
+        run: |
+          python -m venv /tmp/kcc-mcp
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-mcp/bin/pip install "${wheel}[mcp]"
+          /tmp/kcc-mcp/bin/python - <<'PY'
+          import mcp, httpx2
+          import kavi_capability_compiler as kcc
+          assert kcc.__version__=="0.1.0"
+          PY
+      - name: Install signing extra independently
+        run: |
+          python -m venv /tmp/kcc-signing
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-signing/bin/pip install "${wheel}[signing]"
+          /tmp/kcc-signing/bin/python - <<'PY'
+          import cryptography
+          from kavi_capability_compiler.signing import generate_ed25519_keypair
+          private, public = generate_ed25519_keypair()
+          assert len(private)==32 and len(public)==32
+          PY
+
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e ".[all]"
+      - run: python -m pip install pytest
+      - run: pytest -q
+      - name: Run executable integration recipes
+        run: python examples/integrations_smoke.py
+      - name: Run live discovery integration tests
+        run: pytest -q tests/test_live_discovery.py
+      - name: Run pinned official MCP compatibility
+        run: python benchmark/real_mcp_compat.py | tee real-mcp-compat.json
+      - name: Enforce official MCP compatibility
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-compat.json"))
+          assert r["servers"] == 3, r
+          assert r["all_nonempty"], r
+          assert r["all_expected_tools_present"], r
+          PY
+      - name: Run published MCP version drift
+        run: python benchmark/real_mcp_drift.py | tee real-mcp-drift.json
+      - name: Enforce published MCP drift detection
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-drift.json"))
+          assert not r["clean"], r
+          assert r["drift_event_count"] >= 1, r
+          PY
+      - name: Run sealed M2 discovery holdout
+        run: python benchmark/m2_discovery_holdout.py | tee m2-discovery-holdout.json
+      - name: Run KAVI control-plane dogfood
+        run: python benchmark/kavi_dogfood/run.py | tee kavi-dogfood.json
+      - name: Enforce KAVI dogfood authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("kavi-dogfood.json"))
+          assert r["inventory_capabilities"] == 5, r
+          assert r["declared_mutations"] == 2, r
+          assert r["compiled_grants"] == 1, r
+          assert r["authority_reduction"] == 0.8, r
+          assert r["capsule_status"] == "ready", r
+          assert r["allowed_inside_capsule"], r
+          assert r["enqueue_blocked"], r
+          assert r["approve_blocked"], r
+          assert r["mutation_grants"] == [], r
+          PY
+      - name: Run framework equivalence benchmark
+        run: python benchmark/framework_equivalence.py | tee framework-equivalence.json
+      - name: Enforce framework equivalence
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("framework-equivalence.json"))
+          assert r["formats"] == 5, r
+          assert r["manifest_digest_count"] == 1, r
+          assert r["inventory_digest_count"] == 1, r
+          assert r["all_same_grants"], r
+          assert r["all_allowed_executed"], r
+          assert r["all_outside_blocked"], r
+          assert r["denied_dispatches_total"] == 0, r
+          PY
+      - name: Validate benchmark corpus
+        run: python benchmark/validate_corpus.py | tee corpus-validation.json
+      - name: Run sealed holdout benchmark
+        run: python benchmark/holdout_eval.py | tee holdout-results.json
+      - name: Run capability benchmark
+        run: python benchmark/run.py | tee benchmark-results.json
+      - name: Run authority reduction benchmark
+        run: python benchmark/authority_reduction.py | tee authority-reduction-results.json
+      - name: Run drift recall benchmark
+        run: python benchmark/drift.py | tee drift-results.json
+      - name: Run latency benchmark
+        run: python benchmark/latency.py | tee latency-results.json
+      - name: Enforce revealed-holdout regression floor
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("holdout-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["accuracy"] >= 0.75, r
+          assert r["unknown_rate"] <= 0.30, r
+          PY
+      - name: Enforce zero false-safe seed gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("benchmark-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["unknown_rate"] <= 0.15, r
+          assert r["overblocking_rate"] <= 0.05, r
+          assert r["accuracy"] >= 0.85, r
+          PY
+      - name: Enforce drift recall gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("drift-results.json"))
+          assert r["servers"] >= 30, r
+          assert r["drift_recall"] == 1.0, r
+          PY
+      - name: Enforce latency sanity gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("latency-results.json"))
+          assert r["compile"]["p95_ms"] < 10, r
+          assert r["authorize"]["p95_ms"] < 2, r
+          PY
+      - name: Enforce authority reduction gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("authority-reduction-results.json"))
+          assert r["tasks"] >= 10, r
+          assert r["mean_authority_reduction"] >= 0.90, r
+          assert r["inventory_capabilities"] >= 450, r
+          assert r["unnecessary_authority_removed"] >= 4500, r
+          PY
+
+          tar -tzf "$sdist" | grep '/schemas/kcc.inventory-lock.v1.schema.json
+      - name: Install wheel without dependencies
+        run: |
+          python -m venv /tmp/kcc-wheel
+          /tmp/kcc-wheel/bin/pip install --no-deps dist/*.whl
+      - name: Smoke embedded SDK and core CLI from wheel
+        run: |
+          /tmp/kcc-wheel/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          from importlib import metadata
+          assert kcc.__version__=="0.1.0"
+          assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          assert callable(kcc.Guard)
+          assert metadata.version("kavi-capability-compiler")=="0.1.0"
+          import importlib.util
+          assert metadata.metadata("kavi-capability-compiler")["Requires-Python"]==">=3.11"
+          assert kcc.get_schema("kcc.capabilities.v1")["title"]=="KCC Universal Capability Manifest"
+          assert importlib.util.find_spec("kavi_capability_compiler.kavi_dispatch") is None
+          assert importlib.util.find_spec("kavi_capability_compiler.live_probe") is None
+          PY
+          cat > /tmp/tools.json <<'JSON'
+          {"tools":[{"name":"read","description":"Read","input_schema":{"type":"object"}}]}
+          JSON
+          /tmp/kcc-wheel/bin/kcc manifest /tmp/tools.json --format generic --namespace smoke -o /tmp/manifest.json
+          /tmp/kcc-wheel/bin/kcc scan-manifest /tmp/manifest.json -o /tmp/inventory.json
+      - name: Verify optional MCP command fails with install guidance
+        run: |
+          set +e
+          output=$(/tmp/kcc-wheel/bin/kcc discover-stdio python 2>&1)
+          code=$?
+          set -e
+          test "$code" -ne 0
+          echo "$output" | grep -F 'kavi-capability-compiler[mcp]'
+      - name: Install MCP extra independently
+        run: |
+          python -m venv /tmp/kcc-mcp
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-mcp/bin/pip install "${wheel}[mcp]"
+          /tmp/kcc-mcp/bin/python - <<'PY'
+          import mcp, httpx2
+          import kavi_capability_compiler as kcc
+          assert kcc.__version__=="0.1.0"
+          PY
+      - name: Install signing extra independently
+        run: |
+          python -m venv /tmp/kcc-signing
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-signing/bin/pip install "${wheel}[signing]"
+          /tmp/kcc-signing/bin/python - <<'PY'
+          import cryptography
+          from kavi_capability_compiler.signing import generate_ed25519_keypair
+          private, public = generate_ed25519_keypair()
+          assert len(private)==32 and len(public)==32
+          PY
+
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e ".[all]"
+      - run: python -m pip install pytest
+      - run: pytest -q
+      - name: Run executable integration recipes
+        run: python examples/integrations_smoke.py
+      - name: Run live discovery integration tests
+        run: pytest -q tests/test_live_discovery.py
+      - name: Run pinned official MCP compatibility
+        run: python benchmark/real_mcp_compat.py | tee real-mcp-compat.json
+      - name: Enforce official MCP compatibility
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-compat.json"))
+          assert r["servers"] == 3, r
+          assert r["all_nonempty"], r
+          assert r["all_expected_tools_present"], r
+          PY
+      - name: Run published MCP version drift
+        run: python benchmark/real_mcp_drift.py | tee real-mcp-drift.json
+      - name: Enforce published MCP drift detection
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-drift.json"))
+          assert not r["clean"], r
+          assert r["drift_event_count"] >= 1, r
+          PY
+      - name: Run sealed M2 discovery holdout
+        run: python benchmark/m2_discovery_holdout.py | tee m2-discovery-holdout.json
+      - name: Run KAVI control-plane dogfood
+        run: python benchmark/kavi_dogfood/run.py | tee kavi-dogfood.json
+      - name: Enforce KAVI dogfood authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("kavi-dogfood.json"))
+          assert r["inventory_capabilities"] == 5, r
+          assert r["declared_mutations"] == 2, r
+          assert r["compiled_grants"] == 1, r
+          assert r["authority_reduction"] == 0.8, r
+          assert r["capsule_status"] == "ready", r
+          assert r["allowed_inside_capsule"], r
+          assert r["enqueue_blocked"], r
+          assert r["approve_blocked"], r
+          assert r["mutation_grants"] == [], r
+          PY
+      - name: Run framework equivalence benchmark
+        run: python benchmark/framework_equivalence.py | tee framework-equivalence.json
+      - name: Enforce framework equivalence
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("framework-equivalence.json"))
+          assert r["formats"] == 5, r
+          assert r["manifest_digest_count"] == 1, r
+          assert r["inventory_digest_count"] == 1, r
+          assert r["all_same_grants"], r
+          assert r["all_allowed_executed"], r
+          assert r["all_outside_blocked"], r
+          assert r["denied_dispatches_total"] == 0, r
+          PY
+      - name: Validate benchmark corpus
+        run: python benchmark/validate_corpus.py | tee corpus-validation.json
+      - name: Run sealed holdout benchmark
+        run: python benchmark/holdout_eval.py | tee holdout-results.json
+      - name: Run capability benchmark
+        run: python benchmark/run.py | tee benchmark-results.json
+      - name: Run authority reduction benchmark
+        run: python benchmark/authority_reduction.py | tee authority-reduction-results.json
+      - name: Run drift recall benchmark
+        run: python benchmark/drift.py | tee drift-results.json
+      - name: Run latency benchmark
+        run: python benchmark/latency.py | tee latency-results.json
+      - name: Enforce revealed-holdout regression floor
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("holdout-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["accuracy"] >= 0.75, r
+          assert r["unknown_rate"] <= 0.30, r
+          PY
+      - name: Enforce zero false-safe seed gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("benchmark-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["unknown_rate"] <= 0.15, r
+          assert r["overblocking_rate"] <= 0.05, r
+          assert r["accuracy"] >= 0.85, r
+          PY
+      - name: Enforce drift recall gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("drift-results.json"))
+          assert r["servers"] >= 30, r
+          assert r["drift_recall"] == 1.0, r
+          PY
+      - name: Enforce latency sanity gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("latency-results.json"))
+          assert r["compile"]["p95_ms"] < 10, r
+          assert r["authorize"]["p95_ms"] < 2, r
+          PY
+      - name: Enforce authority reduction gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("authority-reduction-results.json"))
+          assert r["tasks"] >= 10, r
+          assert r["mean_authority_reduction"] >= 0.90, r
+          assert r["inventory_capabilities"] >= 450, r
+          assert r["unnecessary_authority_removed"] >= 4500, r
+          PY
+
+          tar -tzf "$sdist" | grep '/schemas/kcc.capsule.v1.schema.json
+      - name: Install wheel without dependencies
+        run: |
+          python -m venv /tmp/kcc-wheel
+          /tmp/kcc-wheel/bin/pip install --no-deps dist/*.whl
+      - name: Smoke embedded SDK and core CLI from wheel
+        run: |
+          /tmp/kcc-wheel/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          from importlib import metadata
+          assert kcc.__version__=="0.1.0"
+          assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          assert callable(kcc.Guard)
+          assert metadata.version("kavi-capability-compiler")=="0.1.0"
+          import importlib.util
+          assert metadata.metadata("kavi-capability-compiler")["Requires-Python"]==">=3.11"
+          assert kcc.get_schema("kcc.capabilities.v1")["title"]=="KCC Universal Capability Manifest"
+          assert importlib.util.find_spec("kavi_capability_compiler.kavi_dispatch") is None
+          assert importlib.util.find_spec("kavi_capability_compiler.live_probe") is None
+          PY
+          cat > /tmp/tools.json <<'JSON'
+          {"tools":[{"name":"read","description":"Read","input_schema":{"type":"object"}}]}
+          JSON
+          /tmp/kcc-wheel/bin/kcc manifest /tmp/tools.json --format generic --namespace smoke -o /tmp/manifest.json
+          /tmp/kcc-wheel/bin/kcc scan-manifest /tmp/manifest.json -o /tmp/inventory.json
+      - name: Verify optional MCP command fails with install guidance
+        run: |
+          set +e
+          output=$(/tmp/kcc-wheel/bin/kcc discover-stdio python 2>&1)
+          code=$?
+          set -e
+          test "$code" -ne 0
+          echo "$output" | grep -F 'kavi-capability-compiler[mcp]'
+      - name: Install MCP extra independently
+        run: |
+          python -m venv /tmp/kcc-mcp
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-mcp/bin/pip install "${wheel}[mcp]"
+          /tmp/kcc-mcp/bin/python - <<'PY'
+          import mcp, httpx2
+          import kavi_capability_compiler as kcc
+          assert kcc.__version__=="0.1.0"
+          PY
+      - name: Install signing extra independently
+        run: |
+          python -m venv /tmp/kcc-signing
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-signing/bin/pip install "${wheel}[signing]"
+          /tmp/kcc-signing/bin/python - <<'PY'
+          import cryptography
+          from kavi_capability_compiler.signing import generate_ed25519_keypair
+          private, public = generate_ed25519_keypair()
+          assert len(private)==32 and len(public)==32
+          PY
+
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e ".[all]"
+      - run: python -m pip install pytest
+      - run: pytest -q
+      - name: Run executable integration recipes
+        run: python examples/integrations_smoke.py
+      - name: Run live discovery integration tests
+        run: pytest -q tests/test_live_discovery.py
+      - name: Run pinned official MCP compatibility
+        run: python benchmark/real_mcp_compat.py | tee real-mcp-compat.json
+      - name: Enforce official MCP compatibility
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-compat.json"))
+          assert r["servers"] == 3, r
+          assert r["all_nonempty"], r
+          assert r["all_expected_tools_present"], r
+          PY
+      - name: Run published MCP version drift
+        run: python benchmark/real_mcp_drift.py | tee real-mcp-drift.json
+      - name: Enforce published MCP drift detection
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-drift.json"))
+          assert not r["clean"], r
+          assert r["drift_event_count"] >= 1, r
+          PY
+      - name: Run sealed M2 discovery holdout
+        run: python benchmark/m2_discovery_holdout.py | tee m2-discovery-holdout.json
+      - name: Run KAVI control-plane dogfood
+        run: python benchmark/kavi_dogfood/run.py | tee kavi-dogfood.json
+      - name: Enforce KAVI dogfood authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("kavi-dogfood.json"))
+          assert r["inventory_capabilities"] == 5, r
+          assert r["declared_mutations"] == 2, r
+          assert r["compiled_grants"] == 1, r
+          assert r["authority_reduction"] == 0.8, r
+          assert r["capsule_status"] == "ready", r
+          assert r["allowed_inside_capsule"], r
+          assert r["enqueue_blocked"], r
+          assert r["approve_blocked"], r
+          assert r["mutation_grants"] == [], r
+          PY
+      - name: Run framework equivalence benchmark
+        run: python benchmark/framework_equivalence.py | tee framework-equivalence.json
+      - name: Enforce framework equivalence
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("framework-equivalence.json"))
+          assert r["formats"] == 5, r
+          assert r["manifest_digest_count"] == 1, r
+          assert r["inventory_digest_count"] == 1, r
+          assert r["all_same_grants"], r
+          assert r["all_allowed_executed"], r
+          assert r["all_outside_blocked"], r
+          assert r["denied_dispatches_total"] == 0, r
+          PY
+      - name: Validate benchmark corpus
+        run: python benchmark/validate_corpus.py | tee corpus-validation.json
+      - name: Run sealed holdout benchmark
+        run: python benchmark/holdout_eval.py | tee holdout-results.json
+      - name: Run capability benchmark
+        run: python benchmark/run.py | tee benchmark-results.json
+      - name: Run authority reduction benchmark
+        run: python benchmark/authority_reduction.py | tee authority-reduction-results.json
+      - name: Run drift recall benchmark
+        run: python benchmark/drift.py | tee drift-results.json
+      - name: Run latency benchmark
+        run: python benchmark/latency.py | tee latency-results.json
+      - name: Enforce revealed-holdout regression floor
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("holdout-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["accuracy"] >= 0.75, r
+          assert r["unknown_rate"] <= 0.30, r
+          PY
+      - name: Enforce zero false-safe seed gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("benchmark-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["unknown_rate"] <= 0.15, r
+          assert r["overblocking_rate"] <= 0.05, r
+          assert r["accuracy"] >= 0.85, r
+          PY
+      - name: Enforce drift recall gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("drift-results.json"))
+          assert r["servers"] >= 30, r
+          assert r["drift_recall"] == 1.0, r
+          PY
+      - name: Enforce latency sanity gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("latency-results.json"))
+          assert r["compile"]["p95_ms"] < 10, r
+          assert r["authorize"]["p95_ms"] < 2, r
+          PY
+      - name: Enforce authority reduction gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("authority-reduction-results.json"))
+          assert r["tasks"] >= 10, r
+          assert r["mean_authority_reduction"] >= 0.90, r
+          assert r["inventory_capabilities"] >= 450, r
+          assert r["unnecessary_authority_removed"] >= 4500, r
+          PY
+
+          tar -tzf "$sdist" | grep '/schemas/kcc.signed-capsule.v1.schema.json
+      - name: Install wheel without dependencies
+        run: |
+          python -m venv /tmp/kcc-wheel
+          /tmp/kcc-wheel/bin/pip install --no-deps dist/*.whl
+      - name: Smoke embedded SDK and core CLI from wheel
+        run: |
+          /tmp/kcc-wheel/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          from importlib import metadata
+          assert kcc.__version__=="0.1.0"
+          assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          assert callable(kcc.Guard)
+          assert metadata.version("kavi-capability-compiler")=="0.1.0"
+          import importlib.util
+          assert metadata.metadata("kavi-capability-compiler")["Requires-Python"]==">=3.11"
+          assert kcc.get_schema("kcc.capabilities.v1")["title"]=="KCC Universal Capability Manifest"
+          assert importlib.util.find_spec("kavi_capability_compiler.kavi_dispatch") is None
+          assert importlib.util.find_spec("kavi_capability_compiler.live_probe") is None
+          PY
+          cat > /tmp/tools.json <<'JSON'
+          {"tools":[{"name":"read","description":"Read","input_schema":{"type":"object"}}]}
+          JSON
+          /tmp/kcc-wheel/bin/kcc manifest /tmp/tools.json --format generic --namespace smoke -o /tmp/manifest.json
+          /tmp/kcc-wheel/bin/kcc scan-manifest /tmp/manifest.json -o /tmp/inventory.json
+      - name: Verify optional MCP command fails with install guidance
+        run: |
+          set +e
+          output=$(/tmp/kcc-wheel/bin/kcc discover-stdio python 2>&1)
+          code=$?
+          set -e
+          test "$code" -ne 0
+          echo "$output" | grep -F 'kavi-capability-compiler[mcp]'
+      - name: Install MCP extra independently
+        run: |
+          python -m venv /tmp/kcc-mcp
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-mcp/bin/pip install "${wheel}[mcp]"
+          /tmp/kcc-mcp/bin/python - <<'PY'
+          import mcp, httpx2
+          import kavi_capability_compiler as kcc
+          assert kcc.__version__=="0.1.0"
+          PY
+      - name: Install signing extra independently
+        run: |
+          python -m venv /tmp/kcc-signing
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-signing/bin/pip install "${wheel}[signing]"
+          /tmp/kcc-signing/bin/python - <<'PY'
+          import cryptography
+          from kavi_capability_compiler.signing import generate_ed25519_keypair
+          private, public = generate_ed25519_keypair()
+          assert len(private)==32 and len(public)==32
+          PY
+
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e ".[all]"
+      - run: python -m pip install pytest
+      - run: pytest -q
+      - name: Run executable integration recipes
+        run: python examples/integrations_smoke.py
+      - name: Run live discovery integration tests
+        run: pytest -q tests/test_live_discovery.py
+      - name: Run pinned official MCP compatibility
+        run: python benchmark/real_mcp_compat.py | tee real-mcp-compat.json
+      - name: Enforce official MCP compatibility
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-compat.json"))
+          assert r["servers"] == 3, r
+          assert r["all_nonempty"], r
+          assert r["all_expected_tools_present"], r
+          PY
+      - name: Run published MCP version drift
+        run: python benchmark/real_mcp_drift.py | tee real-mcp-drift.json
+      - name: Enforce published MCP drift detection
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-drift.json"))
+          assert not r["clean"], r
+          assert r["drift_event_count"] >= 1, r
+          PY
+      - name: Run sealed M2 discovery holdout
+        run: python benchmark/m2_discovery_holdout.py | tee m2-discovery-holdout.json
+      - name: Run KAVI control-plane dogfood
+        run: python benchmark/kavi_dogfood/run.py | tee kavi-dogfood.json
+      - name: Enforce KAVI dogfood authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("kavi-dogfood.json"))
+          assert r["inventory_capabilities"] == 5, r
+          assert r["declared_mutations"] == 2, r
+          assert r["compiled_grants"] == 1, r
+          assert r["authority_reduction"] == 0.8, r
+          assert r["capsule_status"] == "ready", r
+          assert r["allowed_inside_capsule"], r
+          assert r["enqueue_blocked"], r
+          assert r["approve_blocked"], r
+          assert r["mutation_grants"] == [], r
+          PY
+      - name: Run framework equivalence benchmark
+        run: python benchmark/framework_equivalence.py | tee framework-equivalence.json
+      - name: Enforce framework equivalence
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("framework-equivalence.json"))
+          assert r["formats"] == 5, r
+          assert r["manifest_digest_count"] == 1, r
+          assert r["inventory_digest_count"] == 1, r
+          assert r["all_same_grants"], r
+          assert r["all_allowed_executed"], r
+          assert r["all_outside_blocked"], r
+          assert r["denied_dispatches_total"] == 0, r
+          PY
+      - name: Validate benchmark corpus
+        run: python benchmark/validate_corpus.py | tee corpus-validation.json
+      - name: Run sealed holdout benchmark
+        run: python benchmark/holdout_eval.py | tee holdout-results.json
+      - name: Run capability benchmark
+        run: python benchmark/run.py | tee benchmark-results.json
+      - name: Run authority reduction benchmark
+        run: python benchmark/authority_reduction.py | tee authority-reduction-results.json
+      - name: Run drift recall benchmark
+        run: python benchmark/drift.py | tee drift-results.json
+      - name: Run latency benchmark
+        run: python benchmark/latency.py | tee latency-results.json
+      - name: Enforce revealed-holdout regression floor
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("holdout-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["accuracy"] >= 0.75, r
+          assert r["unknown_rate"] <= 0.30, r
+          PY
+      - name: Enforce zero false-safe seed gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("benchmark-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["unknown_rate"] <= 0.15, r
+          assert r["overblocking_rate"] <= 0.05, r
+          assert r["accuracy"] >= 0.85, r
+          PY
+      - name: Enforce drift recall gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("drift-results.json"))
+          assert r["servers"] >= 30, r
+          assert r["drift_recall"] == 1.0, r
+          PY
+      - name: Enforce latency sanity gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("latency-results.json"))
+          assert r["compile"]["p95_ms"] < 10, r
+          assert r["authorize"]["p95_ms"] < 2, r
+          PY
+      - name: Enforce authority reduction gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("authority-reduction-results.json"))
+          assert r["tasks"] >= 10, r
+          assert r["mean_authority_reduction"] >= 0.90, r
+          assert r["inventory_capabilities"] >= 450, r
+          assert r["unnecessary_authority_removed"] >= 4500, r
+          PY
+
+          tar -tzf "$sdist" | grep '/docs/SDK_COMPATIBILITY.md
+      - name: Install wheel without dependencies
+        run: |
+          python -m venv /tmp/kcc-wheel
+          /tmp/kcc-wheel/bin/pip install --no-deps dist/*.whl
+      - name: Smoke embedded SDK and core CLI from wheel
+        run: |
+          /tmp/kcc-wheel/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          from importlib import metadata
+          assert kcc.__version__=="0.1.0"
+          assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          assert callable(kcc.Guard)
+          assert metadata.version("kavi-capability-compiler")=="0.1.0"
+          import importlib.util
+          assert metadata.metadata("kavi-capability-compiler")["Requires-Python"]==">=3.11"
+          assert kcc.get_schema("kcc.capabilities.v1")["title"]=="KCC Universal Capability Manifest"
+          assert importlib.util.find_spec("kavi_capability_compiler.kavi_dispatch") is None
+          assert importlib.util.find_spec("kavi_capability_compiler.live_probe") is None
+          PY
+          cat > /tmp/tools.json <<'JSON'
+          {"tools":[{"name":"read","description":"Read","input_schema":{"type":"object"}}]}
+          JSON
+          /tmp/kcc-wheel/bin/kcc manifest /tmp/tools.json --format generic --namespace smoke -o /tmp/manifest.json
+          /tmp/kcc-wheel/bin/kcc scan-manifest /tmp/manifest.json -o /tmp/inventory.json
+      - name: Verify optional MCP command fails with install guidance
+        run: |
+          set +e
+          output=$(/tmp/kcc-wheel/bin/kcc discover-stdio python 2>&1)
+          code=$?
+          set -e
+          test "$code" -ne 0
+          echo "$output" | grep -F 'kavi-capability-compiler[mcp]'
+      - name: Install MCP extra independently
+        run: |
+          python -m venv /tmp/kcc-mcp
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-mcp/bin/pip install "${wheel}[mcp]"
+          /tmp/kcc-mcp/bin/python - <<'PY'
+          import mcp, httpx2
+          import kavi_capability_compiler as kcc
+          assert kcc.__version__=="0.1.0"
+          PY
+      - name: Install signing extra independently
+        run: |
+          python -m venv /tmp/kcc-signing
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-signing/bin/pip install "${wheel}[signing]"
+          /tmp/kcc-signing/bin/python - <<'PY'
+          import cryptography
+          from kavi_capability_compiler.signing import generate_ed25519_keypair
+          private, public = generate_ed25519_keypair()
+          assert len(private)==32 and len(public)==32
+          PY
+
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e ".[all]"
+      - run: python -m pip install pytest
+      - run: pytest -q
+      - name: Run executable integration recipes
+        run: python examples/integrations_smoke.py
+      - name: Run live discovery integration tests
+        run: pytest -q tests/test_live_discovery.py
+      - name: Run pinned official MCP compatibility
+        run: python benchmark/real_mcp_compat.py | tee real-mcp-compat.json
+      - name: Enforce official MCP compatibility
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-compat.json"))
+          assert r["servers"] == 3, r
+          assert r["all_nonempty"], r
+          assert r["all_expected_tools_present"], r
+          PY
+      - name: Run published MCP version drift
+        run: python benchmark/real_mcp_drift.py | tee real-mcp-drift.json
+      - name: Enforce published MCP drift detection
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-drift.json"))
+          assert not r["clean"], r
+          assert r["drift_event_count"] >= 1, r
+          PY
+      - name: Run sealed M2 discovery holdout
+        run: python benchmark/m2_discovery_holdout.py | tee m2-discovery-holdout.json
+      - name: Run KAVI control-plane dogfood
+        run: python benchmark/kavi_dogfood/run.py | tee kavi-dogfood.json
+      - name: Enforce KAVI dogfood authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("kavi-dogfood.json"))
+          assert r["inventory_capabilities"] == 5, r
+          assert r["declared_mutations"] == 2, r
+          assert r["compiled_grants"] == 1, r
+          assert r["authority_reduction"] == 0.8, r
+          assert r["capsule_status"] == "ready", r
+          assert r["allowed_inside_capsule"], r
+          assert r["enqueue_blocked"], r
+          assert r["approve_blocked"], r
+          assert r["mutation_grants"] == [], r
+          PY
+      - name: Run framework equivalence benchmark
+        run: python benchmark/framework_equivalence.py | tee framework-equivalence.json
+      - name: Enforce framework equivalence
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("framework-equivalence.json"))
+          assert r["formats"] == 5, r
+          assert r["manifest_digest_count"] == 1, r
+          assert r["inventory_digest_count"] == 1, r
+          assert r["all_same_grants"], r
+          assert r["all_allowed_executed"], r
+          assert r["all_outside_blocked"], r
+          assert r["denied_dispatches_total"] == 0, r
+          PY
+      - name: Validate benchmark corpus
+        run: python benchmark/validate_corpus.py | tee corpus-validation.json
+      - name: Run sealed holdout benchmark
+        run: python benchmark/holdout_eval.py | tee holdout-results.json
+      - name: Run capability benchmark
+        run: python benchmark/run.py | tee benchmark-results.json
+      - name: Run authority reduction benchmark
+        run: python benchmark/authority_reduction.py | tee authority-reduction-results.json
+      - name: Run drift recall benchmark
+        run: python benchmark/drift.py | tee drift-results.json
+      - name: Run latency benchmark
+        run: python benchmark/latency.py | tee latency-results.json
+      - name: Enforce revealed-holdout regression floor
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("holdout-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["accuracy"] >= 0.75, r
+          assert r["unknown_rate"] <= 0.30, r
+          PY
+      - name: Enforce zero false-safe seed gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("benchmark-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["unknown_rate"] <= 0.15, r
+          assert r["overblocking_rate"] <= 0.05, r
+          assert r["accuracy"] >= 0.85, r
+          PY
+      - name: Enforce drift recall gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("drift-results.json"))
+          assert r["servers"] >= 30, r
+          assert r["drift_recall"] == 1.0, r
+          PY
+      - name: Enforce latency sanity gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("latency-results.json"))
+          assert r["compile"]["p95_ms"] < 10, r
+          assert r["authorize"]["p95_ms"] < 2, r
+          PY
+      - name: Enforce authority reduction gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("authority-reduction-results.json"))
+          assert r["tasks"] >= 10, r
+          assert r["mean_authority_reduction"] >= 0.90, r
+          assert r["inventory_capabilities"] >= 450, r
+          assert r["unnecessary_authority_removed"] >= 4500, r
+          PY
+
+          tar -tzf "$sdist" | grep '/examples/integrations_smoke.py
+      - name: Install wheel without dependencies
+        run: |
+          python -m venv /tmp/kcc-wheel
+          /tmp/kcc-wheel/bin/pip install --no-deps dist/*.whl
+      - name: Smoke embedded SDK and core CLI from wheel
+        run: |
+          /tmp/kcc-wheel/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          from importlib import metadata
+          assert kcc.__version__=="0.1.0"
+          assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          assert callable(kcc.Guard)
+          assert metadata.version("kavi-capability-compiler")=="0.1.0"
+          import importlib.util
+          assert metadata.metadata("kavi-capability-compiler")["Requires-Python"]==">=3.11"
+          assert kcc.get_schema("kcc.capabilities.v1")["title"]=="KCC Universal Capability Manifest"
+          assert importlib.util.find_spec("kavi_capability_compiler.kavi_dispatch") is None
+          assert importlib.util.find_spec("kavi_capability_compiler.live_probe") is None
+          PY
+          cat > /tmp/tools.json <<'JSON'
+          {"tools":[{"name":"read","description":"Read","input_schema":{"type":"object"}}]}
+          JSON
+          /tmp/kcc-wheel/bin/kcc manifest /tmp/tools.json --format generic --namespace smoke -o /tmp/manifest.json
+          /tmp/kcc-wheel/bin/kcc scan-manifest /tmp/manifest.json -o /tmp/inventory.json
+      - name: Verify optional MCP command fails with install guidance
+        run: |
+          set +e
+          output=$(/tmp/kcc-wheel/bin/kcc discover-stdio python 2>&1)
+          code=$?
+          set -e
+          test "$code" -ne 0
+          echo "$output" | grep -F 'kavi-capability-compiler[mcp]'
+      - name: Install MCP extra independently
+        run: |
+          python -m venv /tmp/kcc-mcp
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-mcp/bin/pip install "${wheel}[mcp]"
+          /tmp/kcc-mcp/bin/python - <<'PY'
+          import mcp, httpx2
+          import kavi_capability_compiler as kcc
+          assert kcc.__version__=="0.1.0"
+          PY
+      - name: Install signing extra independently
+        run: |
+          python -m venv /tmp/kcc-signing
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-signing/bin/pip install "${wheel}[signing]"
+          /tmp/kcc-signing/bin/python - <<'PY'
+          import cryptography
+          from kavi_capability_compiler.signing import generate_ed25519_keypair
+          private, public = generate_ed25519_keypair()
+          assert len(private)==32 and len(public)==32
+          PY
+
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e ".[all]"
+      - run: python -m pip install pytest
+      - run: pytest -q
+      - name: Run executable integration recipes
+        run: python examples/integrations_smoke.py
+      - name: Run live discovery integration tests
+        run: pytest -q tests/test_live_discovery.py
+      - name: Run pinned official MCP compatibility
+        run: python benchmark/real_mcp_compat.py | tee real-mcp-compat.json
+      - name: Enforce official MCP compatibility
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-compat.json"))
+          assert r["servers"] == 3, r
+          assert r["all_nonempty"], r
+          assert r["all_expected_tools_present"], r
+          PY
+      - name: Run published MCP version drift
+        run: python benchmark/real_mcp_drift.py | tee real-mcp-drift.json
+      - name: Enforce published MCP drift detection
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("real-mcp-drift.json"))
+          assert not r["clean"], r
+          assert r["drift_event_count"] >= 1, r
+          PY
+      - name: Run sealed M2 discovery holdout
+        run: python benchmark/m2_discovery_holdout.py | tee m2-discovery-holdout.json
+      - name: Run KAVI control-plane dogfood
+        run: python benchmark/kavi_dogfood/run.py | tee kavi-dogfood.json
+      - name: Enforce KAVI dogfood authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("kavi-dogfood.json"))
+          assert r["inventory_capabilities"] == 5, r
+          assert r["declared_mutations"] == 2, r
+          assert r["compiled_grants"] == 1, r
+          assert r["authority_reduction"] == 0.8, r
+          assert r["capsule_status"] == "ready", r
+          assert r["allowed_inside_capsule"], r
+          assert r["enqueue_blocked"], r
+          assert r["approve_blocked"], r
+          assert r["mutation_grants"] == [], r
+          PY
+      - name: Run framework equivalence benchmark
+        run: python benchmark/framework_equivalence.py | tee framework-equivalence.json
+      - name: Enforce framework equivalence
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("framework-equivalence.json"))
+          assert r["formats"] == 5, r
+          assert r["manifest_digest_count"] == 1, r
+          assert r["inventory_digest_count"] == 1, r
+          assert r["all_same_grants"], r
+          assert r["all_allowed_executed"], r
+          assert r["all_outside_blocked"], r
+          assert r["denied_dispatches_total"] == 0, r
+          PY
+      - name: Validate benchmark corpus
+        run: python benchmark/validate_corpus.py | tee corpus-validation.json
+      - name: Run sealed holdout benchmark
+        run: python benchmark/holdout_eval.py | tee holdout-results.json
+      - name: Run capability benchmark
+        run: python benchmark/run.py | tee benchmark-results.json
+      - name: Run authority reduction benchmark
+        run: python benchmark/authority_reduction.py | tee authority-reduction-results.json
+      - name: Run drift recall benchmark
+        run: python benchmark/drift.py | tee drift-results.json
+      - name: Run latency benchmark
+        run: python benchmark/latency.py | tee latency-results.json
+      - name: Enforce revealed-holdout regression floor
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("holdout-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["accuracy"] >= 0.75, r
+          assert r["unknown_rate"] <= 0.30, r
+          PY
+      - name: Enforce zero false-safe seed gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("benchmark-results.json"))
+          assert r["false_safe_count"] == 0, r
+          assert r["dangerous_recall"] == 1.0, r
+          assert r["unknown_rate"] <= 0.15, r
+          assert r["overblocking_rate"] <= 0.05, r
+          assert r["accuracy"] >= 0.85, r
+          PY
+      - name: Enforce drift recall gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("drift-results.json"))
+          assert r["servers"] >= 30, r
+          assert r["drift_recall"] == 1.0, r
+          PY
+      - name: Enforce latency sanity gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("latency-results.json"))
+          assert r["compile"]["p95_ms"] < 10, r
+          assert r["authorize"]["p95_ms"] < 2, r
+          PY
+      - name: Enforce authority reduction gate
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("authority-reduction-results.json"))
+          assert r["tasks"] >= 10, r
+          assert r["mean_authority_reduction"] >= 0.90, r
+          assert r["inventory_capabilities"] >= 450, r
+          assert r["unnecessary_authority_removed"] >= 4500, r
+          PY
+
       - name: Install wheel without dependencies
         run: |
           python -m venv /tmp/kcc-wheel
