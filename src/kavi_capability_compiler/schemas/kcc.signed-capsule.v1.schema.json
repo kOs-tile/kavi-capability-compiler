@@ -14,7 +14,7 @@
       "const": "kcc.signed-capsule.v1"
     },
     "capsule": {
-      "type": "object"
+      "$ref": "kcc.capsule.v1.schema.json"
     },
     "signature": {
       "type": "object",
