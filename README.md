@@ -43,7 +43,7 @@ These are benchmark checkpoint measurements, not production security guarantees.
 
 ### M2 live discovery
 - official MCP Python SDK stdio discovery
-- Streamable HTTP discovery
+- Streamable HTTP discovery; non-loopback endpoints require HTTPS
 - config-driven discovery
 - secret-safe config summaries
 - live discovery -> deterministic inventory lock
