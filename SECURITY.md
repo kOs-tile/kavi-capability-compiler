@@ -108,3 +108,8 @@ Before first publication, the workflow fails closed if the PyPI project name is
 already registered, if the intended Git tag already exists, if the requested
 release SHA is not the current `main` head, or if any artifact checksum differs
 from the verified build payload.
+
+The `pypi` environment must restrict deployments to the `main` branch. In
+addition, privileged publication jobs have an explicit
+`github.ref == 'refs/heads/main'` condition. This is defense in depth against a
+modified release workflow being dispatched from another branch.

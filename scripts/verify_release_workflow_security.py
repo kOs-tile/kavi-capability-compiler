@@ -27,6 +27,7 @@ REQUIRED=(
     "RELEASE_TARGET_SHA",
     "sha256sum -c",
     "kavi-capability-compiler==0.1.0",
+    "github.ref == 'refs/heads/main'",
 )
 
 FORBIDDEN=(

@@ -108,7 +108,7 @@ jobs:
           retention-days: 3
 
   publish-pypi:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == true }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.publish == true }}
     needs: build-release-artifacts
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -139,7 +139,7 @@ jobs:
           verbose: false
 
   verify-pypi:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == true }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.publish == true }}
     needs: publish-pypi
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -172,7 +172,7 @@ jobs:
           PY
 
   github-release:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == true }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.publish == true }}
     needs: verify-pypi
     runs-on: ubuntu-latest
     timeout-minutes: 10

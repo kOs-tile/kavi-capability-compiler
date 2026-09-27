@@ -44,6 +44,7 @@
 
 ## Publication
 - [ ] create protected GitHub Environment `pypi` with a required reviewer
+- [ ] restrict the `pypi` environment deployment branch policy to `main`
 - [ ] configure PyPI pending Trusted Publisher for `kOs-tile/kavi-capability-compiler`, workflow `release.yml`, environment `pypi`
 - [ ] activate the production publication jobs only after both trust bindings above exist
 - [ ] create `v0.1.0` tag
