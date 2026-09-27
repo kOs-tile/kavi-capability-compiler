@@ -98,7 +98,7 @@ def test_evidence_verify_cli_success(tmp_path, monkeypatch, capsys):
 def test_evidence_verify_cli_fails_on_tamper(tmp_path, monkeypatch, capsys):
     capsule = _capsule()
     envelope = {
-        "version": "kavi.execution-evidence.v0",
+        "version": "kcc.execution-evidence.v1",
         "execution_id": "exec-1",
         "capsule_id": capsule["capsule_id"],
         "capability_id": None,
