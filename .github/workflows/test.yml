@@ -88,6 +88,8 @@ jobs:
           tar -tzf "$sdist" | grep '/examples/integrations/anthropic_tools.py$'
           tar -tzf "$sdist" | grep '/examples/integrations/mcp_tools.py$'
           tar -tzf "$sdist" | grep '/examples/integrations/openapi_agent.py$'
+          tar -tzf "$sdist" | grep '/case_studies/langgraph/validate.py$'
+          tar -tzf "$sdist" | grep '/case_studies/langgraph/README.md$'
       - name: Install wheel without dependencies
         run: |
           python -m venv /tmp/kcc-wheel
@@ -340,3 +342,46 @@ jobs:
           assert r["model_or_api_call_performed"] is False, r
           assert r["pass"] is True, r
           PY
+
+  langgraph-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependency-free KCC core
+        run: python -m pip install -e .
+      - name: Install pinned LangGraph validation dependencies
+        run: python -m pip install "langgraph==1.2.12" "langchain-core==1.6.5"
+      - name: Verify KCC core metadata stayed dependency-free
+        run: |
+          python - <<'PY'
+          from importlib import metadata
+          reqs=metadata.requires("kavi-capability-compiler") or []
+          unconditional=[r for r in reqs if "extra ==" not in r]
+          assert unconditional == [], unconditional
+          PY
+      - name: Run real LangGraph ToolNode validation
+        shell: bash
+        run: |
+          set -o pipefail
+          python case_studies/langgraph/validate.py | tee langgraph-validation.json
+      - name: Enforce LangGraph authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("langgraph-validation.json"))
+          assert r["validation"]=="kcc.langgraph-toolnode.v1", r
+          assert r["langgraph_version"]=="1.2.12", r
+          assert r["langchain_core_version"]=="1.6.5", r
+          assert r["source_schema"]=="BaseTool.tool_call_schema", r
+          assert r["programmatic_runtime_supplied"], r
+          assert r["inventory_bound"], r
+          assert r["allowed_read_executed"], r
+          assert not r["denied_update_executed"], r
+          assert r["denied_reason"]=="capability_not_granted", r
+          assert r["core_public_api_framework_neutral"], r
+          PY
+

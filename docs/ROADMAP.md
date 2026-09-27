@@ -130,3 +130,16 @@ First target:
 - denial before SDK invocation
 - post-compile tool-surface drift rejection
 - no model/API request and no KCC core dependency on the SDK
+
+## M9 — LangGraph Runtime Validation
+**Status: CI-backed validation target.**
+
+Second independent runtime target:
+- LangGraph 1.2.12 real `ToolNode`
+- LangChain Core 1.6.5 real `StructuredTool` objects
+- capability metadata derived from `BaseTool.tool_call_schema`
+- KCC installed at `ToolNode.wrap_tool_call` immediately before `execute(request)`
+- allowed read reaches the underlying tool
+- denied mutation never reaches the underlying tool
+- no model/API request and no KCC core dependency on LangGraph/LangChain
+- explicit `Runtime()` supplied for current programmatic ToolNode invocation behavior

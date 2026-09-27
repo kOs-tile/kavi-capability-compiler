@@ -5,4 +5,4 @@ recursive-include docs *.md
 recursive-include schemas *.json
 recursive-include src/kavi_capability_compiler/schemas *.json
 recursive-include examples *.py
-recursive-include case_studies *.py *.json
+recursive-include case_studies *.py *.json *.md

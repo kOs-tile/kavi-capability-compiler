@@ -34,6 +34,8 @@
 - [x] integration examples execute in CI
 - [x] Generic Python, OpenAI-shaped, Anthropic-shaped, MCP-shaped, and OpenAPI kits execute without vendor credentials
 - [x] framework-specific validation targets are separated from the installed core
+- [x] real OpenAI Agents SDK validation is isolated from core dependencies
+- [x] real LangGraph ToolNode validation is isolated from core dependencies
 
 ## Publication
 - [ ] create `v0.1.0` tag

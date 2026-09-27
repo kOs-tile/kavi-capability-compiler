@@ -69,6 +69,7 @@ These are benchmark checkpoint measurements, not production security guarantees.
 - adversarial SDK benchmark with explicit host-responsibility boundaries
 - executable integration kits for Generic Python, OpenAI tool shapes, Anthropic tool shapes, raw MCP definitions, and OpenAPI
 - repository-only validation against real OpenAI Agents SDK `FunctionTool` objects
+- repository-only validation against real LangGraph `ToolNode.wrap_tool_call` using actual LangChain `BaseTool.tool_call_schema` metadata
 
 KAVI/Hermes/Codex integrations are validation targets and examples, not dependencies of the compiler.
 
@@ -120,7 +121,7 @@ kcc discover-config mcp.json my-server \
 
 KCC is not a hosted gateway, desktop service, local daemon, IAM replacement, secret manager, or autonomous remediation system. Live discovery does not automatically execute discovered tools. Runtime enforcement is intentionally a small portable primitive.
 
-M0–M7 release-candidate engineering is focused on a stable framework-neutral SDK, adversarially tested runtime enforcement, and executable integration examples. External publication remains a separate founder approval.
+M0–M9 release-candidate engineering is focused on a stable framework-neutral SDK, adversarially tested runtime enforcement, executable integration examples, and independent runtime validation. External publication remains a separate founder approval.
 
 See `docs/EMBEDDED_SDK.md`, `docs/SDK_COMPATIBILITY.md`, `docs/ADVERSARIAL_SDK.md`, `docs/UNIVERSAL_MANIFEST.md`, `docs/INTEGRATION_RECIPES.md`, `docs/OPENAI_AGENTS_VALIDATION.md`, and `docs/BENCHMARK_REPORT_V0.1.md`.
 
