@@ -211,7 +211,10 @@ def _validate_parameter_constraints(capability, constraints):
 def compile_capsule(inv,intent,policy,now=None):
     if inv.get("version") != INVENTORY_VERSION:
         raise ValueError(f"Unsupported inventory contract: {inv.get('version')}")
-    if not _inventory_integrity(inv):
+    requested=intent.get("capabilities",[])
+    if not isinstance(requested,list) or not all(isinstance(x,str) and x for x in requested):
+        raise ValueError("Intent capabilities must be a list of non-empty capability IDs")
+    if not _inventory_integrity(inv,semantic_ids=requested):
         raise ValueError("Invalid inventory integrity")
     task=intent.get("task")
     if task is not None and not isinstance(task,str):
@@ -221,7 +224,7 @@ def compile_capsule(inv,intent,policy,now=None):
         raise ValueError("Intent constraints must be an object")
     now=int(now if now is not None else time.time()); by_id={c["id"]:c for c in inv["capabilities"]}
     grants=[]; approvals=[]; denials=[]
-    for cid in intent.get("capabilities",[]):
+    for cid in requested:
         if cid not in by_id: raise ValueError(f"Capability absent from inventory: {cid}")
         c=by_id[cid]; d=decide(policy,c)
         constraints=_constraint_for(intent,cid)
@@ -285,7 +288,7 @@ def verify_capsule(cap,inv,now=None):
 def inventory_lock(inv):
     if inv.get("version") != INVENTORY_VERSION:
         raise ValueError(f"Unsupported inventory contract: {inv.get('version')}")
-    if not _inventory_integrity(inv):
+    if not _inventory_integrity(inv,semantic_ids=()):
         raise ValueError("Invalid inventory integrity")
     entries=[{"id":c["id"],"fingerprint":c["fingerprint"]} for c in inv["capabilities"]]
     lock={"version":INVENTORY_LOCK_VERSION,"inventory_digest":inv["digest"],"capabilities":sorted(entries,key=lambda x:x["id"])}
@@ -299,7 +302,7 @@ def diff_inventory_lock(lock, inv):
         raise ValueError(f"Unsupported inventory contract: {inv.get('version')}")
     if not _inventory_lock_integrity(lock):
         raise ValueError("Invalid inventory lock integrity")
-    if not _inventory_integrity(inv):
+    if not _inventory_integrity(inv,semantic_ids=()):
         raise ValueError("Invalid inventory integrity")
     old={x["id"]:x["fingerprint"] for x in lock.get("capabilities",[])}
     new={x["id"]:x["fingerprint"] for x in inv.get("capabilities",[])}
@@ -330,7 +333,14 @@ def _inventory_lock_integrity(lock):
         return False
 
 
-def _inventory_integrity(inv):
+def _inventory_integrity(inv, semantic_ids=None):
+    """Validate inventory envelope and the semantic rows relevant to this operation.
+
+    Every call validates version, digest, canonical identities, and duplicate IDs
+    across the complete inventory. Expensive fingerprint/effect re-analysis can
+    be bounded to the capability IDs that may receive or exercise authority.
+    Passing None performs a full semantic re-analysis.
+    """
     if not isinstance(inv,dict) or inv.get("version") != INVENTORY_VERSION:
         return False
     claimed=inv.get("digest")
@@ -342,6 +352,7 @@ def _inventory_integrity(inv):
     if adapter not in {None,"universal-manifest.v1"}:
         return False
 
+    selected=None if semantic_ids is None else set(semantic_ids)
     entries=[]; seen_ids=set()
     try:
         for c in caps:
@@ -349,17 +360,22 @@ def _inventory_integrity(inv):
                 return False
             server=c.get("server")
             name=c.get("name")
-            description=c.get("description","")
-            schema=c.get("input_schema") or {}
-            annotations=c.get("annotations") or {}
-            if not isinstance(server,str) or not isinstance(name,str):
+            fingerprint=c.get("fingerprint")
+            if not isinstance(server,str) or not isinstance(name,str) or not isinstance(fingerprint,str):
                 return False
 
             expected_id=capability_id("kcc" if adapter else "mcp",server,name)
             if c.get("id") != expected_id or expected_id in seen_ids:
                 return False
             seen_ids.add(expected_id)
+            entries.append({"id":expected_id,"fingerprint":fingerprint})
 
+            if selected is not None and expected_id not in selected:
+                continue
+
+            description=c.get("description","")
+            schema=c.get("input_schema") or {}
+            annotations=c.get("annotations") or {}
             if adapter:
                 expected_fp=digest({
                     "namespace":server,
@@ -375,7 +391,7 @@ def _inventory_integrity(inv):
                     "schema":schema,
                     "annotations":annotations,
                 })
-            if c.get("fingerprint") != expected_fp:
+            if fingerprint != expected_fp:
                 return False
 
             analysis=analyze_capability({
@@ -392,7 +408,8 @@ def _inventory_integrity(inv):
             if c.get("analysis") != analysis:
                 return False
 
-            entries.append({"id":expected_id,"fingerprint":expected_fp})
+        if selected is not None and not selected.issubset(seen_ids):
+            return False
 
         if adapter:
             expected=digest({
@@ -434,7 +451,7 @@ def authorize_call(cap, capability_id, operation=None, parameters=None, now=None
             return {"allowed":False,"reason":"invalid_inventory_binding"}
         if inventory.get("version") != INVENTORY_VERSION:
             return {"allowed":False,"reason":"unsupported_inventory_version"}
-        if not _inventory_integrity(inventory):
+        if not _inventory_integrity(inventory,semantic_ids=(capability_id,)):
             return {"allowed":False,"reason":"invalid_inventory_integrity"}
         verification_inventory=inventory
     else:
