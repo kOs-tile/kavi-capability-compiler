@@ -65,5 +65,5 @@ def test_security_sensitive_optional_dependency_floors_exclude_known_affected_ra
     extras=data["project"]["optional-dependencies"]
     assert "httpx2>=2.12.0,<3" in extras["mcp"]
     assert "httpx2>=2.12.0,<3" in extras["all"]
-    assert "cryptography>=48.0.1,<49" in extras["signing"]
-    assert "cryptography>=48.0.1,<49" in extras["all"]
+    assert "cryptography>=50.0.1,<51" in extras["signing"]
+    assert "cryptography>=50.0.1,<51" in extras["all"]
