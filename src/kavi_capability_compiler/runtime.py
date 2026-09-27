@@ -19,7 +19,8 @@ class AuthorityDenied(RuntimeError):
 
     def __init__(self, decision: dict[str, Any]) -> None:
         self.decision = decision
-        super().__init__(decision.get("reason", "authority_denied"))
+        self.reason = str(decision.get("reason", "authority_denied"))
+        super().__init__(self.reason)
 
 
 class ApprovalRequired(AuthorityDenied):
