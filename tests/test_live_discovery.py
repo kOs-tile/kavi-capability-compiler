@@ -224,3 +224,26 @@ def test_invalid_config_shapes_fail_closed():
             assert False, f"expected ValueError for {cfg}"
         except ValueError:
             pass
+
+
+def test_remote_authenticated_plaintext_http_is_rejected_before_network_use():
+    try:
+        asyncio.run(discover_streamable_http(
+            "http://example.com/mcp",
+            headers={"Authorization":"Bearer should-never-be-sent"},
+            timeout_seconds=0.25,
+        ))
+        assert False, "expected ValueError"
+    except ValueError as exc:
+        assert "requires HTTPS" in str(exc)
+
+
+def test_streamable_http_rejects_url_userinfo_credentials():
+    try:
+        asyncio.run(discover_streamable_http(
+            "https://user:secret@example.com/mcp",
+            timeout_seconds=0.25,
+        ))
+        assert False, "expected ValueError"
+    except ValueError as exc:
+        assert "userinfo credentials" in str(exc)

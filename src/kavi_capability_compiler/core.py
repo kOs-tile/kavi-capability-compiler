@@ -236,7 +236,7 @@ def compile_capsule(inv,intent,policy,now=None):
     cap["capsule_id"]=digest(cap)
     return cap
 
-def verify_capsule(cap,inv,now=None):
+def verify_capsule(cap,inv,now=None,*,require_inventory_integrity=True):
     if not isinstance(cap,dict) or not isinstance(inv,dict):
         return {"valid":False,"checks":[{"name":"shape","ok":False}]}
     body=dict(cap); claimed=body.pop("capsule_id",None)
@@ -249,6 +249,7 @@ def verify_capsule(cap,inv,now=None):
         ("version",cap.get("version")==CAPSULE_VERSION),
         ("fail_closed",cap.get("fail_closed") is True),
         ("inventory_version",inv.get("version")==INVENTORY_VERSION),
+        ("inventory_integrity",(not require_inventory_integrity) or _inventory_integrity(inv)),
         ("inventory",cap.get("inventory_digest")==inv.get("digest")),
     ]
     rows=inv.get("capabilities",[])
@@ -282,11 +283,29 @@ def inventory_lock(inv):
     lock["digest"]=digest(lock)
     return lock
 
+def _inventory_lock_integrity(lock):
+    if not isinstance(lock,dict):
+        return False
+    body=dict(lock)
+    claimed=body.pop("digest",None)
+    try:
+        return isinstance(claimed,str) and claimed==digest(body)
+    except (TypeError,ValueError):
+        return False
+
 def diff_inventory_lock(lock, inv):
+    if not isinstance(lock,dict):
+        raise ValueError("Invalid inventory lock")
+    if not isinstance(inv,dict):
+        raise ValueError("Invalid inventory")
     if lock.get("version") != INVENTORY_LOCK_VERSION:
         raise ValueError(f"Unsupported inventory lock contract: {lock.get('version')}")
     if inv.get("version") != INVENTORY_VERSION:
         raise ValueError(f"Unsupported inventory contract: {inv.get('version')}")
+    if not _inventory_lock_integrity(lock):
+        raise ValueError("Invalid inventory lock integrity")
+    if not _inventory_integrity(inv):
+        raise ValueError("Invalid inventory integrity")
     old={x["id"]:x["fingerprint"] for x in lock.get("capabilities",[])}
     new={x["id"]:x["fingerprint"] for x in inv.get("capabilities",[])}
     added=sorted(set(new)-set(old)); removed=sorted(set(old)-set(new))
@@ -330,7 +349,7 @@ def _verification_failure_reason(verification, *, inventory_bound=False):
         return "unsupported_capsule_version"
     if "fail_closed" in failed:
         return "fail_closed_required"
-    if inventory_bound and failed.intersection({"inventory","fingerprints","shape"}):
+    if inventory_bound and failed.intersection({"inventory_integrity","inventory","fingerprints","shape"}):
         return "inventory_drift"
     if "expiry" in failed:
         return "expired"
@@ -365,7 +384,12 @@ def authorize_call(cap, capability_id, operation=None, parameters=None, now=None
                     return {"allowed":False,"reason":"invalid_capsule_shape"}
                 verification_inventory["capabilities"].append({"id":entry["id"],"fingerprint":entry["fingerprint"]})
 
-    verification=verify_capsule(cap,verification_inventory,now=now)
+    verification=verify_capsule(
+        cap,
+        verification_inventory,
+        now=now,
+        require_inventory_integrity=inventory_bound,
+    )
     if not verification["valid"]:
         return {
             "allowed":False,

@@ -220,3 +220,64 @@ def test_signing_rejects_rehashed_non_fail_closed_capsule():
     _rehash_capsule(cap)
     with pytest.raises(ValueError,match="fail_closed=true"):
         sign_capsule(cap,private,key_id="test-key")
+
+
+def test_verify_capsule_rejects_tampered_inventory_even_when_claimed_digest_is_unchanged():
+    inv=_inventory()
+    cid=next(x["id"] for x in inv["capabilities"] if x["name"]=="get_record")
+    cap=kcc.compile_capsule(inv,{"capabilities":[cid]},{"default":"allow"},now=100)
+    tampered=copy.deepcopy(inv)
+    next(x for x in tampered["capabilities"] if x["name"]=="update_record")["fingerprint"]="0"*64
+
+    result=kcc.verify_capsule(cap,tampered,now=101)
+    checks={x["name"]:x["ok"] for x in result["checks"]}
+    assert result["valid"] is False
+    assert checks["inventory_integrity"] is False
+
+
+def test_inventory_lock_diff_rejects_tampered_lock_that_hides_drift():
+    original=_inventory()
+    lock=kcc.inventory_lock(original)
+    changed_tools=[
+        {
+            "name":"get_record",
+            "description":"Get record",
+            "input_schema":{
+                "type":"object",
+                "properties":{"id":{"type":"string"}},
+                "required":["id"],
+            },
+        },
+        {
+            "name":"update_record",
+            "description":"Update record",
+            "input_schema":{
+                "type":"object",
+                "properties":{
+                    "id":{"type":"string"},
+                    "value":{"type":"string"},
+                    "scope":{"type":"string"},
+                },
+                "required":["id","value"],
+            },
+        },
+    ]
+    drifted=kcc.scan_manifest(kcc.adapt_capabilities(
+        "generic",{"tools":changed_tools},namespace="records"
+    ))
+    drifted_fp=next(x["fingerprint"] for x in drifted["capabilities"] if x["name"]=="update_record")
+    forged=copy.deepcopy(lock)
+    next(x for x in forged["capabilities"] if x["id"].endswith(":update_record"))["fingerprint"]=drifted_fp
+
+    with pytest.raises(ValueError,match="Invalid inventory lock integrity"):
+        kcc.diff_inventory_lock(forged,drifted)
+
+
+def test_inventory_lock_diff_rejects_tampered_current_inventory_integrity():
+    inv=_inventory()
+    lock=kcc.inventory_lock(inv)
+    tampered=copy.deepcopy(inv)
+    tampered["capabilities"][0]["description"]="tampered without digest update"
+
+    with pytest.raises(ValueError,match="Invalid inventory integrity"):
+        kcc.diff_inventory_lock(lock,tampered)

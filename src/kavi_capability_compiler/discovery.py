@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Mapping, Sequence
 
 import asyncio
+import ipaddress
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -15,6 +16,24 @@ from .core import scan_mcp_snapshot
 
 class DiscoveryError(RuntimeError):
     """Live capability discovery failed before a trustworthy inventory was produced."""
+
+
+def _loopback_host(host: str | None) -> bool:
+    value=str(host or "").strip().lower()
+    if value=="localhost":
+        return True
+    try:
+        return ipaddress.ip_address(value).is_loopback
+    except ValueError:
+        return False
+
+
+def _validate_http_endpoint(url: str, headers: Mapping[str, str] | None) -> None:
+    parsed=urlsplit(str(url))
+    if parsed.username is not None or parsed.password is not None:
+        raise ValueError("Streamable HTTP URL userinfo credentials are not allowed; use headers")
+    if headers and parsed.scheme.lower()!="https" and not _loopback_host(parsed.hostname):
+        raise ValueError("Authenticated Streamable HTTP requires HTTPS for non-loopback hosts")
 
 
 def _model_dump(value: Any) -> dict[str, Any]:
@@ -100,6 +119,7 @@ async def discover_streamable_http(
     if not url or not str(url).startswith(("http://", "https://")):
         raise ValueError("Streamable HTTP URL must use http:// or https://")
     parsed = urlsplit(str(url))
+    _validate_http_endpoint(str(url),headers)
     fallback = server_name or parsed.hostname or "http-mcp"
     if timeout_seconds <= 0:
         raise ValueError("timeout_seconds must be positive")
