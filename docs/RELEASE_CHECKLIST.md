@@ -12,6 +12,9 @@
 - [x] OpenAI Agents SDK 0.22.3 real FunctionTool boundary is CI-gated
 - [x] Anthropic Python SDK 1.8.0 real beta-tool boundary is CI-gated
 - [x] LangGraph 1.2.12 real ToolNode boundary is CI-gated
+- [x] public capsule verification rejects tampered inventory integrity
+- [x] inventory-lock drift checks reject tampered lock/current-inventory integrity
+- [x] authenticated non-loopback MCP HTTP discovery requires HTTPS and URL userinfo is rejected
 
 ## Packaging
 - [x] wheel builds
@@ -29,6 +32,9 @@
 - [x] release CI builds twice from one commit-derived SOURCE_DATE_EPOCH, canonicalizes sdist archive metadata to that epoch, and requires identical wheel + sdist SHA-256 outputs
 - [x] release metadata is checked with Twine
 - [x] installed wheel is checked to exclude repository-only case studies, examples, benchmarks, tests, docs, and scripts
+- [x] CI actions are pinned to immutable commit SHAs and checkout credentials are not persisted
+- [x] release verification toolchain is version-pinned
+- [x] zero-dependency security preflight checks workflow refs and obvious secret material
 
 ## Documentation
 - [x] README describes v0.1 behavior

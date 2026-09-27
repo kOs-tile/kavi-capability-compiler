@@ -47,6 +47,11 @@ All notable changes to KAVI Capability Compiler are documented here.
 - denied calls do not reach the host dispatcher
 - signed envelopes cannot self-declare a trusted key
 - source provenance is separated from semantic authority fingerprints
+- public capsule verification validates supplied inventory integrity
+- inventory-lock drift verification validates lock and current-inventory integrity
+- authenticated non-loopback MCP discovery requires HTTPS and rejects URL userinfo credentials
+- GitHub Actions are pinned to immutable commit SHAs and checkout credentials are not persisted
+- release build/check tooling is version-pinned
 
 ### Known limits
 - v0.1 is alpha software

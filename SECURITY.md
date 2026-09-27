@@ -36,3 +36,19 @@ KCC does not replace:
 - human approval systems
 
 A valid KCC capsule means the request fits the authority KCC compiled under its current model. It is not a certification that the underlying tool or application is safe.
+
+## Release security gates
+
+Before a public release:
+
+- public capsule verification validates supplied inventory integrity;
+- inventory drift checks validate both lock and current-inventory integrity;
+- authenticated non-loopback MCP HTTP discovery requires HTTPS;
+- URL userinfo credentials are rejected for Streamable HTTP discovery;
+- GitHub Actions used by CI are pinned to immutable commit SHAs;
+- checkout credentials are not persisted in the test workspace;
+- release build/check tooling is version-pinned;
+- release CI scans tracked source for obvious private-key/token material and rejects mutable workflow action refs;
+- release artifacts must still pass reproducibility, wheel-surface, metadata, and clean-install gates.
+
+Self-integrity digests are tamper-evidence inside the documented trust boundary; they are not authentication. Signed capsules or equivalent authenticated transport remain required across untrusted boundaries.

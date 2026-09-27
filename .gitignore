@@ -8,3 +8,11 @@ build/
 inventory.json
 audit.json
 capsule.json
+.env
+.env.*
+!.env.example
+.pypirc
+*.pem
+*.key
+*.p12
+*.pfx
