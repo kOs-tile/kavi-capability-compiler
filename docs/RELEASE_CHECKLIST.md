@@ -60,3 +60,22 @@
 - [ ] enable GitHub Immutable Releases protection before the next release cycle
 - [x] do not rebuild v0.1.0 for PyPI
 - [x] do not claim production certification or universal framework support
+
+
+## v0.1.1 security patch
+
+- [x] parameter-rule hardening merged to main
+- [x] unsupported/malformed structured predicates fail closed at compile time
+- [x] incompatible runtime numeric/length bound values fail closed deterministically
+- [x] public SDK and data-contract versions remain unchanged
+- [x] release tooling derives package version/tag/artifact names from pyproject metadata
+- [x] Pages tooling derives the current release version/tag
+- [ ] PR test workflow fully green
+- [ ] PR release dry-run fully green
+- [ ] post-merge main test fully green
+- [ ] final manual publish dry-run artifact payload verified
+- [ ] publish immutable v0.1.1 GitHub Release from exact green main SHA
+- [ ] deploy the Simple Repository index from v0.1.1
+- [ ] rerun external consumer, diagnostics, and optional-extras evidence against v0.1.1
+- [ ] update current public install/status docs to v0.1.1 after publication
+- [ ] do not rebuild v0.1.1 for a later PyPI mirror

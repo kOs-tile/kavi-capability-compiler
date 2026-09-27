@@ -5,15 +5,15 @@ import re
 import sys
 from pathlib import Path
 
+from release_version import release_metadata
+
 PROJECT="kavi-capability-compiler"
-VERSION="0.1.0"
-TAG="v0.1.0"
 REQUIRES_PYTHON=">=3.11"
-RELEASE_BASE=f"https://github.com/kOs-tile/kavi-capability-compiler/releases/download/{TAG}"
 HEX64=re.compile(r"^[0-9a-f]{64}$")
 
 
 def read_checksums(dist: Path) -> dict[str,str]:
+    metadata=release_metadata()
     rows={}
     for raw in (dist/"SHA256SUMS").read_text().splitlines():
         if not raw.strip():
@@ -32,60 +32,50 @@ def read_checksums(dist: Path) -> dict[str,str]:
         if not (dist/name).is_file():
             raise ValueError(f"checksum references missing artifact: {name}")
         rows[name]=digest
-    expected=[
-        name for name in rows
-        if name.endswith(".whl") or name.endswith(".tar.gz")
-    ]
-    wheels=[name for name in expected if name.endswith(".whl")]
-    sdists=[name for name in expected if name.endswith(".tar.gz")]
+    wheels=[name for name in rows if name.endswith(".whl")]
+    sdists=[name for name in rows if name.endswith(".tar.gz")]
     if len(wheels)!=1 or len(sdists)!=1 or len(rows)!=2:
         raise ValueError("expected exactly one wheel and one sdist checksum")
-    if not wheels[0].startswith("kavi_capability_compiler-0.1.0-"):
+    if wheels[0] != metadata["wheel"]:
         raise ValueError(f"unexpected wheel filename: {wheels[0]}")
-    if sdists[0]!="kavi_capability_compiler-0.1.0.tar.gz":
+    if sdists[0] != metadata["sdist"]:
         raise ValueError(f"unexpected sdist filename: {sdists[0]}")
     return rows
 
 
 def build(dist: Path, site: Path) -> None:
+    metadata=release_metadata()
+    release_base="https://github.com/kOs-tile/kavi-capability-compiler/releases/download/"+metadata["tag"]
     checksums=read_checksums(dist)
     project_dir=site/"simple"/PROJECT
     project_dir.mkdir(parents=True,exist_ok=True)
 
-    root="""<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>KCC Simple Index</title></head>
-<body><a href="./kavi-capability-compiler/">kavi-capability-compiler</a></body></html>
-"""
-    (site/"simple"/"index.html").write_text(root)
+    (site/"simple"/"index.html").write_text(
+        '<!DOCTYPE html>\n<html><head><meta charset="utf-8"><title>KCC Simple Index</title></head>\n'
+        '<body><a href="./kavi-capability-compiler/">kavi-capability-compiler</a></body></html>\n'
+    )
 
     links=[]
     for name,digest in sorted(checksums.items()):
-        safe_name=html.escape(name,quote=True)
-        url=f"{RELEASE_BASE}/{name}#sha256={digest}"
+        url=f"{release_base}/{name}#sha256={digest}"
         links.append(
             f'<a href="{html.escape(url,quote=True)}" '
             f'data-requires-python="{html.escape(REQUIRES_PYTHON,quote=True)}">'
-            f'{safe_name}</a>'
+            f'{html.escape(name,quote=True)}</a>'
         )
-    detail=(
-        '<!DOCTYPE html>\n<html><head><meta charset="utf-8">'
-        '<title>kavi-capability-compiler</title></head><body>\n'
+    (project_dir/"index.html").write_text(
+        '<!DOCTYPE html>\n<html><head><meta charset="utf-8"><title>kavi-capability-compiler</title></head><body>\n'
         + "\n".join(links)
         + "\n</body></html>\n"
     )
-    (project_dir/"index.html").write_text(detail)
     (site/".nojekyll").write_text("")
-
-    landing=f"""<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>KAVI Capability Compiler</title></head>
-<body>
-<h1>KAVI Capability Compiler {VERSION}</h1>
-<p>Framework-agnostic least-authority compiler for AI agent systems.</p>
-<pre>python -m pip install --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/ kavi-capability-compiler</pre>
-<p><a href="./simple/">Simple Repository API</a></p>
-</body></html>
-"""
-    (site/"index.html").write_text(landing)
+    (site/"index.html").write_text(
+        '<!DOCTYPE html>\n<html><head><meta charset="utf-8"><title>KAVI Capability Compiler</title></head>\n'
+        f'<body><h1>KAVI Capability Compiler {metadata["version"]}</h1>\n'
+        '<p>Framework-agnostic least-authority compiler for AI agent systems.</p>\n'
+        '<pre>python -m pip install --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/ kavi-capability-compiler</pre>\n'
+        '<p><a href="./simple/">Simple Repository API</a></p></body></html>\n'
+    )
 
 
 def main() -> None:
