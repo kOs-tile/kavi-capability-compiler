@@ -12,6 +12,8 @@ The host application keeps its own model, dispatcher, credentials, storage, iden
 
 - zero-required-dependency embedded core
 - universal `kcc.capabilities.v1` manifest
+- versioned `kcc.inventory.v1` and `kcc.inventory-lock.v1` authority inventory contracts
+- versioned `kcc.capsule.v1` execution capsule contract
 - adapters for generic JSON, MCP, OpenAI function tools, Anthropic tools, and OpenAPI
 - deterministic capability fingerprints and inventory locks
 - task-scoped execution capsules
@@ -21,7 +23,9 @@ The host application keeps its own model, dispatcher, credentials, storage, iden
 - optional Ed25519 signed capsules
 - optional live MCP discovery
 - framework-neutral execution evidence
-- packaged public JSON schemas
+- packaged public JSON schemas for manifests, inventories, inventory locks, capsules, and signed capsules
+- explicit `kcc.sdk.v1` compatibility and exception semantics
+- fail-closed rejection of unsupported/rehashed capsule versions and missing `fail_closed=true`
 
 ## Evidence checkpoint
 
