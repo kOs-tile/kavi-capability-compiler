@@ -54,3 +54,7 @@ Before a public release:
 Self-integrity digests are tamper-evidence inside the documented trust boundary; they are not authentication. Signed capsules or equivalent authenticated transport remain required across untrusted boundaries.
 
 Security-sensitive optional dependency floors are set above known affected ranges at release time. The v0.1 preflight requires `httpx2>=2.12.0,<3` and `cryptography>=50.0.1,<51`; future releases must re-check current advisories rather than treating these floors as permanently sufficient.
+
+## Repository protection before public publication
+
+The public release gate also requires an enforced ruleset on `main` that blocks force-push/deletion and requires pull-request + CI validation before merge. This is a repository administration control, not an in-package runtime control.

@@ -49,6 +49,11 @@
 - [x] framework-specific validation targets are separated from the installed core
 - [x] external runtime validation evidence and limitations are consolidated in `docs/EXTERNAL_VALIDATION_V0.1.md`
 
+## Repository protection
+- [ ] main branch ruleset enforcement is active before public publication
+- [ ] main requires pull requests and passing CI before merge
+- [ ] main blocks force-push and deletion
+
 ## Publication
 - [ ] create `v0.1.0` tag
 - [ ] create GitHub Release from `docs/RELEASE_NOTES_V0.1.md`
