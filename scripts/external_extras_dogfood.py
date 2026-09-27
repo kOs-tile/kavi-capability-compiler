@@ -155,7 +155,7 @@ def exercise_signing() -> dict[str, Any]:
     }
 
 
-MCP_FIXTURE = r"""
+MCP_FIXTURE = r'''
 from mcp.server import MCPServer
 
 mcp = MCPServer("KCC External Extras Fixture")
@@ -172,7 +172,7 @@ def delete_item(item_id: str) -> str:
 
 if __name__ == "__main__":
     mcp.run()
-"""
+'''
 
 
 def exercise_mcp() -> dict[str, Any]:
