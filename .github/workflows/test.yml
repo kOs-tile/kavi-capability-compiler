@@ -69,7 +69,15 @@ jobs:
       - name: Install pinned PyPA audit tool
         run: python -m pip install "pip-audit==2.10.1"
       - name: Resolve KCC optional dependency surface in an isolated target
-        run: python -m pip install --target /tmp/kcc-audit-target ".[all]"
+        run: |
+          python - <<'PY' > /tmp/kcc-audit-requirements.txt
+          import tomllib
+          from pathlib import Path
+          data=tomllib.loads(Path("pyproject.toml").read_text())
+          for requirement in data["project"]["optional-dependencies"]["all"]:
+              print(requirement)
+          PY
+          python -m pip install --target /tmp/kcc-audit-target -r /tmp/kcc-audit-requirements.txt
       - name: Fail on known dependency vulnerabilities
         run: python -m pip_audit --path /tmp/kcc-audit-target --strict --progress-spinner off
 
