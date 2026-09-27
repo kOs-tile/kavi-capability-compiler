@@ -1,4 +1,6 @@
-# M5 Exit Report — v0.1 Release Candidate
+# M5 Exit Report
+
+> **Historical checkpoint.** This document records the M5 release-candidate state before the GitHub-first v0.1.0 publication path was finalized. Plain `pip install kavi-capability-compiler` examples below describe the intended future PyPI UX, not the current v0.1.0 install command. For current installation, use `docs/DISTRIBUTION_V0.1.md` or the README. — v0.1 Release Candidate
 
 M5 prepares KAVI Capability Compiler for public distribution without reintroducing framework coupling.
 
