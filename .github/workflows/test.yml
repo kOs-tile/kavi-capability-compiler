@@ -318,7 +318,9 @@ jobs:
           assert unconditional == [], unconditional
           PY
       - name: Run real OpenAI Agents SDK FunctionTool validation
-        run: python case_studies/openai_agents/run.py | tee openai-agents-validation.json
+        run: |
+          set -o pipefail
+          python -m case_studies.openai_agents.run | tee openai-agents-validation.json
       - name: Enforce OpenAI Agents SDK authority boundary
         run: |
           python - <<'PY'

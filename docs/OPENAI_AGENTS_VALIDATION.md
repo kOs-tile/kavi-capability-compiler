@@ -64,7 +64,7 @@ The case study proves:
 ```bash
 python -m pip install -e .
 python -m pip install "openai-agents==0.22.3"
-python case_studies/openai_agents/run.py
+python -m case_studies.openai_agents.run
 ```
 
 This validation is evidence for interoperability with one pinned SDK release, not a claim that all OpenAI Agents SDK tool categories or future releases are automatically compatible.
