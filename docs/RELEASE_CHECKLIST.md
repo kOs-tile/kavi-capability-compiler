@@ -3,8 +3,9 @@
 ## Code
 - [x] main contains the M0–M4 shipped implementation
 - [x] package version and `__version__` both equal 0.1.0
-- [x] public `__all__` contract passes
-- [x] full test suite passes — 84 tests at final RC checkpoint
+- [x] public `__all__` contract is explicit and framework-neutral
+- [x] `kcc.capabilities.v1`, `kcc.inventory.v1`, `kcc.inventory-lock.v1`, `kcc.capsule.v1`, and `kcc.sdk.v1` are explicitly versioned
+- [ ] full test suite passes after M5.1 contract hardening
 - [x] all benchmark safety gates pass
 
 ## Packaging
@@ -13,7 +14,7 @@
 - [x] wheel installs with `--no-deps`
 - [x] core SDK imports from the installed wheel
 - [x] core CLI works from the installed wheel
-- [x] public JSON schemas load from the installed wheel
+- [ ] all five public JSON schemas load from the installed wheel
 - [x] KAVI/Hermes/Codex-specific runtime modules are absent from the installed core wheel
 - [x] `mcp` extra installs independently
 - [x] `signing` extra installs independently
@@ -24,6 +25,7 @@
 - [x] README describes v0.1 behavior
 - [x] embedded SDK guide is current
 - [x] universal manifest guide is current
+- [x] SDK compatibility and exception semantics are documented
 - [x] framework-neutral execution-evidence contract is current
 - [x] benchmark report includes limitations
 - [x] integration examples execute in CI
