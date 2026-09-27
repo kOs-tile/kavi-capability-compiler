@@ -20,6 +20,7 @@ def _inventory():
 
 def test_kavi_adapter_preserves_authoritative_surface_and_provenance():
     inv=_inventory()
+    assert inv["version"]=="kcc.inventory.v1"
     assert len(inv["capabilities"])==5
     assert inv["provenance"]["sha"]=="80f521a9aba225bbc5abcb815feae24569fa8098"
     by_name={x["name"]:x for x in inv["capabilities"]}
