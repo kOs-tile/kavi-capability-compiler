@@ -43,7 +43,7 @@ Before a public release:
 
 - public capsule verification validates supplied inventory integrity;
 - inventory drift checks validate both lock and current-inventory integrity;
-- authenticated non-loopback MCP HTTP discovery requires HTTPS;
+- non-loopback MCP Streamable HTTP discovery requires HTTPS;
 - URL userinfo credentials are rejected for Streamable HTTP discovery;
 - GitHub Actions used by CI are pinned to immutable commit SHAs;
 - checkout credentials are not persisted in the test workspace;
@@ -58,3 +58,5 @@ Security-sensitive optional dependency floors are set above known affected range
 ## Repository protection before public publication
 
 The public release gate also requires an enforced ruleset on `main` that blocks force-push/deletion and requires pull-request + CI validation before merge. This is a repository administration control, not an in-package runtime control.
+
+Live MCP discovery trust boundary: `discover_stdio` intentionally starts the exact command supplied by the caller, without a shell, and must not be exposed to untrusted command selection. Remote Streamable HTTP discovery accepts plaintext only on loopback; non-loopback endpoints require HTTPS. Hosts that allow untrusted users to choose discovery endpoints must add their own network/SSRF policy.

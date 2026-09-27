@@ -30,10 +30,13 @@ def _loopback_host(host: str | None) -> bool:
 
 def _validate_http_endpoint(url: str, headers: Mapping[str, str] | None) -> None:
     parsed=urlsplit(str(url))
+    scheme=parsed.scheme.lower()
     if parsed.username is not None or parsed.password is not None:
         raise ValueError("Streamable HTTP URL userinfo credentials are not allowed; use headers")
-    if headers and parsed.scheme.lower()!="https" and not _loopback_host(parsed.hostname):
-        raise ValueError("Authenticated Streamable HTTP requires HTTPS for non-loopback hosts")
+    if scheme not in {"http","https"}:
+        raise ValueError("Streamable HTTP endpoint must use http or https")
+    if scheme!="https" and not _loopback_host(parsed.hostname):
+        raise ValueError("Non-loopback Streamable HTTP requires HTTPS")
 
 
 def _model_dump(value: Any) -> dict[str, Any]:

@@ -247,3 +247,25 @@ def test_streamable_http_rejects_url_userinfo_credentials():
         assert False, "expected ValueError"
     except ValueError as exc:
         assert "userinfo credentials" in str(exc)
+
+
+def test_remote_unauthenticated_plaintext_http_is_rejected_before_network_use():
+    try:
+        asyncio.run(discover_streamable_http(
+            "http://example.com/mcp",
+            timeout_seconds=0.25,
+        ))
+        assert False, "expected ValueError"
+    except ValueError as exc:
+        assert "requires HTTPS" in str(exc)
+
+
+def test_streamable_http_rejects_non_http_schemes():
+    try:
+        asyncio.run(discover_streamable_http(
+            "file:///tmp/mcp",
+            timeout_seconds=0.25,
+        ))
+        assert False, "expected ValueError"
+    except ValueError as exc:
+        assert "must use http or https" in str(exc)
