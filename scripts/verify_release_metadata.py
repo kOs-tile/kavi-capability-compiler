@@ -81,6 +81,9 @@ def main() -> None:
     )
 
     require("docs/RELEASE_NOTES_V0.1.md",EXPECTED_DIRECT_WHEEL)
+    require("docs/DISTRIBUTION_V0.1.md","The GitHub Pages Simple Repository is live")
+    require("docs/RELEASE_NOTES_V0.1.md","The live standards-compliant Simple Repository index")
+    require("docs/M5_EXIT.md","**Historical checkpoint.**")
     require("SECURITY.md","cryptography>=50.0.1,<51")
     require("SECURITY.md","Remote Streamable HTTP discovery requires HTTPS.")
 
