@@ -52,12 +52,11 @@ These are benchmark checkpoint measurements, not production security guarantees.
 - published official MCP compatibility validation
 
 ### Execution evidence
-- deterministic `kavi.execution-evidence.v0` envelope
-- binds ORACLE, MNEMOS, SPECTRAFLOW, PHANTOM, and NEPHILIM artifact digests to one execution + capsule
+- deterministic execution-evidence envelope
+- binds external evidence artifact digests to one execution + capsule
 - evidence envelope integrity verification
-- explicit `authority_granted=false` invariant
+- evidence is explicitly non-authoritative and cannot expand a compiled grant
 - CLI: `kcc evidence-bind` and `kcc evidence-verify`
-- executable regression proving external evidence cannot expand a compiled KCC grant
 
 ### M3 framework-agnostic integration
 - universal `kcc.capabilities.v1` capability manifest
@@ -118,12 +117,7 @@ KCC is not a hosted gateway, desktop service, local daemon, IAM replacement, sec
 
 M0–M4 exit gates have passed. KCC is now in v0.1 distribution hardening: package metadata, executable integration recipes, release artifacts, and documentation consistency.
 
-See `docs/M2_EXIT.md`, `docs/RUNTIME_AUTHORIZATION.md`, and `docs/EXECUTION_EVIDENCE.md`.
-
-## KAVI ecosystem
-
-KCC stays independent of the surrounding research stack. Integration responsibilities and non-goals are documented in `docs/KAVI_ECOSYSTEM.md`.
-
+See `docs/EMBEDDED_SDK.md`, `docs/UNIVERSAL_MANIFEST.md`, `docs/INTEGRATION_RECIPES.md`, and `docs/BENCHMARK_REPORT_V0.1.md`.
 
 ## Embed it into an existing agent
 
