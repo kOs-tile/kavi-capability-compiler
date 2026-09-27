@@ -101,3 +101,32 @@ After v0.1:
 - improve integration kits based on external adoption feedback
 - optional proxy/bridge only if users need out-of-process enforcement
 - hosted/dashboard product only if demand justifies it
+
+## M6 — Adversarial SDK Hardening
+**Status: shipped.**
+
+Delivered:
+- inventory-bound Guard
+- fail-closed post-compile capability drift
+- parameter-key allowlisting when parameter constraints are present
+- adversarial SDK benchmark
+- explicit replay and direct-dispatch host-responsibility boundaries
+
+## M7 — Integration Kits
+**Status: shipped.**
+
+Delivered:
+- executable Generic Python, OpenAI-shape, Anthropic-shape, MCP, and OpenAPI examples
+- inventory-bound reference integration pattern
+- no framework vendor SDK dependencies in the core package
+
+## M8 — External Runtime Validation
+**Status: CI-backed validation target.**
+
+First target:
+- OpenAI Agents SDK 0.22.3 real `FunctionTool` objects
+- normalization from the SDK's public metadata surface
+- allowed execution through real `on_invoke_tool`
+- denial before SDK invocation
+- post-compile tool-surface drift rejection
+- no model/API request and no KCC core dependency on the SDK
