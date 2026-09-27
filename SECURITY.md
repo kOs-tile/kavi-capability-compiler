@@ -36,3 +36,55 @@ KCC does not replace:
 - human approval systems
 
 A valid KCC capsule means the request fits the authority KCC compiled under its current model. It is not a certification that the underlying tool or application is safe.
+
+## MCP transport boundary
+
+Remote Streamable HTTP discovery requires HTTPS.
+
+Plaintext `http://` discovery is accepted only for loopback hosts such as
+`localhost`, `127.0.0.1`, and `::1`, where it is useful for local development
+and test fixtures. KCC rejects remote plaintext HTTP before opening a connection.
+
+KCC also rejects URL userinfo credentials such as
+`https://user:password@example.com/...`. Supply authentication through the
+host-owned header configuration instead. Header values remain in memory for the
+request and are not copied into discovery artifacts.
+
+These controls reduce credential exposure and prevent a remote plaintext
+network path from silently modifying the capability surface returned by
+`tools/list`.
+
+## CI and release supply chain
+
+Repository workflows pin external GitHub Actions to full immutable commit SHAs.
+CI contains a regression check that rejects mutable action references.
+
+Release reproducibility tooling is version-pinned. Publication credentials must
+not be stored in the repository; the preferred publication path is short-lived
+OIDC / trusted publishing with build and publish permissions separated.
+
+## Artifact integrity at compile time
+
+KCC treats capability manifests, inventories, and inventory locks as
+security-sensitive authority artifacts.
+
+Before compilation, KCC validates the inventory's deterministic identity,
+fingerprints, derived effect analysis, and digest. Manifest scanning validates
+the manifest digest rather than silently rebuilding authority from a stale or
+tampered envelope. Inventory-lock diffing validates the lock digest and rejects
+duplicate canonical capability identities.
+
+These are integrity checks, not authentication. A hostile party that is allowed
+to replace an entire unsigned artifact and recompute all of its self-integrity
+fields is already across the artifact trust boundary. Cross-process trust must
+therefore use host authentication and, where applicable, KCC signed capsules.
+
+CI also audits the currently resolved optional runtime dependency set against
+the Python Packaging Authority vulnerability audit database before release.
+
+Git checkout steps disable credential persistence after checkout. The CI token is
+read-only and is not left configured in the repository working tree.
+
+The optional signing dependency requires a vulnerability-audited
+`cryptography>=50.0.1,<51` release line; older vulnerable release lines are
+not accepted by the signing extra.

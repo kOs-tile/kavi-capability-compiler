@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Mapping, Sequence
 
 import asyncio
+import ipaddress
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -85,6 +86,31 @@ async def discover_stdio(
         raise DiscoveryError(f"stdio discovery failed for {fallback}: {type(exc).__name__}") from exc
 
 
+def _is_loopback_host(hostname: str | None) -> bool:
+    host=(hostname or "").rstrip(".").lower()
+    if host=="localhost" or host.endswith(".localhost"):
+        return True
+    try:
+        return ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        return False
+
+
+def _validate_streamable_http_url(url: str):
+    raw=str(url)
+    parsed=urlsplit(raw)
+    if parsed.scheme not in {"http","https"} or not parsed.hostname:
+        raise ValueError("Streamable HTTP URL must use http:// or https:// with a hostname")
+    if parsed.username is not None or parsed.password is not None:
+        raise ValueError("Streamable HTTP URL must not contain userinfo credentials")
+    if parsed.scheme=="http" and not _is_loopback_host(parsed.hostname):
+        raise ValueError(
+            "Plaintext HTTP discovery is allowed only for loopback hosts; "
+            "use https:// for remote MCP servers"
+        )
+    return parsed
+
+
 async def discover_streamable_http(
     url: str,
     *,
@@ -97,9 +123,7 @@ async def discover_streamable_http(
     Header values are used only by the HTTP client and never copied into the
     discovery artifact.
     """
-    if not url or not str(url).startswith(("http://", "https://")):
-        raise ValueError("Streamable HTTP URL must use http:// or https://")
-    parsed = urlsplit(str(url))
+    parsed = _validate_streamable_http_url(str(url))
     fallback = server_name or parsed.hostname or "http-mcp"
     if timeout_seconds <= 0:
         raise ValueError("timeout_seconds must be positive")

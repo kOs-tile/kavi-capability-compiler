@@ -28,10 +28,11 @@ def test_kavi_adapter_preserves_authoritative_surface_and_provenance():
     assert len(inv["capabilities"])==5
     assert inv["provenance"]["sha"]=="80f521a9aba225bbc5abcb815feae24569fa8098"
     by_name={x["name"]:x for x in inv["capabilities"]}
+    assert inv["adapter"]=="universal-manifest.v1"
     assert by_name["get_operator_snapshot"]["effect"]=="read"
     assert by_name["enqueue_task"]["effect"]=="write"
-    assert "declared_mutation" in by_name["approve_task"]["analysis"]["risk_flags"]
-    assert "approval_contract_required" in by_name["approve_task"]["analysis"]["risk_flags"]
+    assert by_name["approve_task"]["annotations"]["kaviDeclaredWrite"] is True
+    assert by_name["approve_task"]["annotations"]["kaviFailClosedUntilOperatorContract"] is True
 
 
 def test_read_only_kavi_capsule_blocks_outside_control_plane_authority():

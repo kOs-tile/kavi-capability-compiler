@@ -99,6 +99,40 @@ def test_streamable_http_live_discovery_and_header_non_persistence():
             proc.wait(timeout=3)
 
 
+def test_remote_plaintext_http_discovery_is_rejected_before_network():
+    started=time.monotonic()
+    try:
+        asyncio.run(
+            discover_streamable_http(
+                "http://192.0.2.1/mcp",
+                headers={"Authorization":"Bearer SHOULD_NOT_SEND"},
+                timeout_seconds=10,
+            )
+        )
+        assert False, "expected remote plaintext HTTP rejection"
+    except ValueError as exc:
+        assert "loopback" in str(exc).lower()
+        assert "SHOULD_NOT_SEND" not in str(exc)
+    assert time.monotonic()-started < 1
+
+
+def test_streamable_http_url_userinfo_is_rejected_before_network():
+    secret="USERINFO_SECRET_SHOULD_NOT_SEND"
+    started=time.monotonic()
+    try:
+        asyncio.run(
+            discover_streamable_http(
+                f"https://user:{secret}@example.com/mcp",
+                timeout_seconds=10,
+            )
+        )
+        assert False, "expected URL userinfo rejection"
+    except ValueError as exc:
+        assert "userinfo" in str(exc).lower()
+        assert secret not in str(exc)
+    assert time.monotonic()-started < 1
+
+
 def test_config_summary_redacts_secret_values_and_url_credentials():
     secret = "TOP_SECRET_TOKEN"
     cfg = {"mcpServers": {

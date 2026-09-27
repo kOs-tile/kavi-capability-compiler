@@ -20,10 +20,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.11"
+      - name: Enforce immutable GitHub Action references
+        run: python scripts/verify_workflow_action_pins.py .github/workflows
       - name: Install core only
         run: python -m pip install -e .
       - name: Verify embedded SDK imports without optional integrations
@@ -57,8 +61,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.11"
       - run: python -m pip install build
@@ -166,8 +172,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.11"
       - run: python -m pip install -e ".[all]"
@@ -301,8 +309,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.11"
       - name: Install dependency-free KCC core
@@ -345,8 +355,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.11"
       - name: Install dependency-free KCC core
@@ -389,8 +401,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.11"
       - name: Install dependency-free KCC core
@@ -430,16 +444,42 @@ jobs:
           assert r["pass"] is True, r
           PY
 
+
+  dependency-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+      - name: Resolve KCC optional runtime dependencies in isolation
+        run: |
+          python -m venv /tmp/kcc-runtime
+          /tmp/kcc-runtime/bin/pip install -e ".[all]"
+          /tmp/kcc-runtime/bin/pip list --format=freeze \
+            | grep -Ev '^(kavi-capability-compiler|pip|setuptools|wheel)==' \
+            > /tmp/kcc-runtime-requirements.txt
+          test -s /tmp/kcc-runtime-requirements.txt
+      - name: Install pinned PyPA dependency auditor
+        run: python -m pip install "pip-audit==2.10.1"
+      - name: Fail on known vulnerabilities in resolved optional runtime dependencies
+        run: python -m pip_audit -r /tmp/kcc-runtime-requirements.txt
+
   release-reproducibility:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.11"
       - name: Install release verification tools
-        run: python -m pip install build twine wheel "setuptools>=68"
+        run: python -m pip install "build==1.6.1" "twine==7.0.0" "wheel==0.48.0" "setuptools==84.0.0"
       - name: Build release artifacts twice from the same commit epoch
         run: |
           export SOURCE_DATE_EPOCH="$(git log -1 --format=%ct)"

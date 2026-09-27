@@ -162,3 +162,36 @@ def test_constraint_unknown_schema_parameter_rejected_at_compile():
         assert False, "expected ValueError"
     except ValueError as e:
         assert "unknown parameter" in str(e)
+
+def test_capability_identity_escapes_reserved_segment_delimiters():
+    left=capability_id("kcc","a:b","c")
+    right=capability_id("kcc","a","b:c")
+    assert left != right
+    assert "%3a" in left and "%3a" in right
+
+
+def test_mcp_scan_rejects_duplicate_canonical_identity():
+    snap={"server":{"name":"demo"},"tools":[
+        {"name":"Read Item","description":"Read item","inputSchema":{"type":"object"}},
+        {"name":"read-item","description":"Read item alias","inputSchema":{"type":"object"}},
+    ]}
+    try:
+        scan_mcp_snapshot(snap)
+        assert False, "expected canonical identity collision"
+    except ValueError as exc:
+        assert "Duplicate canonical capability identity" in str(exc)
+
+
+def test_compile_rejects_inventory_with_security_analysis_tampering():
+    inv=scan_mcp_snapshot(SNAP)
+    inv["capabilities"][1]["effect"]="read"
+    try:
+        compile_capsule(
+            inv,
+            {"capabilities":["mcp:demo:create_issue"]},
+            {"default":"allow"},
+            now=100,
+        )
+        assert False, "expected invalid inventory integrity"
+    except ValueError as exc:
+        assert "Invalid inventory integrity" in str(exc)
