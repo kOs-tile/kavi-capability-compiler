@@ -142,3 +142,15 @@ Target:
 - post-compile tool-surface drift rejection
 - no model/API request and no KCC core dependency on Anthropic
 - networked `tool_runner` explicitly outside this offline validation claim
+
+## M10 — LangGraph ToolNode Validation
+**Status: CI-backed validation target.**
+
+Target:
+- LangGraph 1.2.12 real `ToolNode`
+- real LangChain tool objects and generated input schemas
+- KCC Guard immediately before `ToolNode.invoke()`
+- allowed real ToolNode dispatch
+- denied call never reaches ToolNode
+- post-compile tool-surface drift rejection
+- no LLM/API request and no KCC core dependency on LangGraph

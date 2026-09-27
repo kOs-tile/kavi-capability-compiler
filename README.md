@@ -70,6 +70,7 @@ These are benchmark checkpoint measurements, not production security guarantees.
 - executable integration kits for Generic Python, OpenAI tool shapes, Anthropic tool shapes, raw MCP definitions, and OpenAPI
 - repository-only validation against real OpenAI Agents SDK `FunctionTool` objects
 - repository-only validation against real Anthropic Python SDK `@beta_tool` objects
+- repository-only validation immediately before real LangGraph `ToolNode.invoke()` dispatch
 
 KAVI/Hermes/Codex integrations are validation targets and examples, not dependencies of the compiler.
 
@@ -123,7 +124,7 @@ KCC is not a hosted gateway, desktop service, local daemon, IAM replacement, sec
 
 M0–M7 release-candidate engineering is focused on a stable framework-neutral SDK, adversarially tested runtime enforcement, and executable integration examples. External publication remains a separate founder approval.
 
-See `docs/EMBEDDED_SDK.md`, `docs/SDK_COMPATIBILITY.md`, `docs/ADVERSARIAL_SDK.md`, `docs/UNIVERSAL_MANIFEST.md`, `docs/INTEGRATION_RECIPES.md`, `docs/OPENAI_AGENTS_VALIDATION.md`, `docs/ANTHROPIC_SDK_VALIDATION.md`, and `docs/BENCHMARK_REPORT_V0.1.md`.
+See `docs/EMBEDDED_SDK.md`, `docs/SDK_COMPATIBILITY.md`, `docs/ADVERSARIAL_SDK.md`, `docs/UNIVERSAL_MANIFEST.md`, `docs/INTEGRATION_RECIPES.md`, `docs/OPENAI_AGENTS_VALIDATION.md`, `docs/ANTHROPIC_SDK_VALIDATION.md`, `docs/LANGGRAPH_TOOLNODE_VALIDATION.md`, and `docs/BENCHMARK_REPORT_V0.1.md`.
 
 ## Embed it into an existing agent
 

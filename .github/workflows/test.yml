@@ -384,3 +384,48 @@ jobs:
           assert r["model_or_api_call_performed"] is False, r
           assert r["pass"] is True, r
           PY
+
+  langgraph-toolnode-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependency-free KCC core
+        run: python -m pip install -e .
+      - name: Install pinned LangGraph validation dependency
+        run: python -m pip install "langgraph==1.2.12"
+      - name: Verify KCC core metadata stayed dependency-free
+        run: |
+          python - <<'PY'
+          from importlib import metadata
+          reqs=metadata.requires("kavi-capability-compiler") or []
+          unconditional=[r for r in reqs if "extra ==" not in r]
+          assert unconditional == [], unconditional
+          PY
+      - name: Run real LangGraph ToolNode validation
+        run: |
+          set -o pipefail
+          python -m case_studies.langgraph_toolnode.run | tee langgraph-toolnode-validation.json
+      - name: Enforce LangGraph ToolNode authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("langgraph-toolnode-validation.json"))
+          assert r["validation"]=="kcc.langgraph-toolnode.v1", r
+          assert r["langgraph_version"]=="1.2.12", r
+          assert r["tool_count"]==2, r
+          assert r["manifest_version"]=="kcc.capabilities.v1", r
+          assert r["inventory_version"]=="kcc.inventory.v1", r
+          assert r["capsule_version"]=="kcc.capsule.v1", r
+          assert r["guard_inventory_bound"] is True, r
+          assert r["allowed_toolnode_dispatches"]==1, r
+          assert r["allowed_tool_invocations"]==1, r
+          assert r["denied_tool_invocations"]==0, r
+          assert r["denied_reason"]=="capability_not_granted", r
+          assert r["expanded_surface_reason"]=="inventory_drift", r
+          assert r["model_or_api_call_performed"] is False, r
+          assert r["pass"] is True, r
+          PY
