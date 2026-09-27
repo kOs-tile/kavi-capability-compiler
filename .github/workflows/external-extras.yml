@@ -2,6 +2,12 @@ name: external-extras-dogfood
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Published KCC version to validate"
+        required: true
+        default: "0.1.0"
+        type: string
   pull_request:
     branches:
       - main
@@ -12,6 +18,9 @@ on:
 
 permissions:
   contents: read
+
+env:
+  KCC_TARGET_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || '0.1.0' }}
 
 jobs:
   extras:
@@ -51,7 +60,7 @@ jobs:
         run: |
           set -euo pipefail
           cd /tmp
-          PYTHONPATH="" /tmp/kcc-extras/bin/python -m pip install             --disable-pip-version-check             --no-cache-dir             "kavi-capability-compiler[${EXTRA}] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
+          PYTHONPATH="" /tmp/kcc-extras/bin/python -m pip install             --disable-pip-version-check             --no-cache-dir             "kavi-capability-compiler[${EXTRA}] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v${KCC_TARGET_VERSION}/kavi_capability_compiler-${KCC_TARGET_VERSION}-py3-none-any.whl"
 
       - name: Exercise installed optional extra
         env:
@@ -63,7 +72,7 @@ jobs:
           mkdir -p /tmp/kcc-extras-dogfood
           cp "$GITHUB_WORKSPACE/scripts/external_extras_dogfood.py" /tmp/kcc-extras-dogfood/
           cd /tmp/kcc-extras-dogfood
-          PYTHONPATH="" /tmp/kcc-extras/bin/python external_extras_dogfood.py             --extra "$EXTRA"             --output "$GITHUB_WORKSPACE/evidence/${PYTHON_VERSION}-${EXTRA}.json"
+          PYTHONPATH="" /tmp/kcc-extras/bin/python external_extras_dogfood.py             --extra "$EXTRA"             --expected-version "$KCC_TARGET_VERSION"             --output "$GITHUB_WORKSPACE/evidence/${PYTHON_VERSION}-${EXTRA}.json"
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:

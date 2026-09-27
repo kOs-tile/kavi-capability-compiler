@@ -143,11 +143,12 @@ def denied_case(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--distribution", required=True)
+    parser.add_argument("--expected-version", required=True)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
 
-    assert metadata.version("kavi-capability-compiler") == "0.1.0"
-    assert kcc.__version__ == "0.1.0"
+    assert metadata.version("kavi-capability-compiler") == args.expected_version
+    assert kcc.__version__ == args.expected_version
     assert kcc.SDK_VERSION == "kcc.sdk.v1"
     package_path = Path(kcc.__file__).resolve()
     assert "site-packages" in package_path.parts, package_path
