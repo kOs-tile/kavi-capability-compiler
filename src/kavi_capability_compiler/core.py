@@ -1,6 +1,10 @@
 from __future__ import annotations
 import fnmatch, hashlib, json, re, time
 
+INVENTORY_VERSION="kcc.inventory.v1"
+INVENTORY_LOCK_VERSION="kcc.inventory-lock.v1"
+CAPSULE_VERSION="kcc.capsule.v1"
+
 def canonical(value):
     return json.dumps(value, sort_keys=True, separators=(",", ":"))
 
@@ -143,7 +147,7 @@ def scan_mcp_snapshot(snapshot):
             "fingerprint":fp,"effect":effect,"confidence":confidence,
             "analysis":analyze_capability(t),
             "annotations":t.get("annotations") or {}})
-    inv={"version":"kcc.inventory.v0","capabilities":caps}
+    inv={"version":INVENTORY_VERSION,"capabilities":caps}
     inv["digest"]=digest(inv)
     return inv
 
@@ -199,7 +203,12 @@ def _validate_parameter_constraints(capability, constraints):
             raise ValueError(f"Constraint references unknown parameter(s) for {capability['id']}: {unknown}")
 
 def compile_capsule(inv,intent,policy,now=None):
-    now=int(now or time.time()); by_id={c["id"]:c for c in inv["capabilities"]}
+    if inv.get("version") != INVENTORY_VERSION:
+        raise ValueError(f"Unsupported inventory contract: {inv.get('version')}")
+    task=intent.get("task")
+    if task is not None and not isinstance(task,str):
+        raise ValueError("Task must be a string or null")
+    now=int(now if now is not None else time.time()); by_id={c["id"]:c for c in inv["capabilities"]}
     grants=[]; approvals=[]; denials=[]
     for cid in intent.get("capabilities",[]):
         if cid not in by_id: raise ValueError(f"Capability absent from inventory: {cid}")
@@ -217,29 +226,64 @@ def compile_capsule(inv,intent,policy,now=None):
         {"allow":grants,"approval":approvals,"deny":denials}[d].append(entry)
     ttl=max(1,min(int(intent.get("ttl_seconds",900)),86400))
     status="denied" if denials else ("approval_required" if approvals else "ready")
-    cap={"version":"kcc.capsule.v0","status":status,"issued_at":now,"expires_at":now+ttl,
+    cap={"version":CAPSULE_VERSION,"status":status,"issued_at":now,"expires_at":now+ttl,
         "inventory_digest":inv["digest"],"intent_digest":digest(intent),"policy_digest":digest(policy),
-        "task":intent.get("task"),"constraints":intent.get("constraints",{}),
+        "task":task,"constraints":intent.get("constraints",{}),
         "grants":grants,"approvals":approvals,"denials":denials,"fail_closed":True}
     cap["capsule_id"]=digest(cap)
     return cap
 
 def verify_capsule(cap,inv,now=None):
+    if not isinstance(cap,dict) or not isinstance(inv,dict):
+        return {"valid":False,"checks":[{"name":"shape","ok":False}]}
     body=dict(cap); claimed=body.pop("capsule_id",None)
-    checks=[("integrity",claimed==digest(body)),("inventory",cap.get("inventory_digest")==inv.get("digest"))]
-    by_id={c["id"]:c for c in inv["capabilities"]}
-    bound=all(by_id.get(x["id"],{}).get("fingerprint")==x["fingerprint"] for k in ("grants","approvals","denials") for x in cap.get(k,[]))
-    checks += [("fingerprints",bound),("expiry",int(now or time.time()) < cap.get("expires_at",0))]
+    try:
+        integrity=isinstance(claimed,str) and claimed==digest(body)
+    except (TypeError,ValueError):
+        integrity=False
+    checks=[
+        ("integrity",integrity),
+        ("version",cap.get("version")==CAPSULE_VERSION),
+        ("fail_closed",cap.get("fail_closed") is True),
+        ("inventory_version",inv.get("version")==INVENTORY_VERSION),
+        ("inventory",cap.get("inventory_digest")==inv.get("digest")),
+    ]
+    rows=inv.get("capabilities",[])
+    inventory_shape=isinstance(rows,list) and all(isinstance(x,dict) and isinstance(x.get("id"),str) and isinstance(x.get("fingerprint"),str) for x in rows)
+    by_id={c["id"]:c for c in rows} if inventory_shape else {}
+    shape=True; bound=True
+    for key in ("grants","approvals","denials"):
+        entries=cap.get(key,[])
+        if not isinstance(entries,list):
+            shape=False; bound=False; continue
+        for entry in entries:
+            if not isinstance(entry,dict) or not isinstance(entry.get("id"),str) or not isinstance(entry.get("fingerprint"),str):
+                shape=False; bound=False; continue
+            if by_id.get(entry["id"],{}).get("fingerprint") != entry["fingerprint"]:
+                bound=False
+    try:
+        current=int(now if now is not None else time.time())
+        expiry=int(cap.get("expires_at",0))
+        expiry_ok=current < expiry
+    except (TypeError,ValueError):
+        expiry_ok=False
+    checks += [("shape",shape and inventory_shape),("fingerprints",bound),("expiry",expiry_ok)]
     return {"valid":all(v for _,v in checks),"checks":[{"name":n,"ok":v} for n,v in checks]}
 
 
 def inventory_lock(inv):
+    if inv.get("version") != INVENTORY_VERSION:
+        raise ValueError(f"Unsupported inventory contract: {inv.get('version')}")
     entries=[{"id":c["id"],"fingerprint":c["fingerprint"]} for c in inv["capabilities"]]
-    lock={"version":"kcc.inventory-lock.v0","inventory_digest":inv["digest"],"capabilities":sorted(entries,key=lambda x:x["id"])}
+    lock={"version":INVENTORY_LOCK_VERSION,"inventory_digest":inv["digest"],"capabilities":sorted(entries,key=lambda x:x["id"])}
     lock["digest"]=digest(lock)
     return lock
 
 def diff_inventory_lock(lock, inv):
+    if lock.get("version") != INVENTORY_LOCK_VERSION:
+        raise ValueError(f"Unsupported inventory lock contract: {lock.get('version')}")
+    if inv.get("version") != INVENTORY_VERSION:
+        raise ValueError(f"Unsupported inventory contract: {inv.get('version')}")
     old={x["id"]:x["fingerprint"] for x in lock.get("capabilities",[])}
     new={x["id"]:x["fingerprint"] for x in inv.get("capabilities",[])}
     added=sorted(set(new)-set(old)); removed=sorted(set(old)-set(new))
@@ -248,13 +292,35 @@ def diff_inventory_lock(lock, inv):
 
 
 def authorize_call(cap, capability_id, operation=None, parameters=None, now=None):
-    if not verify_capsule(cap, {"digest":cap.get("inventory_digest"), "capabilities":[
-        {"id":x["id"],"fingerprint":x["fingerprint"]}
-        for k in ("grants","approvals","denials") for x in cap.get(k,[])
-    ]}, now=now)["checks"][0]["ok"]:
-        return {"allowed":False,"reason":"invalid_capsule_integrity"}
-    if int(now or time.time()) >= cap.get("expires_at",0):
-        return {"allowed":False,"reason":"expired"}
+    verification_inventory={
+        "version":INVENTORY_VERSION,
+        "digest":cap.get("inventory_digest") if isinstance(cap,dict) else None,
+        "capabilities":[],
+    }
+    if not isinstance(cap,dict):
+        return {"allowed":False,"reason":"invalid_capsule_shape"}
+    for key in ("grants","approvals","denials"):
+        entries=cap.get(key,[])
+        if not isinstance(entries,list):
+            return {"allowed":False,"reason":"invalid_capsule_shape"}
+        for entry in entries:
+            if not isinstance(entry,dict) or not isinstance(entry.get("id"),str) or not isinstance(entry.get("fingerprint"),str):
+                return {"allowed":False,"reason":"invalid_capsule_shape"}
+            verification_inventory["capabilities"].append({"id":entry["id"],"fingerprint":entry["fingerprint"]})
+    verification=verify_capsule(cap,verification_inventory,now=now)
+    if not verification["valid"]:
+        failed={x["name"] for x in verification["checks"] if not x["ok"]}
+        if "integrity" in failed:
+            reason="invalid_capsule_integrity"
+        elif "version" in failed:
+            reason="unsupported_capsule_version"
+        elif "fail_closed" in failed:
+            reason="fail_closed_required"
+        elif "expiry" in failed:
+            reason="expired"
+        else:
+            reason="invalid_capsule"
+        return {"allowed":False,"reason":reason,"verification":verification}
     grants={x["id"]:x for x in cap.get("grants",[])}
     approvals={x["id"]:x for x in cap.get("approvals",[])}
     denials={x["id"]:x for x in cap.get("denials",[])}
