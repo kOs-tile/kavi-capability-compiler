@@ -19,7 +19,7 @@ source adapter
 kcc.capabilities.v1
         |
         v
-KCC inventory -> task intent + policy -> execution capsule
+kcc.inventory.v1 -> task intent + policy -> kcc.capsule.v1
         |
         v
 generic runtime guard -> caller-supplied dispatcher
@@ -89,7 +89,7 @@ kcc manifest tools.json \
 kcc scan-manifest capabilities.json -o inventory.json
 ```
 
-After `scan-manifest`, the compiler and runtime guard are source-format agnostic.
+After `scan-manifest`, the compiler and runtime guard are source-format agnostic. The normalized manifest produces a `kcc.inventory.v1` artifact; compilation produces a `kcc.capsule.v1` artifact.
 
 ## External adapter contract
 
