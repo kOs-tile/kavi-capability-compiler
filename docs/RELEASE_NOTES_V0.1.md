@@ -30,7 +30,7 @@ The host application keeps its own model, dispatcher, credentials, storage, iden
 - adversarial runtime tests for capsule tampering, approval bypass, stale inventory, and parameter-bound bypasses
 - executable integration kits for Generic Python, OpenAI tool shapes, Anthropic tool shapes, MCP definitions, and OpenAPI
 - pinned real-runtime validation at the tool-dispatch boundary for OpenAI Agents SDK 0.22.3, Anthropic Python SDK 1.8.0, and LangGraph 1.2.12
-- CI release closure that checks bit-for-bit wheel/sdist reproducibility, wheel surface, and Twine metadata
+- CI release closure that checks raw wheel reproducibility, deterministic commit-epoch canonicalization of sdist archive metadata, bit-for-bit release-artifact equality, wheel surface, and Twine metadata
 
 ## Evidence checkpoint
 

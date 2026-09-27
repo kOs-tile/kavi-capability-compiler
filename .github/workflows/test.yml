@@ -443,6 +443,7 @@ jobs:
       - name: Build release artifacts twice from the same commit epoch
         run: |
           export SOURCE_DATE_EPOCH="$(git log -1 --format=%ct)"
+          echo "$SOURCE_DATE_EPOCH" > /tmp/kcc-source-date-epoch
           rm -rf build dist
           find src -maxdepth 1 -name '*.egg-info' -type d -exec rm -rf {} +
           rm -rf /tmp/kcc-dist-a /tmp/kcc-dist-b
@@ -450,7 +451,12 @@ jobs:
           rm -rf build
           find src -maxdepth 1 -name '*.egg-info' -type d -exec rm -rf {} +
           python -m build --no-isolation --outdir /tmp/kcc-dist-b
-      - name: Require bit-for-bit reproducible artifacts and clean wheel surface
+      - name: Canonicalize sdist archive metadata to the commit epoch
+        run: |
+          epoch="$(cat /tmp/kcc-source-date-epoch)"
+          python scripts/normalize_sdist.py /tmp/kcc-dist-a/*.tar.gz "$epoch"
+          python scripts/normalize_sdist.py /tmp/kcc-dist-b/*.tar.gz "$epoch"
+      - name: Require bit-for-bit reproducible release artifacts and clean wheel surface
         run: python scripts/verify_reproducible_builds.py /tmp/kcc-dist-a /tmp/kcc-dist-b
       - name: Verify release metadata
         run: python -m twine check /tmp/kcc-dist-a/*

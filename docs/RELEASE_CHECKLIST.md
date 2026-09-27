@@ -26,7 +26,7 @@
 - [x] Apache-2.0 license metadata/file and Python >=3.11 are declared
 - [x] artifact SHA-256 checksums are generated during release CI
 - [x] all five framework-neutral integration kits are present in the source distribution
-- [x] release CI builds wheel + sdist twice from one commit-derived SOURCE_DATE_EPOCH and requires identical SHA-256 outputs
+- [x] release CI builds twice from one commit-derived SOURCE_DATE_EPOCH, canonicalizes sdist archive metadata to that epoch, and requires identical wheel + sdist SHA-256 outputs
 - [x] release metadata is checked with Twine
 - [x] installed wheel is checked to exclude repository-only case studies, examples, benchmarks, tests, docs, and scripts
 

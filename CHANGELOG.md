@@ -34,7 +34,7 @@ All notable changes to KAVI Capability Compiler are documented here.
 - dependency-free default core install
 - optional `mcp` and `signing` extras
 - dependency-free wheel smoke
-- bit-for-bit reproducible wheel/sdist CI gate using commit-derived SOURCE_DATE_EPOCH
+- bit-for-bit release-artifact CI gate: raw reproducible wheels plus commit-epoch-canonicalized sdists
 - Twine release-metadata validation
 - wheel-surface audit excluding repository-only validation/example/test content
 - Apache-2.0 license

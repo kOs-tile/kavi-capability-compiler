@@ -160,7 +160,8 @@ Target:
 
 Release engineering gates:
 - build wheel + sdist twice from the same commit-derived `SOURCE_DATE_EPOCH`
-- require bit-for-bit SHA-256 equality for both artifact types
+- canonicalize sdist tar/gzip archive metadata to that commit epoch because raw Setuptools sdists retain archive-time nondeterminism
+- require bit-for-bit SHA-256 equality for the resulting release wheel + sdist artifacts
 - verify release metadata with Twine
 - verify the wheel excludes repository-only case studies/examples/benchmarks/tests/docs
 - consolidate pinned OpenAI Agents, Anthropic SDK, and LangGraph runtime-boundary evidence
