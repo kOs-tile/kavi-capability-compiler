@@ -130,3 +130,15 @@ First target:
 - denial before SDK invocation
 - post-compile tool-surface drift rejection
 - no model/API request and no KCC core dependency on the SDK
+
+## M9 — Anthropic SDK Validation
+**Status: CI-backed validation target.**
+
+Target:
+- Anthropic Python SDK 1.8.0 real `@beta_tool` objects
+- normalization through the existing Anthropic capability adapter
+- allowed execution through real SDK `.call()`
+- denial before SDK invocation
+- post-compile tool-surface drift rejection
+- no model/API request and no KCC core dependency on Anthropic
+- networked `tool_runner` explicitly outside this offline validation claim
