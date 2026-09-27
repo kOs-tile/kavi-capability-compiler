@@ -50,7 +50,7 @@ def _entry(
 
 def build_manifest(capabilities: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
     rows=[]
-    seen=set()
+    seen=set(); seen_ids=set()
     for raw in capabilities:
         row=deepcopy(dict(raw))
         key=(str(row.get("namespace","")),str(row.get("name","")))
@@ -59,6 +59,10 @@ def build_manifest(capabilities: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
         if key in seen:
             raise ValueError(f"Duplicate capability identity: {key[0]}:{key[1]}")
         seen.add(key)
+        canonical_id=capability_id("kcc",key[0],key[1])
+        if canonical_id in seen_ids:
+            raise ValueError(f"Duplicate canonical capability identity: {canonical_id}")
+        seen_ids.add(canonical_id)
         expected=_entry(
             namespace=key[0],
             name=key[1],
@@ -224,6 +228,8 @@ def scan_manifest(manifest: Mapping[str, Any]) -> dict[str, Any]:
     if manifest.get("schema_version") != SCHEMA_VERSION:
         raise ValueError(f"Unsupported capability manifest: {manifest.get('schema_version')}")
     checked=build_manifest(manifest.get("capabilities") or [])
+    if manifest.get("digest") != checked["digest"]:
+        raise ValueError("Capability manifest digest mismatch")
     caps=[]
     for row in checked["capabilities"]:
         tool={

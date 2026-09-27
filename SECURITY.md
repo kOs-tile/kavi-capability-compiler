@@ -62,3 +62,22 @@ CI contains a regression check that rejects mutable action references.
 Release reproducibility tooling is version-pinned. Publication credentials must
 not be stored in the repository; the preferred publication path is short-lived
 OIDC / trusted publishing with build and publish permissions separated.
+
+## Artifact integrity at compile time
+
+KCC treats capability manifests, inventories, and inventory locks as
+security-sensitive authority artifacts.
+
+Before compilation, KCC validates the inventory's deterministic identity,
+fingerprints, derived effect analysis, and digest. Manifest scanning validates
+the manifest digest rather than silently rebuilding authority from a stale or
+tampered envelope. Inventory-lock diffing validates the lock digest and rejects
+duplicate canonical capability identities.
+
+These are integrity checks, not authentication. A hostile party that is allowed
+to replace an entire unsigned artifact and recompute all of its self-integrity
+fields is already across the artifact trust boundary. Cross-process trust must
+therefore use host authentication and, where applicable, KCC signed capsules.
+
+CI also audits the currently resolved optional runtime dependency set against
+the Python Packaging Authority vulnerability audit database before release.

@@ -130,19 +130,25 @@ def classify(tool):
     return effect, analysis["confidence"]
 
 def capability_id(provider, server, name):
-    def norm(x): return str(x).strip().lower().replace(" ", "-")
+    def norm(x):
+        text=str(x).strip().lower().replace(" ", "-")
+        return text.replace("%","%25").replace(":","%3a")
     return f"{norm(provider)}:{norm(server)}:{norm(name)}"
 
 def scan_mcp_snapshot(snapshot):
     tools = snapshot.get("tools") or snapshot.get("result",{}).get("tools") or []
     server = snapshot.get("server",{}).get("name","mcp")
-    caps=[]
+    caps=[]; seen_ids=set()
     for t in tools:
         schema=t.get("inputSchema") or {}
         effect, confidence=classify(t)
         fp=digest({"name":t.get("name"),"description":t.get("description"),"schema":schema,
             "annotations":t.get("annotations") or {}})
-        caps.append({"id":capability_id("mcp",server,t["name"]),"provider":"mcp","server":server,
+        cid=capability_id("mcp",server,t["name"])
+        if cid in seen_ids:
+            raise ValueError(f"Duplicate canonical capability identity: {cid}")
+        seen_ids.add(cid)
+        caps.append({"id":cid,"provider":"mcp","server":server,
             "name":t["name"],"description":t.get("description",""),"input_schema":schema,
             "fingerprint":fp,"effect":effect,"confidence":confidence,
             "analysis":analyze_capability(t),
@@ -205,6 +211,8 @@ def _validate_parameter_constraints(capability, constraints):
 def compile_capsule(inv,intent,policy,now=None):
     if inv.get("version") != INVENTORY_VERSION:
         raise ValueError(f"Unsupported inventory contract: {inv.get('version')}")
+    if not _inventory_integrity(inv):
+        raise ValueError("Invalid inventory integrity")
     task=intent.get("task")
     if task is not None and not isinstance(task,str):
         raise ValueError("Task must be a string or null")
@@ -277,6 +285,8 @@ def verify_capsule(cap,inv,now=None):
 def inventory_lock(inv):
     if inv.get("version") != INVENTORY_VERSION:
         raise ValueError(f"Unsupported inventory contract: {inv.get('version')}")
+    if not _inventory_integrity(inv):
+        raise ValueError("Invalid inventory integrity")
     entries=[{"id":c["id"],"fingerprint":c["fingerprint"]} for c in inv["capabilities"]]
     lock={"version":INVENTORY_LOCK_VERSION,"inventory_digest":inv["digest"],"capabilities":sorted(entries,key=lambda x:x["id"])}
     lock["digest"]=digest(lock)
@@ -287,11 +297,37 @@ def diff_inventory_lock(lock, inv):
         raise ValueError(f"Unsupported inventory lock contract: {lock.get('version')}")
     if inv.get("version") != INVENTORY_VERSION:
         raise ValueError(f"Unsupported inventory contract: {inv.get('version')}")
+    if not _inventory_lock_integrity(lock):
+        raise ValueError("Invalid inventory lock integrity")
+    if not _inventory_integrity(inv):
+        raise ValueError("Invalid inventory integrity")
     old={x["id"]:x["fingerprint"] for x in lock.get("capabilities",[])}
     new={x["id"]:x["fingerprint"] for x in inv.get("capabilities",[])}
     added=sorted(set(new)-set(old)); removed=sorted(set(old)-set(new))
     changed=sorted(k for k in set(old)&set(new) if old[k]!=new[k])
     return {"clean":not (added or removed or changed),"added":added,"removed":removed,"changed":changed}
+
+
+def _inventory_lock_integrity(lock):
+    if not isinstance(lock,dict) or lock.get("version") != INVENTORY_LOCK_VERSION:
+        return False
+    claimed=lock.get("digest")
+    rows=lock.get("capabilities")
+    if not isinstance(claimed,str) or not isinstance(rows,list):
+        return False
+    seen=set()
+    for row in rows:
+        if not isinstance(row,dict) or not isinstance(row.get("id"),str) or not isinstance(row.get("fingerprint"),str):
+            return False
+        if row["id"] in seen:
+            return False
+        seen.add(row["id"])
+    try:
+        body=dict(lock)
+        body.pop("digest",None)
+        return claimed==digest(body)
+    except (TypeError,ValueError):
+        return False
 
 
 def _inventory_integrity(inv):
@@ -301,16 +337,67 @@ def _inventory_integrity(inv):
     caps=inv.get("capabilities")
     if not isinstance(claimed,str) or not isinstance(caps,list):
         return False
+
+    adapter=inv.get("adapter")
+    if adapter not in {None,"universal-manifest.v1"}:
+        return False
+
+    entries=[]; seen_ids=set()
     try:
-        if "adapter" in inv:
-            entries=[]
-            for c in caps:
-                if not isinstance(c,dict) or not isinstance(c.get("id"),str) or not isinstance(c.get("fingerprint"),str):
-                    return False
-                entries.append({"id":c["id"],"fingerprint":c["fingerprint"]})
+        for c in caps:
+            if not isinstance(c,dict):
+                return False
+            server=c.get("server")
+            name=c.get("name")
+            description=c.get("description","")
+            schema=c.get("input_schema") or {}
+            annotations=c.get("annotations") or {}
+            if not isinstance(server,str) or not isinstance(name,str):
+                return False
+
+            expected_id=capability_id("kcc" if adapter else "mcp",server,name)
+            if c.get("id") != expected_id or expected_id in seen_ids:
+                return False
+            seen_ids.add(expected_id)
+
+            if adapter:
+                expected_fp=digest({
+                    "namespace":server,
+                    "name":name,
+                    "description":str(description or ""),
+                    "input_schema":schema,
+                    "annotations":annotations,
+                })
+            else:
+                expected_fp=digest({
+                    "name":name,
+                    "description":description,
+                    "schema":schema,
+                    "annotations":annotations,
+                })
+            if c.get("fingerprint") != expected_fp:
+                return False
+
+            analysis=analyze_capability({
+                "name":name,
+                "description":description,
+                "inputSchema":schema,
+                "annotations":annotations,
+            })
+            expected_effect="unknown" if analysis["effect"]=="mixed" else analysis["effect"]
+            if c.get("effect") != expected_effect:
+                return False
+            if c.get("confidence") != analysis["confidence"]:
+                return False
+            if c.get("analysis") != analysis:
+                return False
+
+            entries.append({"id":expected_id,"fingerprint":expected_fp})
+
+        if adapter:
             expected=digest({
                 "version":inv["version"],
-                "adapter":inv["adapter"],
+                "adapter":adapter,
                 "capabilities":sorted(entries,key=lambda x:x["id"]),
             })
         else:

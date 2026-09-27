@@ -220,3 +220,13 @@ def test_signing_rejects_rehashed_non_fail_closed_capsule():
     _rehash_capsule(cap)
     with pytest.raises(ValueError,match="fail_closed=true"):
         sign_capsule(cap,private,key_id="test-key")
+
+def test_inventory_lock_diff_rejects_rehashed_tampered_lock():
+    inv=_inventory()
+    lock=kcc.inventory_lock(inv)
+    lock["capabilities"].append(dict(lock["capabilities"][0]))
+    body=copy.deepcopy(lock)
+    body.pop("digest",None)
+    lock["digest"]=digest(body)
+    with pytest.raises(ValueError,match="Invalid inventory lock integrity"):
+        kcc.diff_inventory_lock(lock,inv)

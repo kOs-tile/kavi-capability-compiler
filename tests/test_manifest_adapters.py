@@ -1,4 +1,4 @@
-from kavi_capability_compiler.core import authorize_call, compile_capsule
+from kavi_capability_compiler.core import authorize_call, compile_capsule, digest
 from kavi_capability_compiler.manifest import (
     build_manifest,
     from_anthropic_tools,
@@ -242,3 +242,45 @@ def test_unsupported_adapter_format_fails_closed():
         assert False, "expected unsupported format failure"
     except ValueError as exc:
         assert "Unsupported capability source format" in str(exc)
+
+def test_manifest_digest_is_enforced_even_if_capability_fingerprint_is_recomputed():
+    manifest=from_generic([
+        {"name":"get_record","description":DESC_GET,"input_schema":SCHEMA_GET},
+    ],namespace="records")
+    manifest["capabilities"][0]["description"]="Changed authority semantics"
+    semantic={
+        "namespace":"records",
+        "name":"get_record",
+        "description":"Changed authority semantics",
+        "input_schema":SCHEMA_GET,
+        "annotations":{},
+    }
+    manifest["capabilities"][0]["fingerprint"]=digest(semantic)
+    try:
+        scan_manifest(manifest)
+        assert False, "expected manifest digest mismatch"
+    except ValueError as exc:
+        assert "manifest digest mismatch" in str(exc).lower()
+
+
+def test_manifest_missing_digest_fails_closed():
+    manifest=from_generic([
+        {"name":"get_record","description":DESC_GET,"input_schema":SCHEMA_GET},
+    ],namespace="records")
+    manifest.pop("digest")
+    try:
+        scan_manifest(manifest)
+        assert False, "expected manifest digest mismatch"
+    except ValueError as exc:
+        assert "manifest digest mismatch" in str(exc).lower()
+
+
+def test_manifest_rejects_canonical_identity_aliases():
+    try:
+        from_generic([
+            {"namespace":"records","name":"Read Item","description":"Read"},
+            {"namespace":"records","name":"read-item","description":"Read alias"},
+        ])
+        assert False, "expected canonical identity collision"
+    except ValueError as exc:
+        assert "Duplicate canonical capability identity" in str(exc)

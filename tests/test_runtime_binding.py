@@ -172,3 +172,16 @@ def test_inventory_bound_signed_guard_rejects_drift():
     decision=guard.authorize(cid,parameters={"id":"1"},now=101)
     assert decision["allowed"] is False
     assert decision["reason"]=="inventory_drift"
+
+def test_compile_rejects_manifest_inventory_effect_tampering_even_when_digest_is_unchanged():
+    inv=_inventory()
+    target=next(x for x in inv["capabilities"] if x["name"]=="update_record")
+    assert target["effect"]=="write"
+    target["effect"]="read"
+    with pytest.raises(ValueError,match="Invalid inventory integrity"):
+        kcc.compile_capsule(
+            inv,
+            {"capabilities":[target["id"]]},
+            {"default":"allow"},
+            now=100,
+        )
