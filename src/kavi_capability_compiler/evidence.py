@@ -86,7 +86,7 @@ def build_execution_evidence(
     )
 
     envelope: dict[str, Any] = {
-        "version": "kavi.execution-evidence.v0",
+        "version": "kcc.execution-evidence.v1",
         "execution_id": execution_id,
         "capsule_id": capsule_id,
         "capability_id": capability_id,
@@ -107,7 +107,7 @@ def verify_execution_evidence(envelope: dict[str, Any]) -> dict[str, Any]:
     body = dict(envelope)
     claimed = body.pop("digest", None)
     checks = [
-        ("version", body.get("version") == "kavi.execution-evidence.v0"),
+        ("version", body.get("version") == "kcc.execution-evidence.v1"),
         ("integrity", claimed == digest(body)),
         ("capsule_id", bool(_HEX64.fullmatch(str(body.get("capsule_id", ""))))),
         ("non_authority", body.get("authority_granted") is False),
