@@ -102,8 +102,8 @@ Final M5.1 pre-publication CI checkpoint:
 - sealed holdout false-safe: **0**
 - mean task authority reduction: **99.49%**
 - drift recall: **100%**
-- authorize p95: approximately **0.0167 ms**
-- compile p95: approximately **0.0667 ms**
+- authorize p95: approximately **0.0206 ms**
+- compile p95: approximately **0.1199 ms**
 
 Latency values are GitHub Actions microbenchmarks, not production throughput guarantees.
 
