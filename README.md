@@ -1,6 +1,6 @@
 # KAVI Capability Compiler
 
-> **Status — v0.1 release candidate.** Core contracts, adversarial enforcement, framework-neutral integration kits, pinned real-runtime validations, security hardening, and reproducible release-artifact checks are CI-gated. GitHub Release is the initial distribution path; PyPI is an optional later mirror.
+> **Status — v0.1.0 published.** The GitHub Release is live at tag `v0.1.0`, bound to commit `63bd0e228f2587c55e246051afdbf2d8b46086a3`. Wheel and source-distribution digests are published in `SHA256SUMS`. PyPI remains an optional later mirror.
 
 KCC is a framework-agnostic **least-authority compiler for AI agents**.
 
@@ -86,7 +86,7 @@ Python 3.11+.
 
 Default install is the embedded core SDK and has no required third-party runtime dependencies.
 
-For v0.1.0 before the PyPI mirror is available, install the immutable GitHub Release wheel directly:
+For v0.1.0 before the PyPI mirror is available, install the versioned GitHub Release wheel directly:
 
 ```bash
 python -m pip install https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl
@@ -125,7 +125,7 @@ kcc discover-config mcp.json my-server \
 
 KCC is not a hosted gateway, desktop service, local daemon, IAM replacement, secret manager, or autonomous remediation system. Live discovery does not automatically execute discovered tools. Runtime enforcement is intentionally a small portable primitive.
 
-M0–M11 engineering is complete. The v0.1 launch path is GitHub Release first, with a standards-compliant Simple Repository index available through GitHub Pages and PyPI retained as a later mirror.
+M0–M11 engineering is complete and v0.1.0 is published through GitHub Release. The release artifacts were reproduced, checksummed, clean-installed, and matched against the public GitHub asset digests. A standards-compliant Simple Repository index can be deployed through GitHub Pages; PyPI remains a later mirror.
 
 See `docs/EMBEDDED_SDK.md`, `docs/SDK_COMPATIBILITY.md`, `docs/ADVERSARIAL_SDK.md`, `docs/UNIVERSAL_MANIFEST.md`, `docs/INTEGRATION_RECIPES.md`, `docs/OPENAI_AGENTS_VALIDATION.md`, `docs/ANTHROPIC_SDK_VALIDATION.md`, `docs/LANGGRAPH_TOOLNODE_VALIDATION.md`, `docs/EXTERNAL_VALIDATION_V0.1.md`, and `docs/BENCHMARK_REPORT_V0.1.md`.
 

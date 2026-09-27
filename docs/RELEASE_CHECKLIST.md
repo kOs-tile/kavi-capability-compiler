@@ -49,10 +49,13 @@
 - [x] release payload is reproducibility-checked, Twine-checked, clean-installed, checksummed, and Simple-Index validated before publication
 - [x] Simple Repository links bind release assets with SHA-256 fragments
 - [x] GitHub Pages deployment is isolated in a separate manual workflow and cannot affect GitHub Release success
-- [ ] create `v0.1.0` tag + GitHub Release from the final verified main SHA
-- [ ] attach the verified wheel, sdist, and `SHA256SUMS`
+- [x] create `v0.1.0` tag + GitHub Release from the final verified main SHA
+- [x] attach the verified wheel, sdist, and `SHA256SUMS`
 - [ ] enable GitHub Pages with GitHub Actions as source
 - [ ] deploy the Simple Repository index from the immutable v0.1.0 release assets
 - [ ] later mirror the exact same v0.1.0 artifacts to PyPI when account registration is available
+- [x] public wheel and sdist digests match the verified publish-run artifacts
+- [x] clean install verifies version `0.1.0`, `kcc.sdk.v1`, CLI, Guard, and all five public schemas
+- [ ] enable GitHub Immutable Releases protection before the next release cycle
 - [x] do not rebuild v0.1.0 for PyPI
 - [x] do not claim production certification or universal framework support
