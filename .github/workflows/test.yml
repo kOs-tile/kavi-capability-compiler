@@ -33,6 +33,7 @@ jobs:
           m=json.load(open("/tmp/capabilities.json"))
           i=json.load(open("/tmp/inventory.json"))
           assert m["schema_version"]=="kcc.capabilities.v1"
+          assert i["version"]=="kcc.inventory.v1"
           assert i["adapter"]=="universal-manifest.v1"
           PY
 
@@ -57,7 +58,12 @@ jobs:
           sdist=$(ls dist/*.tar.gz)
           tar -tzf "$sdist" | grep '/CHANGELOG.md$'
           tar -tzf "$sdist" | grep '/docs/INTEGRATION_RECIPES.md$'
+          tar -tzf "$sdist" | grep '/docs/SDK_COMPATIBILITY.md$'
           tar -tzf "$sdist" | grep '/schemas/kcc.capabilities.v1.schema.json$'
+          tar -tzf "$sdist" | grep '/schemas/kcc.inventory.v1.schema.json$'
+          tar -tzf "$sdist" | grep '/schemas/kcc.inventory-lock.v1.schema.json$'
+          tar -tzf "$sdist" | grep '/schemas/kcc.capsule.v1.schema.json$'
+          tar -tzf "$sdist" | grep '/schemas/kcc.signed-capsule.v1.schema.json$'
           tar -tzf "$sdist" | grep '/examples/integrations_smoke.py$'
       - name: Install wheel without dependencies
         run: |
@@ -70,11 +76,26 @@ jobs:
           from importlib import metadata
           assert kcc.__version__=="0.1.0"
           assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          assert kcc.INVENTORY_VERSION=="kcc.inventory.v1"
+          assert kcc.INVENTORY_LOCK_VERSION=="kcc.inventory-lock.v1"
+          assert kcc.CAPSULE_VERSION=="kcc.capsule.v1"
           assert callable(kcc.Guard)
           assert metadata.version("kavi-capability-compiler")=="0.1.0"
           import importlib.util
           assert metadata.metadata("kavi-capability-compiler")["Requires-Python"]==">=3.11"
+          assert kcc.schema_names()==(
+              "kcc.capabilities.v1",
+              "kcc.capsule.v1",
+              "kcc.inventory-lock.v1",
+              "kcc.inventory.v1",
+              "kcc.signed-capsule.v1",
+          )
           assert kcc.get_schema("kcc.capabilities.v1")["title"]=="KCC Universal Capability Manifest"
+          assert kcc.get_schema("kcc.inventory.v1")["title"]=="KCC Capability Inventory"
+          assert kcc.get_schema("kcc.inventory-lock.v1")["title"]=="KCC Inventory Lock"
+          assert kcc.get_schema("kcc.capsule.v1")["title"]=="KCC Execution Capsule"
+          signed=kcc.get_schema("kcc.signed-capsule.v1")
+          assert signed["properties"]["capsule"]["$ref"]=="kcc.capsule.v1.schema.json"
           assert importlib.util.find_spec("kavi_capability_compiler.kavi_dispatch") is None
           assert importlib.util.find_spec("kavi_capability_compiler.live_probe") is None
           PY
@@ -83,6 +104,11 @@ jobs:
           JSON
           /tmp/kcc-wheel/bin/kcc manifest /tmp/tools.json --format generic --namespace smoke -o /tmp/manifest.json
           /tmp/kcc-wheel/bin/kcc scan-manifest /tmp/manifest.json -o /tmp/inventory.json
+          /tmp/kcc-wheel/bin/python - <<'PY'
+          import json
+          inventory=json.load(open("/tmp/inventory.json"))
+          assert inventory["version"]=="kcc.inventory.v1"
+          PY
       - name: Verify optional MCP command fails with install guidance
         run: |
           set +e

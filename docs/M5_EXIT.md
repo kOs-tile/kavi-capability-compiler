@@ -33,12 +33,19 @@ Historical KAVI validation code remains under `case_studies/` in the repository/
 
 ## Public contracts
 
+The v0.1 release-candidate surface is frozen as:
+
 - `kcc.capabilities.v1`
+- `kcc.inventory.v1`
+- `kcc.inventory-lock.v1`
+- `kcc.capsule.v1`
 - `kcc.signed-capsule.v1`
 - `kcc.execution-evidence.v1`
 - `kcc.sdk.v1`
 
-Public capability and signed-capsule JSON schemas are bundled inside the wheel and available through `get_schema(...)`.
+JSON Schemas for the manifest, inventory, inventory lock, execution capsule, and signed-capsule envelope are bundled inside the wheel and available through `get_schema(...)`.
+
+M5.1 additionally makes the runtime fail closed on unsupported capsule versions and on capsules that do not carry `fail_closed=true`, even if their self-integrity digest has been recomputed. Signed envelopes are bound to `kcc.capsule.v1`.
 
 ## Integration coverage
 
@@ -74,7 +81,15 @@ Final M5 release-candidate branch:
 
 ## Regression checkpoint
 
-- full suite: **84 passed**
+Final M5.1 pre-publication CI checkpoint:
+
+- full suite: **96 passed**
+- embedded integration recipes: **PASS**
+- core minimal install: **PASS**
+- wheel/sdist package smoke: **PASS**
+- all five packaged public JSON schemas: **PASS**
+- KAVI repo-only case study on `kcc.inventory.v1`: **PASS**
+- all compatibility, drift, holdout, authority-reduction, and latency gates: **PASS**
 - live MCP discovery integration suite: **11 passed**
 - development corpus: **487 capabilities / 30 surfaces**
 - development accuracy: **89.73%**
@@ -87,14 +102,14 @@ Final M5 release-candidate branch:
 - sealed holdout false-safe: **0**
 - mean task authority reduction: **99.49%**
 - drift recall: **100%**
-- authorize p95: approximately **0.0167 ms**
-- compile p95: approximately **0.0667 ms**
+- authorize p95: approximately **0.0206 ms**
+- compile p95: approximately **0.1199 ms**
 
 Latency values are GitHub Actions microbenchmarks, not production throughput guarantees.
 
 ## M5 verdict
 
-**RELEASE CANDIDATE READY.**
+**RELEASE CANDIDATE HARDENED AND READY FOR FOUNDER-GATED PUBLICATION.**
 
 The codebase is ready to merge as v0.1.0 release-candidate state.
 

@@ -6,6 +6,9 @@ from typing import Any
 
 _SCHEMAS={
     "kcc.capabilities.v1":"kcc.capabilities.v1.schema.json",
+    "kcc.inventory.v1":"kcc.inventory.v1.schema.json",
+    "kcc.inventory-lock.v1":"kcc.inventory-lock.v1.schema.json",
+    "kcc.capsule.v1":"kcc.capsule.v1.schema.json",
     "kcc.signed-capsule.v1":"kcc.signed-capsule.v1.schema.json",
 }
 

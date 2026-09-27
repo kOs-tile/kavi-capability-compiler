@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kavi-ai.com/schemas/kcc.capsule.v1.schema.json",
+  "title": "KCC Execution Capsule",
+  "$defs": {
+    "grant": {
+      "type": "object",
+      "required": ["id", "fingerprint", "effect", "risk_flags", "constraints"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "effect": {
+          "enum": ["read", "write", "delete", "execute", "financial", "deploy", "external_message", "unknown"]
+        },
+        "risk_flags": {"type": "array", "items": {"type": "string"}},
+        "constraints": {
+          "type": "object",
+          "properties": {
+            "operations": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {"type": "string", "minLength": 1}
+            },
+            "parameters": {"type": "object"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "type": "object",
+  "required": [
+    "version", "status", "issued_at", "expires_at", "inventory_digest",
+    "intent_digest", "policy_digest", "task", "constraints", "grants",
+    "approvals", "denials", "fail_closed", "capsule_id"
+  ],
+  "properties": {
+    "version": {"const": "kcc.capsule.v1"},
+    "status": {"enum": ["ready", "approval_required", "denied"]},
+    "issued_at": {"type": "integer", "minimum": 0},
+    "expires_at": {"type": "integer", "minimum": 0},
+    "inventory_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "intent_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "policy_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "task": {"type": ["string", "null"]},
+    "constraints": {"type": "object"},
+    "grants": {"type": "array", "items": {"$ref": "#/$defs/grant"}},
+    "approvals": {"type": "array", "items": {"$ref": "#/$defs/grant"}},
+    "denials": {"type": "array", "items": {"$ref": "#/$defs/grant"}},
+    "fail_closed": {"const": true},
+    "capsule_id": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

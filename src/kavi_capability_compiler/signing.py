@@ -8,7 +8,7 @@ from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
 
-from .core import canonical, digest
+from .core import CAPSULE_VERSION, canonical, digest
 
 SIGNED_CAPSULE_VERSION="kcc.signed-capsule.v1"
 ALGORITHM="Ed25519"
@@ -77,6 +77,10 @@ def sign_capsule(
     cap=deepcopy(dict(capsule))
     if not _capsule_integrity(cap):
         raise ValueError("Cannot sign capsule with invalid integrity")
+    if cap.get("version") != CAPSULE_VERSION:
+        raise ValueError(f"Unsupported capsule contract: {cap.get('version')}")
+    if cap.get("fail_closed") is not True:
+        raise ValueError("Cannot sign capsule without fail_closed=true")
     signature=_private(private_key).sign(_message(cap))
     envelope={
         "version":SIGNED_CAPSULE_VERSION,
@@ -122,6 +126,8 @@ def verify_signed_capsule(
 
     capsule_ok=isinstance(cap,Mapping) and _capsule_integrity(cap)
     checks.append({"name":"capsule_integrity","ok":capsule_ok})
+    checks.append({"name":"capsule_version","ok":isinstance(cap,Mapping) and cap.get("version")==CAPSULE_VERSION})
+    checks.append({"name":"fail_closed","ok":isinstance(cap,Mapping) and cap.get("fail_closed") is True})
 
     expiry_ok=False
     if isinstance(cap,Mapping):

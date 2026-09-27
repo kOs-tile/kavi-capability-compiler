@@ -22,8 +22,20 @@ def test_release_docs_exist():
         "docs/EMBEDDED_SDK.md",
         "docs/UNIVERSAL_MANIFEST.md",
         "docs/INTEGRATION_RECIPES.md",
+        "docs/SDK_COMPATIBILITY.md",
         "docs/BENCHMARK_REPORT_V0.1.md",
         "docs/RELEASE_CHECKLIST.md",
+    ):
+        assert Path(path).is_file(), path
+
+
+def test_public_contract_schema_sources_exist():
+    for path in (
+        "schemas/kcc.capabilities.v1.schema.json",
+        "schemas/kcc.inventory.v1.schema.json",
+        "schemas/kcc.inventory-lock.v1.schema.json",
+        "schemas/kcc.capsule.v1.schema.json",
+        "schemas/kcc.signed-capsule.v1.schema.json",
     ):
         assert Path(path).is_file(), path
 

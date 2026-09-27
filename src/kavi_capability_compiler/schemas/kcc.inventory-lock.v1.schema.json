@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kavi-ai.com/schemas/kcc.inventory-lock.v1.schema.json",
+  "title": "KCC Inventory Lock",
+  "type": "object",
+  "required": ["version", "inventory_digest", "capabilities", "digest"],
+  "properties": {
+    "version": {"const": "kcc.inventory-lock.v1"},
+    "inventory_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "fingerprint"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

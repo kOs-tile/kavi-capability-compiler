@@ -81,10 +81,13 @@ Exit report: `M4_EXIT.md`.
 Compiler and executor remain separable and may run in-process or in different services.
 
 ## M5 — Distribution / Product
-**Status: active — v0.1 release candidate.**
+**Status: v0.1 release candidate hardened; publication pending founder approval.**
 
 Current release gate:
 - package version 0.1.0
+- frozen `kcc.inventory.v1`, `kcc.inventory-lock.v1`, and `kcc.capsule.v1` contracts
+- five packaged public JSON schemas
+- explicit `kcc.sdk.v1` compatibility and exception semantics
 - dependency-free core wheel
 - independently installable MCP and signing extras
 - packaged public JSON schemas

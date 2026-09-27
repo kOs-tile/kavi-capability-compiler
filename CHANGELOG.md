@@ -6,6 +6,9 @@ All notable changes to KAVI Capability Compiler are documented here.
 
 ### Added
 - framework-neutral `kcc.capabilities.v1` manifest
+- versioned `kcc.inventory.v1`, `kcc.inventory-lock.v1`, and `kcc.capsule.v1` authority contracts
+- packaged JSON Schemas for capability manifests, inventories, inventory locks, capsules, and signed capsules
+- explicit `kcc.sdk.v1` compatibility and authorization-exception semantics
 - adapters for generic JSON, MCP tool definitions, OpenAI function tools, Anthropic tools, and OpenAPI
 - deterministic capability fingerprints and inventory locks
 - task-scoped execution capsules
@@ -29,6 +32,8 @@ All notable changes to KAVI Capability Compiler are documented here.
 - Python 3.11+
 
 ### Security model
+- capsule authorization rejects unsupported contract versions and missing `fail_closed=true` even when integrity is recomputed
+- signed capsules are bound to `kcc.capsule.v1`
 - unknown authority never becomes silent authority
 - denied calls do not reach the host dispatcher
 - signed envelopes cannot self-declare a trusted key

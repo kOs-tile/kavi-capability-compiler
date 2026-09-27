@@ -3,7 +3,7 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any, Iterable, Mapping
 
-from .core import analyze_capability, capability_id, digest
+from .core import INVENTORY_VERSION, analyze_capability, capability_id, digest
 
 SCHEMA_VERSION = "kcc.capabilities.v1"
 
@@ -247,7 +247,7 @@ def scan_manifest(manifest: Mapping[str, Any]) -> dict[str, Any]:
             "annotations":row.get("annotations") or {},
             "source":row.get("source") or {"kind":"unknown"},
         })
-    inv={"version":"kcc.inventory.v0","adapter":"universal-manifest.v1","capabilities":caps}
+    inv={"version":INVENTORY_VERSION,"adapter":"universal-manifest.v1","capabilities":caps}
     inv["digest"]=digest({
         "version":inv["version"],
         "adapter":inv["adapter"],

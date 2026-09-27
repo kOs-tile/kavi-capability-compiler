@@ -26,7 +26,10 @@ capability definitions
 kcc.capabilities.v1
       |
       v
-compile_capsule(...)
+kcc.inventory.v1
+      |
+      v
+compile_capsule(...) -> kcc.capsule.v1
       |
       v
 Guard
@@ -114,6 +117,10 @@ No KCC server is required. The dispatcher remains the application's own function
 
 A capability outside the capsule is rejected before the dispatcher is called.
 
+An unsigned capsule is intended for a trusted in-process boundary. Its digest detects accidental or post-compile mutation; it does not authenticate an untrusted sender. If the capsule crosses a process, service, client, or network trust boundary, use the signed-capsule path or an equivalent host-authenticated transport.
+
+See `SDK_COMPATIBILITY.md` for the frozen v0.1 contracts and exception semantics.
+
 ## Signed capsules
 
 For distributed stacks where the compiler and executor are separate processes or services, install the optional signing extra:
@@ -133,7 +140,7 @@ KCC does not provide key storage, KMS, identity, or secret management.
 Existing runtimes can integrate in either direction:
 
 1. **In-process** — call KCC directly as a library.
-2. **Out-of-process** — emit `kcc.capabilities.v1`, compile elsewhere, return a capsule to the runtime.
-3. **Distributed** — use a signed capsule between compiler and executor.
+2. **Out-of-process within one trusted boundary** — emit `kcc.capabilities.v1`, compile elsewhere, and return the capsule over a host-authenticated channel.
+3. **Distributed / separate trust boundary** — use `kcc.signed-capsule.v1` with independently configured trusted public keys.
 
 Hermes, Codex, KAVI, LangGraph, custom agents, cloud runtimes, and local runtimes are all merely possible hosts. None is required by KCC.

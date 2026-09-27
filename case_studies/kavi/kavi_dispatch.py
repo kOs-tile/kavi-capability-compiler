@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
-from kavi_capability_compiler.core import capability_id, digest
+from kavi_capability_compiler.core import INVENTORY_VERSION, capability_id, digest
 
 
 def scan_kavi_dispatch_contract(
@@ -83,7 +83,7 @@ def scan_kavi_dispatch_contract(
             "provenance":provenance,
         })
     inv={
-        "version":"kcc.inventory.v0",
+        "version":INVENTORY_VERSION,
         "adapter":"kavi-dispatch-contract.v0",
         "provenance":provenance,
         "capabilities":caps,

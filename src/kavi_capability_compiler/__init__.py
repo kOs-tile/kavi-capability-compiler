@@ -2,6 +2,9 @@ __version__ = "0.1.0"
 
 from .adapters import SUPPORTED_SOURCE_FORMATS, adapt_capabilities
 from .core import (
+    CAPSULE_VERSION,
+    INVENTORY_LOCK_VERSION,
+    INVENTORY_VERSION,
     authorize_call,
     compile_capsule,
     diff_inventory_lock,
@@ -17,6 +20,9 @@ __all__ = [
     "__version__",
     "SDK_VERSION",
     "SCHEMA_VERSION",
+    "INVENTORY_VERSION",
+    "INVENTORY_LOCK_VERSION",
+    "CAPSULE_VERSION",
     "SUPPORTED_SOURCE_FORMATS",
     "adapt_capabilities",
     "build_manifest",
