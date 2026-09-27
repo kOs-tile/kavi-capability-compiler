@@ -42,6 +42,21 @@
 - [x] framework-specific validation targets are separated from the installed core
 - [x] external runtime validation evidence and limitations are consolidated in `docs/EXTERNAL_VALIDATION_V0.1.md`
 
+## Publication security
+- [x] release workflow runs as a build-only dry run on pull requests
+- [x] real publish requires manual workflow dispatch from `main`
+- [x] real publish requires `target_sha` to equal the workflow's exact `main` SHA
+- [x] real publish requires explicit `confirm_version=v0.1.0`
+- [x] target SHA must already have a successful `test` workflow from a `main` push
+- [x] build job has no OIDC and no repository write permission
+- [x] PyPI job is isolated behind environment `pypi` and owns the only `id-token: write`
+- [x] GitHub Release job runs only after PyPI success and owns the only `contents: write`
+- [x] no long-lived PyPI token is stored or referenced
+- [x] PyPA publish action and artifact actions are pinned to immutable commit SHAs
+- [ ] configure PyPI pending Trusted Publisher for `kOs-tile/kavi-capability-compiler`, workflow `release.yml`, environment `pypi`
+- [ ] configure GitHub environment `pypi` with a trusted manual reviewer
+- [ ] run one manual dry run with `publish=false` against the final green main SHA and review its artifacts/logs
+
 ## Publication
 - [ ] create `v0.1.0` tag
 - [ ] create GitHub Release from `docs/RELEASE_NOTES_V0.1.md`
