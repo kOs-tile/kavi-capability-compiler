@@ -1,0 +1,134 @@
+name: external-diagnostics-dogfood
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/external-diagnostics.yml"
+      - "scripts/external_diagnostics_dogfood.py"
+      - "docs/EXTERNAL_DIAGNOSTICS_DOGFOOD.md"
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostics:
+    name: diagnostics / ${{ matrix.distribution }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        distribution: ["pages-index", "release-wheel"]
+
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+          check-latest: false
+
+      - name: Create isolated consumer environment
+        run: |
+          set -euo pipefail
+          python -m venv /tmp/kcc-diagnostics
+          cd /tmp
+          PYTHONPATH="" /tmp/kcc-diagnostics/bin/python - <<'PY'
+          import importlib.util
+          assert importlib.util.find_spec("kavi_capability_compiler") is None
+          PY
+
+      - name: Install from GitHub Pages Simple Repository
+        if: matrix.distribution == 'pages-index'
+        run: |
+          set -euo pipefail
+          cd /tmp
+          PYTHONPATH="" /tmp/kcc-diagnostics/bin/python -m pip install             --disable-pip-version-check             --no-cache-dir             --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/             "kavi-capability-compiler==0.1.0"
+
+      - name: Install direct GitHub Release wheel
+        if: matrix.distribution == 'release-wheel'
+        run: |
+          set -euo pipefail
+          cd /tmp
+          PYTHONPATH="" /tmp/kcc-diagnostics/bin/python -m pip install             --disable-pip-version-check             --no-cache-dir             https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl
+
+      - name: Exercise public diagnostics contract
+        env:
+          DISTRIBUTION: ${{ matrix.distribution }}
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/kcc-diagnostics-dogfood
+          mkdir -p /tmp/kcc-diagnostics-dogfood
+          cp "$GITHUB_WORKSPACE/scripts/external_diagnostics_dogfood.py" /tmp/kcc-diagnostics-dogfood/
+          cd /tmp/kcc-diagnostics-dogfood
+          PYTHONPATH="" /tmp/kcc-diagnostics/bin/python external_diagnostics_dogfood.py             --distribution "$DISTRIBUTION"             --output "$GITHUB_WORKSPACE/evidence/${DISTRIBUTION}.json"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: kcc-external-diagnostics-${{ matrix.distribution }}
+          path: evidence/*.json
+          if-no-files-found: error
+          retention-days: 14
+
+  aggregate:
+    name: aggregate-diagnostics-evidence
+    needs: diagnostics
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: kcc-external-diagnostics-*
+          path: /tmp/evidence
+          merge-multiple: true
+
+      - name: Verify complete diagnostics cohort
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          files=sorted(Path("/tmp/evidence").glob("*.json"))
+          if len(files)!=2:
+              raise SystemExit(f"expected 2 evidence files, got {len(files)}")
+          rows=[json.loads(path.read_text()) for path in files]
+          expected={"pages-index","release-wheel"}
+          actual={row["distribution"] for row in rows}
+          if actual!=expected:
+              raise SystemExit(f"distribution mismatch: {sorted(actual)}")
+          if not all(row.get("pass") is True for row in rows):
+              raise SystemExit("one or more diagnostics cells failed")
+          if not all(len(row.get("cases",[]))==10 for row in rows):
+              raise SystemExit("expected 10 diagnostics cases per distribution")
+
+          combined={
+              "schema":"kcc.external-diagnostics-cohort.v1",
+              "pass":True,
+              "cells":rows,
+          }
+          Path("/tmp/kcc-external-diagnostics-cohort.json").write_text(
+              json.dumps(combined,indent=2,sort_keys=True)+"\n"
+          )
+          print(json.dumps({
+              "validation":"KCC_EXTERNAL_DIAGNOSTICS_COHORT",
+              "distributions":len(rows),
+              "cases_per_distribution":10,
+              "pass":True,
+          },sort_keys=True))
+          PY
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: kcc-external-diagnostics-cohort
+          path: /tmp/kcc-external-diagnostics-cohort.json
+          if-no-files-found: error
+          retention-days: 30
