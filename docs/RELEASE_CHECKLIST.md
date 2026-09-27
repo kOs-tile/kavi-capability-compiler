@@ -32,6 +32,7 @@
 - [x] release CI builds twice from one commit-derived SOURCE_DATE_EPOCH, canonicalizes sdist archive metadata to that epoch, and requires identical wheel + sdist SHA-256 outputs
 - [x] release metadata is checked with Twine
 - [x] installed wheel is checked to exclude repository-only case studies, examples, benchmarks, tests, docs, and scripts
+- [x] source distribution excludes repository-only KAVI/framework validation case studies
 - [x] CI actions are pinned to immutable commit SHAs and checkout credentials are not persisted
 - [x] release verification toolchain is version-pinned
 - [x] zero-dependency security preflight checks workflow refs and obvious secret material

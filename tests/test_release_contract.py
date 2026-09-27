@@ -67,3 +67,8 @@ def test_security_sensitive_optional_dependency_floors_exclude_known_affected_ra
     assert "httpx2>=2.12.0,<3" in extras["all"]
     assert "cryptography>=50.0.1,<51" in extras["signing"]
     assert "cryptography>=50.0.1,<51" in extras["all"]
+
+
+def test_source_distribution_manifest_excludes_repository_only_case_studies():
+    manifest=Path("MANIFEST.in").read_text()
+    assert "recursive-include case_studies" not in manifest

@@ -37,6 +37,7 @@ All notable changes to KAVI Capability Compiler are documented here.
 - bit-for-bit release-artifact CI gate: raw reproducible wheels plus commit-epoch-canonicalized sdists
 - Twine release-metadata validation
 - wheel-surface audit excluding repository-only validation/example/test content
+- source distribution excludes repository-only case-study runtime code
 - Apache-2.0 license
 - Python 3.11+
 
