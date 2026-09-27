@@ -22,6 +22,7 @@ The host application keeps its own model, dispatcher, credentials, storage, iden
 - sync + async `Guard` before the host dispatcher
 - optional Ed25519 signed capsules
 - optional live MCP discovery
+- non-loopback Streamable HTTP discovery requires HTTPS; plaintext is limited to loopback development endpoints
 - framework-neutral execution evidence
 - packaged public JSON schemas for manifests, inventories, inventory locks, capsules, and signed capsules
 - explicit `kcc.sdk.v1` compatibility and exception semantics
