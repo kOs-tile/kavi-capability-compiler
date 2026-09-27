@@ -8,6 +8,10 @@ from pathlib import Path
 EXPECTED_NAME="kavi-capability-compiler"
 EXPECTED_VERSION="0.1.0"
 EXPECTED_TAG="v0.1.0"
+EXPECTED_DIRECT_WHEEL=(
+    "https://github.com/kOs-tile/kavi-capability-compiler/releases/download/"
+    "v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
+)
 
 
 def require(path: str, needle: str) -> None:
@@ -33,7 +37,9 @@ def main() -> None:
     require("CHANGELOG.md","## 0.1.0")
     require("docs/RELEASE_NOTES_V0.1.md","# KAVI Capability Compiler v0.1.0")
     require("docs/RELEASE_CHECKLIST.md","# v0.1 Release Checklist")
-    require("README.md","pip install kavi-capability-compiler")
+    require("docs/DISTRIBUTION_V0.1.md","KCC v0.1.0 launches through GitHub Release first.")
+    require("README.md",EXPECTED_DIRECT_WHEEL)
+    require("docs/RELEASE_NOTES_V0.1.md",EXPECTED_DIRECT_WHEEL)
     require("SECURITY.md","cryptography>=50.0.1,<51")
     require("SECURITY.md","Remote Streamable HTTP discovery requires HTTPS.")
 
@@ -43,6 +49,7 @@ def main() -> None:
         "version":EXPECTED_VERSION,
         "tag":EXPECTED_TAG,
         "requires_python":project["requires-python"],
+        "distribution":"github-release-first",
         "pass":True,
     }
     print(json.dumps(result,sort_keys=True))
