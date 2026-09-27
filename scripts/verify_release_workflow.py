@@ -59,8 +59,19 @@ def main(path: str | Path | None = None) -> None:
         raise SystemExit("GitHub release job is not manual-publish gated")
     if "sha256sum --check SHA256SUMS" not in release:
         raise SystemExit("GitHub release job must reverify checksums")
-    if "gh release create v0.1.0" not in release:
-        raise SystemExit("exact v0.1.0 release creation is required")
+    for marker in (
+        "gh release create v0.1.0",
+        "--draft",
+        "gh release edit v0.1.0",
+        "--draft=false",
+        '--json isDraft --jq .isDraft',
+    ):
+        if marker not in release:
+            raise SystemExit(f"draft-first immutable-release pattern missing: {marker}")
+    create_index=release.find("gh release create v0.1.0")
+    publish_index=release.find("gh release edit v0.1.0")
+    if create_index<0 or publish_index<0 or create_index>=publish_index:
+        raise SystemExit("release must be created as a draft before publication")
     if text.count("contents: write")!=1:
         raise SystemExit("contents:write must exist in exactly one job")
     print("KCC_GITHUB_RELEASE_WORKFLOW: PASS")

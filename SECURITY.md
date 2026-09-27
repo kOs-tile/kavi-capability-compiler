@@ -63,6 +63,15 @@ Release reproducibility tooling is version-pinned. Publication credentials must
 not be stored in the repository; the preferred publication path is short-lived
 OIDC / trusted publishing with build and publish permissions separated.
 
+For GitHub Releases, the repository release workflow uses a draft-first sequence:
+create the draft, attach the already-verified wheel/sdist/checksum payload, verify
+that the release is still a draft, and only then publish it. This is the sequence
+recommended by GitHub when Immutable Releases protection is enabled, because
+publication locks the associated tag and release assets. Repository-level
+Immutable Releases enforcement is an administrative setting and must be enabled
+before the next release cycle; v0.1.0 itself is not claimed to be platform-level
+immutable.
+
 ## Artifact integrity at compile time
 
 KCC treats capability manifests, inventories, and inventory locks as
