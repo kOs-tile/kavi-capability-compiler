@@ -9,6 +9,9 @@
 - [x] all benchmark safety gates pass
 - [x] adversarial SDK benchmark is CI-gated
 - [x] inventory-bound Guard rejects post-compile capability drift
+- [x] OpenAI Agents SDK 0.22.3 real FunctionTool boundary is CI-gated
+- [x] Anthropic Python SDK 1.8.0 real beta-tool boundary is CI-gated
+- [x] LangGraph 1.2.12 real ToolNode boundary is CI-gated
 
 ## Packaging
 - [x] wheel builds
@@ -23,6 +26,9 @@
 - [x] Apache-2.0 license metadata/file and Python >=3.11 are declared
 - [x] artifact SHA-256 checksums are generated during release CI
 - [x] all five framework-neutral integration kits are present in the source distribution
+- [x] release CI builds twice from one commit-derived SOURCE_DATE_EPOCH, canonicalizes sdist archive metadata to that epoch, and requires identical wheel + sdist SHA-256 outputs
+- [x] release metadata is checked with Twine
+- [x] installed wheel is checked to exclude repository-only case studies, examples, benchmarks, tests, docs, and scripts
 
 ## Documentation
 - [x] README describes v0.1 behavior
@@ -34,6 +40,7 @@
 - [x] integration examples execute in CI
 - [x] Generic Python, OpenAI-shaped, Anthropic-shaped, MCP-shaped, and OpenAPI kits execute without vendor credentials
 - [x] framework-specific validation targets are separated from the installed core
+- [x] external runtime validation evidence and limitations are consolidated in `docs/EXTERNAL_VALIDATION_V0.1.md`
 
 ## Publication
 - [ ] create `v0.1.0` tag
