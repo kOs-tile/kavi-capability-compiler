@@ -41,3 +41,24 @@ Prefer one of two forms:
 - emit `kcc.capabilities.v1` directly
 
 A new framework name alone is not sufficient reason to add a core dependency.
+
+## Development execution discipline
+
+KCC development should optimize for evidence quality and iteration throughput at the same time.
+
+1. Work on one milestone branch from fresh `main`.
+2. Prepare a coherent batch of related file changes before writing Git history.
+3. Prefer one atomic Git tree/commit for that batch instead of one commit per file.
+4. Open or update one pull request and let PR CI be the branch verification surface.
+5. A newer PR commit supersedes older CI; stale runs are cancelled automatically.
+6. When CI fails, inspect the exact failing job/step first, then make one bounded repair commit.
+7. Do not make speculative micro-commits while a previous full CI run is still executing.
+8. Keep the complete security, benchmark, package, and compatibility gates intact.
+9. Merge with squash unless preserving separate commits has a concrete review or release value.
+10. Treat the post-merge `main` CI run as the authoritative final verification.
+
+Operationally, this means the preferred loop is:
+
+`fresh main -> coherent batch -> one commit -> PR CI -> diagnosed repair if needed -> green -> squash merge -> main CI`
+
+This workflow reduces queueing and duplicate CI without weakening any release or security gate.
