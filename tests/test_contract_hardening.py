@@ -1,6 +1,7 @@
 import copy
 
 import pytest
+from jsonschema import Draft202012Validator
 
 import kavi_capability_compiler as kcc
 from kavi_capability_compiler.core import digest
@@ -42,6 +43,29 @@ def _rehash_capsule(capsule):
     body=copy.deepcopy(capsule)
     body.pop("capsule_id",None)
     capsule["capsule_id"]=digest(body)
+
+
+def test_core_artifacts_validate_against_public_schemas():
+    inv=_inventory()
+    cid=next(x["id"] for x in inv["capabilities"] if x["name"]=="get_record")
+    cap=kcc.compile_capsule(inv,{"capabilities":[cid]},{"default":"allow"},now=100)
+    lock=kcc.inventory_lock(inv)
+
+    Draft202012Validator(kcc.get_schema("kcc.inventory.v1")).validate(inv)
+    Draft202012Validator(kcc.get_schema("kcc.inventory-lock.v1")).validate(lock)
+    Draft202012Validator(kcc.get_schema("kcc.capsule.v1")).validate(cap)
+
+
+def test_invalid_global_constraints_are_rejected_before_capsule_emission():
+    inv=_inventory()
+    cid=next(x["id"] for x in inv["capabilities"] if x["name"]=="get_record")
+    with pytest.raises(ValueError,match="Intent constraints must be an object"):
+        kcc.compile_capsule(
+            inv,
+            {"capabilities":[cid],"constraints":["not","an","object"]},
+            {"default":"allow"},
+            now=100,
+        )
 
 
 def test_v1_inventory_capsule_and_lock_contracts_are_emitted():
