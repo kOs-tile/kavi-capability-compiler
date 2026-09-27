@@ -429,3 +429,28 @@ jobs:
           assert r["model_or_api_call_performed"] is False, r
           assert r["pass"] is True, r
           PY
+
+  release-reproducibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install release verification tools
+        run: python -m pip install build twine wheel "setuptools>=68"
+      - name: Build release artifacts twice from the same commit epoch
+        run: |
+          export SOURCE_DATE_EPOCH="$(git log -1 --format=%ct)"
+          rm -rf build dist
+          find src -maxdepth 1 -name '*.egg-info' -type d -exec rm -rf {} +
+          rm -rf /tmp/kcc-dist-a /tmp/kcc-dist-b
+          python -m build --no-isolation --outdir /tmp/kcc-dist-a
+          rm -rf build
+          find src -maxdepth 1 -name '*.egg-info' -type d -exec rm -rf {} +
+          python -m build --no-isolation --outdir /tmp/kcc-dist-b
+      - name: Require bit-for-bit reproducible artifacts and clean wheel surface
+        run: python scripts/verify_reproducible_builds.py /tmp/kcc-dist-a /tmp/kcc-dist-b
+      - name: Verify release metadata
+        run: python -m twine check /tmp/kcc-dist-a/*

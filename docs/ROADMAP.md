@@ -154,3 +154,14 @@ Target:
 - denied call never reaches ToolNode
 - post-compile tool-surface drift rejection
 - no LLM/API request and no KCC core dependency on LangGraph
+
+## M11 — Release Closure / Reproducibility
+**Status: CI-gated technical release closure.**
+
+Release engineering gates:
+- build wheel + sdist twice from the same commit-derived `SOURCE_DATE_EPOCH`
+- require bit-for-bit SHA-256 equality for both artifact types
+- verify release metadata with Twine
+- verify the wheel excludes repository-only case studies/examples/benchmarks/tests/docs
+- consolidate pinned OpenAI Agents, Anthropic SDK, and LangGraph runtime-boundary evidence
+- keep tag/GitHub Release/PyPI publication as a separate founder-approved action

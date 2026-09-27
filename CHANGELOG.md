@@ -26,11 +26,17 @@ All notable changes to KAVI Capability Compiler are documented here.
 - inventory-bound Guard drift enforcement
 - adversarial SDK benchmark with explicit replay and direct-dispatch trust boundaries
 - executable framework-neutral integration kits for Generic Python, OpenAI tool shapes, Anthropic tool shapes, MCP definitions, and OpenAPI
+- pinned repository-only runtime validation for OpenAI Agents SDK 0.22.3 FunctionTool dispatch
+- pinned repository-only runtime validation for Anthropic Python SDK 1.8.0 beta-tool dispatch
+- pinned repository-only runtime validation for LangGraph 1.2.12 ToolNode dispatch
 
 ### Distribution
 - dependency-free default core install
 - optional `mcp` and `signing` extras
 - dependency-free wheel smoke
+- bit-for-bit reproducible wheel/sdist CI gate using commit-derived SOURCE_DATE_EPOCH
+- Twine release-metadata validation
+- wheel-surface audit excluding repository-only validation/example/test content
 - Apache-2.0 license
 - Python 3.11+
 
