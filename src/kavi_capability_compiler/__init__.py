@@ -11,6 +11,7 @@ from .core import (
 from .manifest import SCHEMA_VERSION, build_manifest, scan_manifest
 from .runtime import ApprovalRequired, AuthorityDenied, CapabilityDenied
 from .sdk import Guard, SDK_VERSION
+from .schema_resources import get_schema, schema_names
 
 __all__ = [
     "__version__",
@@ -29,4 +30,6 @@ __all__ = [
     "AuthorityDenied",
     "ApprovalRequired",
     "CapabilityDenied",
+    "get_schema",
+    "schema_names",
 ]
