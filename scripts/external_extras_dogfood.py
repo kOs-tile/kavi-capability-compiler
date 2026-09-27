@@ -296,14 +296,18 @@ def main() -> None:
 
     if args.extra in {"signing", "all"}:
         result["signing"] = exercise_signing()
-    else:
-        assert dist_version("cryptography") is None
 
     if args.extra in {"mcp", "all"}:
         result["mcp"] = exercise_mcp()
     else:
+        # The signing extra must not pull in the MCP integration stack.
         assert dist_version("mcp") is None
         assert dist_version("httpx2") is None
+
+    # Do not assert that the MCP-only environment lacks cryptography:
+    # the MCP dependency graph may legitimately bring it transitively
+    # (for example through pyjwt[crypto]). The contract under test is
+    # that KCC's declared extras resolve and their public functionality works.
 
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
