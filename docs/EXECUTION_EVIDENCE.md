@@ -1,57 +1,30 @@
 # Execution evidence envelope
 
-KCC is the authority plane. Other KAVI subsystems may produce evidence that
-explains the context, memory, browser result, runtime behavior, or domain signal
-associated with an execution, but those artifacts do not grant authority.
+KCC is the authority plane. External systems may produce evidence that explains context, retrieval, telemetry, tool results, runtime observations, or domain signals associated with an execution. Those artifacts do not grant authority.
 
-`kavi.execution-evidence.v0` binds those artifacts to one execution and one
-canonical KCC capsule by digest.
+`kcc.execution-evidence.v1` binds immutable evidence references to one execution and one canonical KCC capsule by digest.
 
 ## Contract
 
 ```json
 {
-  "version": "kavi.execution-evidence.v0",
+  "version": "kcc.execution-evidence.v1",
   "execution_id": "exec-123",
   "capsule_id": "<64-char KCC capsule SHA-256>",
-  "capability_id": "mcp:browser:browser_tabs",
-  "operation": "list",
+  "capability_id": "kcc:crm:read_customer",
+  "operation": "read",
   "evidence": [
     {
-      "kind": "capability_plan",
-      "producer": "axiom",
-      "artifact_id": "plan-123",
-      "artifact_digest": "<AXIOM plan_fingerprint>"
-    },
-    {
-      "kind": "context",
-      "producer": "oracle",
-      "artifact_id": "state-2026-09-26T17:00:00Z",
-      "artifact_digest": "<ORACLE evidence_digest>"
-    },
-    {
-      "kind": "memory",
-      "producer": "mnemos",
+      "kind": "retrieval",
+      "producer": "host-rag",
       "artifact_id": "query-123",
-      "artifact_digest": "<MNEMOS admission_fingerprint>"
+      "artifact_digest": "<64-char SHA-256>"
     },
     {
-      "kind": "authority_observation",
-      "producer": "spectraflow",
-      "artifact_id": "observation-123",
-      "artifact_digest": "<SPECTRAFLOW evaluation_fingerprint>"
-    },
-    {
-      "kind": "browser_extraction",
-      "producer": "phantom",
-      "artifact_id": "extract-123",
-      "artifact_digest": "<PHANTOM report_fingerprint>"
-    },
-    {
-      "kind": "domain_detection",
-      "producer": "nephilim",
-      "artifact_id": "ethereum:19000001:sandwich",
-      "artifact_digest": "<NEPHILIM report_fingerprint>"
+      "kind": "runtime_observation",
+      "producer": "host-telemetry",
+      "artifact_id": "trace-456",
+      "artifact_digest": "<64-char SHA-256>"
     }
   ],
   "authority_granted": false,
@@ -60,20 +33,20 @@ canonical KCC capsule by digest.
 }
 ```
 
-The envelope is intentionally small. It stores references and canonical digests,
-not the full evidence payloads.
+The envelope stores references and digests, not full evidence payloads.
 
-## Producer mapping
+## Producer contract
 
-| Producer | Evidence artifact | Digest |
-|---|---|---|
-| KCC live probe | authenticated observed runtime authority surface | `report_fingerprint` |
-| AXIOM | pre-authority capability plan binding snapshot + intent | `plan_fingerprint` |
-| ORACLE | provenance/freshness ledger | `evidence_digest` |
-| MNEMOS | memory admission audit | `admission_fingerprint` |
-| SPECTRAFLOW | authority-drift evaluation | `evaluation_fingerprint` |
-| PHANTOM | extraction or extraction-drift report | `report_fingerprint` |
-| NEPHILIM | detector evidence bound to normalized block inputs | `report_fingerprint` |
+KCC does not require a fixed producer list.
+
+Any host subsystem may contribute evidence if it can provide:
+
+- `kind`
+- `producer`
+- `artifact_id`
+- lowercase SHA-256 `artifact_digest`
+
+Examples include retrieval systems, model routers, telemetry pipelines, browser extractors, policy analyzers, workflow engines, and domain-specific detectors.
 
 ## Verification boundary
 
@@ -84,29 +57,24 @@ not the full evidence payloads.
 - canonical capsule ID shape
 - the invariant that the envelope itself grants no authority
 
-It does **not** fetch or verify the referenced artifacts. A full verifier must
-resolve each producer artifact, recompute its digest, and separately verify the
-KCC capsule before accepting the audit chain.
+It does **not** fetch or verify referenced artifacts. A full audit verifier may resolve those artifacts and recompute their digests separately.
 
 ## Safety invariant
 
 **Evidence may explain an execution; evidence may not expand an execution.**
 
-A memory, market signal, browser extraction, drift alert, or world-state value
-can affect planning or trigger approval, but cannot create a grant absent from
-the KCC capsule.
-
+An external signal may affect planning or trigger approval, but it cannot create a grant absent from the KCC capsule.
 
 ## CLI
 
-Bind producer references to an already-compiled capsule:
+Bind evidence references to an already-compiled capsule:
 
 ```bash
 kcc evidence-bind capsule.json \
   --execution-id exec-123 \
   --evidence evidence-refs.json \
-  --capability mcp:browser:browser_tabs \
-  --operation list \
+  --capability kcc:crm:read_customer \
+  --operation read \
   -o execution-evidence.json
 ```
 
@@ -116,23 +84,6 @@ Verify the envelope itself:
 kcc evidence-verify execution-evidence.json
 ```
 
-`evidence-verify` exits non-zero when the envelope version, integrity, capsule ID
-shape, or non-authority invariant fails. Producer artifact verification remains a
-separate producer-specific responsibility.
+`evidence-verify` exits non-zero when the envelope version, integrity, capsule ID shape, or non-authority invariant fails.
 
-
-### Live runtime authority reference
-
-A successful `kcc probe-kavi` result includes a ready-to-bind reference:
-
-```json
-{
-  "kind": "runtime_authority_surface",
-  "producer": "kcc-kavi-live-probe",
-  "artifact_id": "kavi-dispatch-bridge:<observed_at>",
-  "artifact_digest": "<live probe report_fingerprint>"
-}
-```
-
-The reference contains no bearer material and can be passed directly to
-`evidence-bind` with the rest of the execution evidence set.
+Producer artifact verification remains a host-owned responsibility.

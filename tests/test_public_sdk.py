@@ -90,6 +90,16 @@ def test_public_api_contract_is_explicit_and_framework_neutral():
         "adapt_capabilities","build_manifest","scan_manifest","compile_capsule",
         "verify_capsule","authorize_call","inventory_lock","diff_inventory_lock",
         "Guard","AuthorityDenied","ApprovalRequired","CapabilityDenied",
+        "get_schema","schema_names",
     }
     assert set(kcc.__all__)==expected
     assert not any("kavi" in name.lower() or "hermes" in name.lower() or "codex" in name.lower() for name in kcc.__all__)
+
+
+def test_packaged_public_schemas_are_available():
+    names=kcc.schema_names()
+    assert names==("kcc.capabilities.v1","kcc.signed-capsule.v1")
+    capabilities=kcc.get_schema("kcc.capabilities.v1")
+    signed=kcc.get_schema("kcc.signed-capsule.v1")
+    assert capabilities["title"]=="KCC Universal Capability Manifest"
+    assert signed["title"]=="KCC Signed Capsule Envelope"

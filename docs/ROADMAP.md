@@ -36,7 +36,7 @@ Delivered:
 - sealed discovery holdout
 
 ## M3 — Framework-Agnostic Integration & Enforcement
-**Status: active.**
+**Status: shipped.**
 
 Goal: make KCC usable by existing agent/tool stacks without requiring framework migration or modifications to the agent runtime.
 
@@ -81,10 +81,20 @@ Exit report: `M4_EXIT.md`.
 Compiler and executor remain separable and may run in-process or in different services.
 
 ## M5 — Distribution / Product
+**Status: active — v0.1 release candidate.**
 
-- versioned package
-- integration examples
-- benchmark report
-- landing page
-- public v0.1
-- dashboard/hosted control plane only if user demand justifies it
+Current release gate:
+- package version 0.1.0
+- dependency-free core wheel
+- independently installable MCP and signing extras
+- packaged public JSON schemas
+- executable integration examples
+- benchmark report with explicit limitations
+- CHANGELOG, release notes, checksums, and release checklist
+- wheel + sdist verification in CI
+
+After v0.1:
+- validate additional real agent stacks without adding core dependencies
+- improve integration kits based on external adoption feedback
+- optional proxy/bridge only if users need out-of-process enforcement
+- hosted/dashboard product only if demand justifies it

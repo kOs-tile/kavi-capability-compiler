@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
-from .core import capability_id, digest
+from kavi_capability_compiler.core import capability_id, digest
 
 
 def scan_kavi_dispatch_contract(

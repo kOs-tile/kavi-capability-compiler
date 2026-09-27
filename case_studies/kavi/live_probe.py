@@ -16,7 +16,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
-from .core import digest, scan_mcp_snapshot
+from kavi_capability_compiler.core import digest, scan_mcp_snapshot
 
 
 PROTOCOL_VERSION = "2025-11-25"
