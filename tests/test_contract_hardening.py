@@ -230,3 +230,108 @@ def test_inventory_lock_diff_rejects_rehashed_tampered_lock():
     lock["digest"]=digest(body)
     with pytest.raises(ValueError,match="Invalid inventory lock integrity"):
         kcc.diff_inventory_lock(lock,inv)
+
+
+def test_compile_rejects_unsupported_structured_parameter_rules():
+    inv=_inventory()
+    cid=next(x["id"] for x in inv["capabilities"] if x["name"]=="get_record")
+    with pytest.raises(ValueError,match="Unsupported parameter rule"):
+        kcc.compile_capsule(
+            inv,
+            {
+                "capabilities":[cid],
+                "capability_constraints":{
+                    cid:{
+                        "parameters":{
+                            "id":{
+                                "required":True,
+                                "type":"string",
+                                "maxLength":8,
+                            }
+                        }
+                    }
+                },
+            },
+            {"default":"allow"},
+            now=100,
+        )
+
+
+@pytest.mark.parametrize(
+    "rule,error",
+    [
+        ({"required":"yes"},"Invalid required rule"),
+        ({"type":"uuid"},"Unsupported parameter type rule"),
+        ({"min":"0"},"Invalid min rule"),
+        ({"max":True},"Invalid max rule"),
+        ({"enum":"one"},"Invalid enum rule"),
+        ({"max_length":-1},"Invalid max_length rule"),
+        ({"pattern":"["},"Invalid pattern rule"),
+        ({"min":5,"max":1},"Invalid numeric range"),
+    ],
+)
+def test_compile_rejects_malformed_structured_parameter_rules(rule,error):
+    inv=_inventory()
+    cid=next(x["id"] for x in inv["capabilities"] if x["name"]=="get_record")
+    with pytest.raises(ValueError,match=error):
+        kcc.compile_capsule(
+            inv,
+            {
+                "capabilities":[cid],
+                "capability_constraints":{
+                    cid:{"parameters":{"id":rule}}
+                },
+            },
+            {"default":"allow"},
+            now=100,
+        )
+
+
+def test_runtime_parameter_bound_type_mismatch_fails_closed():
+    inv=_inventory()
+    cid=next(x["id"] for x in inv["capabilities"] if x["name"]=="get_record")
+    cap=kcc.compile_capsule(
+        inv,
+        {
+            "capabilities":[cid],
+            "capability_constraints":{
+                cid:{"parameters":{"id":{"max":3}}}
+            },
+        },
+        {"default":"allow"},
+        now=100,
+    )
+    decision=kcc.authorize_call(
+        cap,
+        cid,
+        parameters={"id":"not-numeric"},
+        now=101,
+        inventory=inv,
+    )
+    assert decision["allowed"] is False
+    assert decision["reason"]=="parameter_type_mismatch:id"
+
+
+def test_runtime_max_length_on_unsized_value_fails_closed():
+    inv=_inventory()
+    cid=next(x["id"] for x in inv["capabilities"] if x["name"]=="get_record")
+    cap=kcc.compile_capsule(
+        inv,
+        {
+            "capabilities":[cid],
+            "capability_constraints":{
+                cid:{"parameters":{"id":{"max_length":3}}}
+            },
+        },
+        {"default":"allow"},
+        now=100,
+    )
+    decision=kcc.authorize_call(
+        cap,
+        cid,
+        parameters={"id":123},
+        now=101,
+        inventory=inv,
+    )
+    assert decision["allowed"] is False
+    assert decision["reason"]=="parameter_type_mismatch:id"

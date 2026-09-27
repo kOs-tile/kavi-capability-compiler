@@ -197,6 +197,34 @@ cases.append(case(
     parameter_decision["reason"],
 ))
 
+unsupported_parameter_rule_blocked=False
+unsupported_parameter_rule_evidence=None
+try:
+    kcc.compile_capsule(
+        inv,
+        {
+            "capabilities":[update_id],
+            "capability_constraints":{
+                update_id:{
+                    "parameters":{
+                        "id":{"type":"string","maxLength":8},
+                        "value":{},
+                    }
+                }
+            },
+        },
+        {"default":"allow"},
+        now=100,
+    )
+except ValueError as exc:
+    unsupported_parameter_rule_evidence=str(exc)
+    unsupported_parameter_rule_blocked="Unsupported parameter rule" in str(exc)
+cases.append(case(
+    "unsupported_parameter_rule_rejected",
+    unsupported_parameter_rule_blocked,
+    unsupported_parameter_rule_evidence,
+))
+
 replay_guard=kcc.Guard.from_capsule(cap,inventory=inv)
 replay_first=replay_guard.authorize(cid,parameters={"id":"1"},now=101)
 replay_second=replay_guard.authorize(cid,parameters={"id":"1"},now=102)
