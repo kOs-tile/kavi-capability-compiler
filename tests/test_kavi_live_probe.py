@@ -1,6 +1,6 @@
 import pytest
 
-from kavi_capability_compiler.live_probe import LiveProbeError, probe_kavi_bridge
+from case_studies.kavi.live_probe import LiveProbeError, probe_kavi_bridge
 
 
 TOOLS = [
