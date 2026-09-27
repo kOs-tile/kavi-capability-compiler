@@ -29,6 +29,8 @@ All notable changes to KAVI Capability Compiler are documented here.
 - pinned repository-only runtime validation for OpenAI Agents SDK 0.22.3 FunctionTool dispatch
 - pinned repository-only runtime validation for Anthropic Python SDK 1.8.0 beta-tool dispatch
 - pinned repository-only runtime validation for LangGraph 1.2.12 ToolNode dispatch
+- pre-publication security hardening for canonical capability identities and authority-artifact integrity
+- remote MCP discovery transport protection: HTTPS required outside loopback and URL userinfo rejected
 
 ### Distribution
 - dependency-free default core install
@@ -37,6 +39,10 @@ All notable changes to KAVI Capability Compiler are documented here.
 - bit-for-bit release-artifact CI gate: raw reproducible wheels plus commit-epoch-canonicalized sdists
 - Twine release-metadata validation
 - wheel-surface audit excluding repository-only validation/example/test content
+- immutable-SHA GitHub Actions with checkout credential persistence disabled
+- dependency-vulnerability audit for the resolved optional runtime dependency set
+- clean CPython 3.11–3.14 wheel/core/signing/MCP-extra compatibility matrix
+- clean source-distribution install smoke
 - Apache-2.0 license
 - Python 3.11+
 
@@ -47,6 +53,9 @@ All notable changes to KAVI Capability Compiler are documented here.
 - denied calls do not reach the host dispatcher
 - signed envelopes cannot self-declare a trusted key
 - source provenance is separated from semantic authority fingerprints
+- manifest, inventory, and inventory-lock integrity is enforced before authority compilation/use
+- canonical capability identity aliases and reserved-delimiter collisions fail closed
+- signing extra requires vulnerability-audited `cryptography>=50.0.1,<51`
 
 ### Known limits
 - v0.1 is alpha software

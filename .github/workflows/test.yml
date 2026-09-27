@@ -28,6 +28,10 @@ jobs:
           python-version: "3.11"
       - name: Enforce immutable GitHub Action references
         run: python scripts/verify_workflow_action_pins.py .github/workflows
+      - name: Enforce non-publishing release workflow
+        run: python scripts/verify_release_workflow_dry_run.py .github/workflows/release.yml
+      - name: Verify release metadata coherence
+        run: python scripts/verify_release_metadata.py
       - name: Install core only
         run: python -m pip install -e .
       - name: Verify embedded SDK imports without optional integrations
@@ -444,6 +448,117 @@ jobs:
           assert r["pass"] is True, r
           PY
 
+
+
+  python-compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Build wheel with pinned release tooling
+        run: |
+          python -m pip install "build==1.6.1" "wheel==0.48.0" "setuptools==84.0.0"
+          python -m build --wheel --no-isolation
+      - name: Clean core wheel smoke
+        run: |
+          python -m venv /tmp/kcc-core
+          /tmp/kcc-core/bin/pip install --no-deps dist/*.whl
+          /tmp/kcc-core/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          assert kcc.__version__=="0.1.0"
+          assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          assert len(kcc.schema_names())==5
+          manifest=kcc.adapt_capabilities(
+              "generic",
+              {"tools":[{"name":"get_record","description":"Get record","input_schema":{"type":"object"}}]},
+              namespace="compat",
+          )
+          inventory=kcc.scan_manifest(manifest)
+          cid=inventory["capabilities"][0]["id"]
+          capsule=kcc.compile_capsule(
+              inventory,
+              {"capabilities":[cid]},
+              {"default":"allow"},
+              now=100,
+          )
+          assert kcc.Guard.from_capsule(capsule,inventory=inventory).authorize(cid,now=101)["allowed"]
+          PY
+      - name: Clean signing-extra smoke
+        run: |
+          python -m venv /tmp/kcc-sign
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-sign/bin/pip install "${wheel}[signing]"
+          /tmp/kcc-sign/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          from kavi_capability_compiler.signing import (
+              generate_ed25519_keypair,
+              sign_capsule,
+              verify_signed_capsule,
+          )
+          manifest=kcc.adapt_capabilities(
+              "generic",
+              {"tools":[{"name":"get_record","description":"Get record","input_schema":{"type":"object"}}]},
+              namespace="compat",
+          )
+          inventory=kcc.scan_manifest(manifest)
+          cid=inventory["capabilities"][0]["id"]
+          capsule=kcc.compile_capsule(inventory,{"capabilities":[cid]},{"default":"allow"},now=100)
+          private,public=generate_ed25519_keypair()
+          envelope=sign_capsule(capsule,private,key_id="compat-key")
+          assert verify_signed_capsule(envelope,{"compat-key":public},now=101)["valid"]
+          PY
+      - name: Clean MCP-extra import smoke
+        run: |
+          python -m venv /tmp/kcc-mcp-compat
+          wheel=$(ls dist/*.whl)
+          /tmp/kcc-mcp-compat/bin/pip install "${wheel}[mcp]"
+          /tmp/kcc-mcp-compat/bin/python - <<'PY'
+          import mcp, httpx2
+          import kavi_capability_compiler as kcc
+          assert kcc.__version__=="0.1.0"
+          PY
+
+  source-distribution-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+      - name: Build sdist with pinned release tooling
+        run: |
+          python -m pip install "build==1.6.1" "wheel==0.48.0" "setuptools==84.0.0"
+          python -m build --sdist --no-isolation
+      - name: Install sdist in a separate clean environment
+        run: |
+          python -m venv /tmp/kcc-sdist
+          /tmp/kcc-sdist/bin/pip install --no-deps dist/*.tar.gz
+          /tmp/kcc-sdist/bin/kcc --version | grep -Fx "0.1.0"
+          /tmp/kcc-sdist/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          assert kcc.__version__=="0.1.0"
+          assert kcc.schema_names()==(
+              "kcc.capabilities.v1",
+              "kcc.capsule.v1",
+              "kcc.inventory-lock.v1",
+              "kcc.inventory.v1",
+              "kcc.signed-capsule.v1",
+          )
+          PY
+      - name: Verify release metadata coherence
+        run: python scripts/verify_release_metadata.py
 
   dependency-audit:
     runs-on: ubuntu-latest
