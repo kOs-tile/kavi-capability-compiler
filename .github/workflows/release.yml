@@ -1,0 +1,89 @@
+name: release
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/release.yml"
+      - "pyproject.toml"
+      - "src/kavi_capability_compiler/**"
+      - "scripts/**"
+      - "README.md"
+      - "CHANGELOG.md"
+      - "docs/RELEASE_NOTES_V0.1.md"
+      - "docs/RELEASE_CHECKLIST.md"
+      - "SECURITY.md"
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: "Exact 40-character commit SHA to build"
+        required: true
+        type: string
+
+concurrency:
+  group: kcc-release-dry-run-${{ github.event.pull_request.number || inputs.target_sha || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-release-artifacts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.target_sha || github.sha }}
+          persist-credentials: false
+          fetch-depth: 1
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+      - name: Verify exact manual target
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+        run: |
+          [[ "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+      - name: Verify workflow and release metadata gates
+        run: |
+          python scripts/verify_workflow_action_pins.py .github/workflows
+          python scripts/verify_release_workflow_dry_run.py .github/workflows/release.yml
+          python scripts/verify_release_metadata.py
+      - name: Install pinned release tooling
+        run: python -m pip install "build==1.6.1" "twine==7.0.0" "wheel==0.48.0" "setuptools==84.0.0"
+      - name: Build twice from the checked-out commit
+        run: |
+          export SOURCE_DATE_EPOCH="$(git log -1 --format=%ct)"
+          echo "$SOURCE_DATE_EPOCH" > /tmp/kcc-release-epoch
+          rm -rf build dist /tmp/kcc-release-a /tmp/kcc-release-b
+          find src -maxdepth 1 -name '*.egg-info' -type d -exec rm -rf {} +
+          python -m build --no-isolation --outdir /tmp/kcc-release-a
+          rm -rf build
+          find src -maxdepth 1 -name '*.egg-info' -type d -exec rm -rf {} +
+          python -m build --no-isolation --outdir /tmp/kcc-release-b
+      - name: Canonicalize and verify release artifacts
+        run: |
+          epoch="$(cat /tmp/kcc-release-epoch)"
+          python scripts/normalize_sdist.py /tmp/kcc-release-a/*.tar.gz "$epoch"
+          python scripts/normalize_sdist.py /tmp/kcc-release-b/*.tar.gz "$epoch"
+          python scripts/verify_reproducible_builds.py /tmp/kcc-release-a /tmp/kcc-release-b
+          python -m twine check /tmp/kcc-release-a/*
+      - name: Stage exact dry-run release payload
+        run: |
+          rm -rf dist
+          mkdir dist
+          cp /tmp/kcc-release-a/*.whl /tmp/kcc-release-a/*.tar.gz dist/
+          python scripts/release_checksums.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: kcc-v0.1.0-release-dry-run
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+            dist/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 3

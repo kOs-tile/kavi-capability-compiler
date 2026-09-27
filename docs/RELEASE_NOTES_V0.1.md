@@ -31,6 +31,10 @@ The host application keeps its own model, dispatcher, credentials, storage, iden
 - executable integration kits for Generic Python, OpenAI tool shapes, Anthropic tool shapes, MCP definitions, and OpenAPI
 - pinned real-runtime validation at the tool-dispatch boundary for OpenAI Agents SDK 0.22.3, Anthropic Python SDK 1.8.0, and LangGraph 1.2.12
 - CI release closure that checks raw wheel reproducibility, deterministic commit-epoch canonicalization of sdist archive metadata, bit-for-bit release-artifact equality, wheel surface, and Twine metadata
+- pre-publication security hardening for canonical capability identity collisions and manifest/inventory/lock integrity
+- remote MCP discovery requires HTTPS except for loopback development endpoints and rejects URL userinfo credentials
+- immutable-SHA CI Actions, disabled checkout credential persistence, and vulnerability auditing of resolved optional dependencies
+- clean CPython 3.11–3.14 compatibility gates for core, signing, and MCP extras plus clean sdist installation
 
 ## Evidence checkpoint
 
