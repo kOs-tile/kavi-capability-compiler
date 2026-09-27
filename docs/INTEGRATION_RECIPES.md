@@ -127,3 +127,9 @@ The executor must receive trusted public keys independently. A signed envelope c
 ## Executable reference
 
 `examples/integrations_smoke.py` exercises generic JSON, MCP, OpenAI, Anthropic, and OpenAPI definitions through the same Guard boundary and is executed in CI.
+
+## Executable integration kits
+
+For complete runnable references, see `docs/INTEGRATION_KITS.md` and `examples/integration_kits/`.
+
+The examples cover OpenAI function-tool definitions, Anthropic tools, MCP tool definitions, OpenAPI operations, and a custom Python registry. Every kit uses the same framework-neutral KCC contract and binds Guard to the current inventory.
