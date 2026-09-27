@@ -42,6 +42,18 @@
 - [x] framework-specific validation targets are separated from the installed core
 - [x] external runtime validation evidence and limitations are consolidated in `docs/EXTERNAL_VALIDATION_V0.1.md`
 
+## Publication security gate
+- [x] dedicated release workflow is manual-dispatch only and defaults to `publish=false`
+- [x] release build job has no OIDC or write permission
+- [x] PyPI publish job is isolated behind the `pypi` environment and owns the only `id-token: write`
+- [x] GitHub Release creation is a separate post-PyPI job with `contents: write` and no OIDC
+- [x] PyPI publication uses a pinned PyPA Trusted Publishing action and no repository-stored PyPI token
+- [x] release artifacts are rebuilt twice, reproducibility-checked, Twine-checked, clean-installed, checksummed, and transferred as one verified artifact set
+- [ ] configure PyPI pending Trusted Publisher: owner `kOs-tile`, repository `kavi-capability-compiler`, workflow `release.yml`, environment `pypi`
+- [ ] configure GitHub environment `pypi` with manual approval / trusted reviewer protection
+- [ ] run `release-v0.1.0` once with `publish=false` and `confirm_version=v0.1.0`
+- [ ] review the dry-run artifact hashes and job logs
+
 ## Publication
 - [ ] create `v0.1.0` tag
 - [ ] create GitHub Release from `docs/RELEASE_NOTES_V0.1.md`

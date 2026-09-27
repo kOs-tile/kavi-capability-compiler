@@ -1,0 +1,219 @@
+name: release-v0.1.0
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish v0.1.0 to PyPI and create the GitHub Release"
+        required: true
+        type: boolean
+        default: false
+      confirm_version:
+        description: "Type v0.1.0 to authorize publication"
+        required: true
+        type: string
+        default: ""
+
+concurrency:
+  group: kcc-release-v0.1.0
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Require main branch dispatch
+        shell: bash
+        env:
+          KCC_REF: ${{ github.ref }}
+          KCC_CONFIRM_VERSION: ${{ inputs.confirm_version }}
+        run: |
+          set -euo pipefail
+          test "$KCC_REF" = "refs/heads/main"
+          test "$KCC_CONFIRM_VERSION" = "v0.1.0"
+
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+
+      - name: Verify release commit and package version
+        shell: bash
+        env:
+          KCC_EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$KCC_EXPECTED_SHA"
+          python - <<'PY'
+          from pathlib import Path
+          import tomllib
+          import kavi_capability_compiler as kcc
+
+          data=tomllib.loads(Path("pyproject.toml").read_text())
+          assert data["project"]["name"]=="kavi-capability-compiler"
+          assert data["project"]["version"]=="0.1.0"
+          assert kcc.__version__=="0.1.0"
+          PY
+
+      - name: Verify immutable workflow action references
+        run: python scripts/verify_workflow_action_pins.py .github/workflows
+
+      - name: Install pinned release tooling
+        run: python -m pip install "build==1.6.1" "twine==7.0.0" "wheel==0.48.0" "setuptools==84.0.0"
+
+      - name: Build release artifacts twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          export SOURCE_DATE_EPOCH="$(git log -1 --format=%ct)"
+          echo "$SOURCE_DATE_EPOCH" > /tmp/kcc-source-date-epoch
+          rm -rf build dist /tmp/kcc-dist-a /tmp/kcc-dist-b
+          find src -maxdepth 1 -name '*.egg-info' -type d -exec rm -rf {} +
+          python -m build --no-isolation --outdir /tmp/kcc-dist-a
+          rm -rf build
+          find src -maxdepth 1 -name '*.egg-info' -type d -exec rm -rf {} +
+          python -m build --no-isolation --outdir /tmp/kcc-dist-b
+
+      - name: Canonicalize sdist metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          epoch="$(cat /tmp/kcc-source-date-epoch)"
+          python scripts/normalize_sdist.py /tmp/kcc-dist-a/*.tar.gz "$epoch"
+          python scripts/normalize_sdist.py /tmp/kcc-dist-b/*.tar.gz "$epoch"
+
+      - name: Require reproducible artifacts and clean wheel surface
+        run: python scripts/verify_reproducible_builds.py /tmp/kcc-dist-a /tmp/kcc-dist-b
+
+      - name: Stage exact release artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          cp /tmp/kcc-dist-a/*.whl dist/
+          cp /tmp/kcc-dist-a/*.tar.gz dist/
+          python scripts/release_checksums.py
+          test "$(ls dist/*.whl | wc -l)" -eq 1
+          test "$(ls dist/*.tar.gz | wc -l)" -eq 1
+          test -f dist/SHA256SUMS
+
+      - name: Verify release metadata
+        run: python -m twine check dist/*.whl dist/*.tar.gz
+
+      - name: Clean-install built wheel with no dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv /tmp/kcc-release-install
+          /tmp/kcc-release-install/bin/pip install --no-deps dist/*.whl
+          /tmp/kcc-release-install/bin/python - <<'PY'
+          from importlib import metadata
+          import kavi_capability_compiler as kcc
+
+          assert metadata.version("kavi-capability-compiler")=="0.1.0"
+          assert kcc.__version__=="0.1.0"
+          assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          assert kcc.CAPSULE_VERSION=="kcc.capsule.v1"
+          assert callable(kcc.Guard)
+          PY
+          /tmp/kcc-release-install/bin/kcc --version | grep -Fx '0.1.0'
+
+      - name: Upload verified release artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: kcc-v0.1.0-release-artifacts
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+            dist/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 7
+
+  publish-pypi:
+    if: ${{ inputs.publish }}
+    needs: build-and-verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Require explicit publication confirmation
+        shell: bash
+        env:
+          KCC_CONFIRM_VERSION: ${{ inputs.confirm_version }}
+        run: test "$KCC_CONFIRM_VERSION" = "v0.1.0"
+
+      - name: Download verified artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: kcc-v0.1.0-release-artifacts
+          path: dist
+
+      - name: Verify checksums before upload
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd dist
+          sha256sum --check SHA256SUMS
+
+      - name: Publish to PyPI with Trusted Publishing
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # release/v1
+        with:
+          packages-dir: dist/
+          skip-existing: false
+          verbose: true
+          print-hash: true
+
+  create-github-release:
+    if: ${{ inputs.publish }}
+    needs:
+      - build-and-verify
+      - publish-pypi
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Download verified artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: kcc-v0.1.0-release-artifacts
+          path: dist
+
+      - name: Verify checksums before GitHub Release
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd dist
+          sha256sum --check SHA256SUMS
+
+      - name: Create immutable v0.1.0 release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          KCC_RELEASE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          if gh release view v0.1.0 --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            echo "v0.1.0 release already exists; refusing to overwrite" >&2
+            exit 1
+          fi
+          gh release create v0.1.0             --repo "${{ github.repository }}"             --target "$KCC_RELEASE_SHA"             --title "KAVI Capability Compiler v0.1.0"             --notes-file docs/RELEASE_NOTES_V0.1.md             dist/*.whl dist/*.tar.gz dist/SHA256SUMS
