@@ -4,10 +4,27 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kavi-capability-compiler"
-version = "0.0.1"
-description = "Framework-agnostic least-authority compiler for AI agents"
+version = "0.1.0"
+description = "Framework-agnostic least-authority compiler and embedded enforcement SDK for AI agents"
+readme = "README.md"
 requires-python = ">=3.11"
+license = {file = "LICENSE"}
+authors = [{name = "KAVI"}]
+keywords = ["ai-agents", "least-privilege", "capabilities", "mcp", "agent-security"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Security",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
 dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/kOs-tile/kavi-capability-compiler"
+Repository = "https://github.com/kOs-tile/kavi-capability-compiler"
+Issues = "https://github.com/kOs-tile/kavi-capability-compiler/issues"
 
 [project.optional-dependencies]
 mcp = ["mcp>=2.2,<3", "httpx2>=2.5.0"]
