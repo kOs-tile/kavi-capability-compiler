@@ -58,7 +58,13 @@ jobs:
           sdist=$(ls dist/*.tar.gz)
           tar -tzf "$sdist" | grep '/CHANGELOG.md$'
           tar -tzf "$sdist" | grep '/docs/INTEGRATION_RECIPES.md$'
-          tar -tzf "$sdist" | grep '/schemas/kcc.capabilities.v1.schema.json
+          tar -tzf "$sdist" | grep '/docs/SDK_COMPATIBILITY.md$'
+          tar -tzf "$sdist" | grep '/schemas/kcc.capabilities.v1.schema.json$'
+          tar -tzf "$sdist" | grep '/schemas/kcc.inventory.v1.schema.json$'
+          tar -tzf "$sdist" | grep '/schemas/kcc.inventory-lock.v1.schema.json$'
+          tar -tzf "$sdist" | grep '/schemas/kcc.capsule.v1.schema.json$'
+          tar -tzf "$sdist" | grep '/schemas/kcc.signed-capsule.v1.schema.json$'
+          tar -tzf "$sdist" | grep '/examples/integrations_smoke.py$'
       - name: Install wheel without dependencies
         run: |
           python -m venv /tmp/kcc-wheel
