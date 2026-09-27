@@ -56,6 +56,7 @@
 - [ ] later mirror the exact same v0.1.0 artifacts to PyPI when account registration is available
 - [x] public wheel and sdist digests match the verified publish-run artifacts
 - [x] clean install verifies version `0.1.0`, `kcc.sdk.v1`, CLI, Guard, and all five public schemas
+- [x] release workflow uses draft -> verified asset attachment -> publish sequencing
 - [ ] enable GitHub Immutable Releases protection before the next release cycle
 - [x] do not rebuild v0.1.0 for PyPI
 - [x] do not claim production certification or universal framework support
