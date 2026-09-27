@@ -4,6 +4,7 @@ import hashlib
 import json
 import sys
 import zipfile
+import tarfile
 from pathlib import Path
 
 
@@ -57,6 +58,18 @@ def verify_wheel_surface(wheel: Path) -> dict[str, object]:
     }
 
 
+def verify_sdist_surface(sdist: Path) -> dict[str, object]:
+    with tarfile.open(sdist,"r:gz") as archive:
+        names=sorted(member.name for member in archive.getmembers())
+    leaks=[name for name in names if "/case_studies/" in f"/{name}"]
+    if leaks:
+        raise SystemExit(f"sdist contains repository-only case_studies: {leaks[:10]}")
+    return {
+        "file_count":len(names),
+        "repository_only_case_study_leaks":0,
+    }
+
+
 def main() -> None:
     if len(sys.argv) != 3:
         raise SystemExit("usage: verify_reproducible_builds.py DIST_A DIST_B")
@@ -75,11 +88,14 @@ def main() -> None:
             raise SystemExit(f"non-reproducible artifact: {name}")
 
     wheel=next(path for name,path in left.items() if name.endswith(".whl"))
+    sdist=next(path for name,path in left.items() if name.endswith(".tar.gz"))
     surface=verify_wheel_surface(wheel)
+    sdist_surface=verify_sdist_surface(sdist)
     result={
         "validation":"kcc.release-reproducibility.v1",
         "artifacts":rows,
         "wheel_surface":surface,
+        "sdist_surface":sdist_surface,
         "pass":True,
     }
     print(json.dumps(result,sort_keys=True))
