@@ -23,6 +23,7 @@ def test_release_docs_exist():
         "docs/UNIVERSAL_MANIFEST.md",
         "docs/INTEGRATION_RECIPES.md",
         "docs/SDK_COMPATIBILITY.md",
+        "docs/ADVERSARIAL_SDK.md",
         "docs/BENCHMARK_REPORT_V0.1.md",
         "docs/RELEASE_CHECKLIST.md",
     ):
@@ -36,6 +37,18 @@ def test_public_contract_schema_sources_exist():
         "schemas/kcc.inventory-lock.v1.schema.json",
         "schemas/kcc.capsule.v1.schema.json",
         "schemas/kcc.signed-capsule.v1.schema.json",
+    ):
+        assert Path(path).is_file(), path
+
+
+def test_framework_neutral_integration_kits_exist():
+    for path in (
+        "examples/integrations/_shared.py",
+        "examples/integrations/generic_python.py",
+        "examples/integrations/openai_tools.py",
+        "examples/integrations/anthropic_tools.py",
+        "examples/integrations/mcp_tools.py",
+        "examples/integrations/openapi_agent.py",
     ):
         assert Path(path).is_file(), path
 

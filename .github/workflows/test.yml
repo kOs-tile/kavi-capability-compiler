@@ -82,6 +82,12 @@ jobs:
           tar -tzf "$sdist" | grep '/schemas/kcc.capsule.v1.schema.json$'
           tar -tzf "$sdist" | grep '/schemas/kcc.signed-capsule.v1.schema.json$'
           tar -tzf "$sdist" | grep '/examples/integrations_smoke.py$'
+          tar -tzf "$sdist" | grep '/examples/integrations/_shared.py$'
+          tar -tzf "$sdist" | grep '/examples/integrations/generic_python.py$'
+          tar -tzf "$sdist" | grep '/examples/integrations/openai_tools.py$'
+          tar -tzf "$sdist" | grep '/examples/integrations/anthropic_tools.py$'
+          tar -tzf "$sdist" | grep '/examples/integrations/mcp_tools.py$'
+          tar -tzf "$sdist" | grep '/examples/integrations/openapi_agent.py$'
       - name: Install wheel without dependencies
         run: |
           python -m venv /tmp/kcc-wheel
@@ -169,6 +175,11 @@ jobs:
       - run: pytest -q
       - name: Run executable integration recipes
         run: python examples/integrations_smoke.py
+      - name: Run framework-neutral integration kits
+        run: |
+          for kit in generic_python openai_tools anthropic_tools mcp_tools openapi_agent; do
+            python "examples/integrations/${kit}.py"
+          done
       - name: Run live discovery integration tests
         run: pytest -q tests/test_live_discovery.py
       - name: Run pinned official MCP compatibility

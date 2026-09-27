@@ -23,6 +23,9 @@ All notable changes to KAVI Capability Compiler are documented here.
 - authority drift detection
 - execution-evidence envelopes
 - benchmark and holdout gates
+- inventory-bound Guard drift enforcement
+- adversarial SDK benchmark with explicit replay and direct-dispatch trust boundaries
+- executable framework-neutral integration kits for Generic Python, OpenAI tool shapes, Anthropic tool shapes, MCP definitions, and OpenAPI
 
 ### Distribution
 - dependency-free default core install
