@@ -44,6 +44,12 @@ All other authorization failures, including invalid integrity, unsupported capsu
 
 Dispatcher exceptions are not converted into authorization exceptions after a call has been authorized.
 
+## Trust boundary
+
+An unsigned `kcc.capsule.v1` is an in-process authority artifact, not an authentication credential. A host must not accept an unsigned capsule from an untrusted process, client, or network boundary merely because its self-integrity digest is valid.
+
+When compiler and executor are separated by a trust boundary, use a signed capsule or an equivalent host-authenticated transport with independently configured trust.
+
 ## Signed capsules
 
 `kcc.signed-capsule.v1` can contain only `kcc.capsule.v1`.
