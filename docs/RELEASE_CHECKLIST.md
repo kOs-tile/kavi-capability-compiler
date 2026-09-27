@@ -5,8 +5,10 @@
 - [x] package version and `__version__` both equal 0.1.0
 - [x] public `__all__` contract is explicit and framework-neutral
 - [x] `kcc.capabilities.v1`, `kcc.inventory.v1`, `kcc.inventory-lock.v1`, `kcc.capsule.v1`, and `kcc.sdk.v1` are explicitly versioned
-- [x] full test suite passes after M5.1 contract hardening — 96 tests
+- [x] full test suite passes at the current release-candidate checkpoint
 - [x] all benchmark safety gates pass
+- [x] adversarial SDK benchmark is CI-gated
+- [x] inventory-bound Guard rejects post-compile capability drift
 
 ## Packaging
 - [x] wheel builds
@@ -20,6 +22,7 @@
 - [x] `signing` extra installs independently
 - [x] Apache-2.0 license metadata/file and Python >=3.11 are declared
 - [x] artifact SHA-256 checksums are generated during release CI
+- [x] all five framework-neutral integration kits are present in the source distribution
 
 ## Documentation
 - [x] README describes v0.1 behavior
@@ -29,6 +32,7 @@
 - [x] framework-neutral execution-evidence contract is current
 - [x] benchmark report includes limitations
 - [x] integration examples execute in CI
+- [x] Generic Python, OpenAI-shaped, Anthropic-shaped, MCP-shaped, and OpenAPI kits execute without vendor credentials
 - [x] framework-specific validation targets are separated from the installed core
 
 ## Publication

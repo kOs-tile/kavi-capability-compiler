@@ -1,6 +1,6 @@
 # KAVI Capability Compiler
 
-> **Status — v0.1 release candidate.** M0–M4 are shipped. M5 distribution hardening is complete on `main`; pre-publication M5.1 is freezing the remaining public authority contracts before any tag or PyPI release.
+> **Status — v0.1 release candidate.** Core contracts, release hardening, adversarial SDK checks, and framework-neutral integration kits are CI-backed. Tag/GitHub Release/PyPI publication remain founder-gated.
 
 KCC is a framework-agnostic **least-authority compiler for AI agents**.
 
@@ -65,6 +65,9 @@ These are benchmark checkpoint measurements, not production security guarantees.
 - semantic fingerprints independent of source format/provenance
 - generic runtime guard in front of any caller-supplied dispatcher
 - cross-format equivalence benchmark
+- inventory-bound Guard for post-compile capability drift
+- adversarial SDK benchmark with explicit host-responsibility boundaries
+- executable integration kits for Generic Python, OpenAI tool shapes, Anthropic tool shapes, raw MCP definitions, and OpenAPI
 
 KAVI/Hermes/Codex integrations are validation targets and examples, not dependencies of the compiler.
 
@@ -116,9 +119,9 @@ kcc discover-config mcp.json my-server \
 
 KCC is not a hosted gateway, desktop service, local daemon, IAM replacement, secret manager, or autonomous remediation system. Live discovery does not automatically execute discovered tools. Runtime enforcement is intentionally a small portable primitive.
 
-M0–M4 exit gates have passed. KCC is now in v0.1 distribution hardening: package metadata, executable integration recipes, release artifacts, and documentation consistency.
+M0–M7 release-candidate engineering is focused on a stable framework-neutral SDK, adversarially tested runtime enforcement, and executable integration examples. External publication remains a separate founder approval.
 
-See `docs/EMBEDDED_SDK.md`, `docs/SDK_COMPATIBILITY.md`, `docs/UNIVERSAL_MANIFEST.md`, `docs/INTEGRATION_RECIPES.md`, and `docs/BENCHMARK_REPORT_V0.1.md`.
+See `docs/EMBEDDED_SDK.md`, `docs/SDK_COMPATIBILITY.md`, `docs/ADVERSARIAL_SDK.md`, `docs/UNIVERSAL_MANIFEST.md`, `docs/INTEGRATION_RECIPES.md`, and `docs/BENCHMARK_REPORT_V0.1.md`.
 
 ## Embed it into an existing agent
 
@@ -134,7 +137,7 @@ manifest = kcc.adapt_capabilities(
 )
 inventory = kcc.scan_manifest(manifest)
 capsule = kcc.compile_capsule(inventory, task_intent, policy)
-guard = kcc.Guard.from_capsule(capsule)
+guard = kcc.Guard.from_capsule(capsule, inventory=inventory)
 
 result = await guard.dispatch(
     capability_id,
