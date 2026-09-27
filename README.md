@@ -1,6 +1,6 @@
 # KAVI Capability Compiler
 
-> **Status — v0.1 technical release candidate.** Core contracts, adversarial enforcement, framework-neutral integration kits, three pinned real-runtime validations, and reproducible release-artifact checks are CI-gated. Tag/GitHub Release/PyPI publication remain founder-gated.
+> **Status — v0.1 release candidate.** Core contracts, adversarial enforcement, framework-neutral integration kits, pinned real-runtime validations, security hardening, and reproducible release-artifact checks are CI-gated. GitHub Release is the initial distribution path; PyPI is an optional later mirror.
 
 KCC is a framework-agnostic **least-authority compiler for AI agents**.
 
@@ -84,18 +84,21 @@ Uncertain authority fails closed into denial/approval behavior rather than becom
 
 Python 3.11+.
 
-Default install is the embedded core SDK and has no required third-party runtime dependencies:
+Default install is the embedded core SDK and has no required third-party runtime dependencies.
+
+For v0.1.0 before the PyPI mirror is available, install the immutable GitHub Release wheel directly:
 
 ```bash
-pip install kavi-capability-compiler
+python -m pip install https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl
 ```
 
-Optional extras:
+After the optional GitHub Pages Simple Repository index is enabled, pip can also install by project name:
 
 ```bash
-pip install "kavi-capability-compiler[mcp]"
-pip install "kavi-capability-compiler[signing]"
+python -m pip install --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/ kavi-capability-compiler
 ```
+
+PyPI will be added later as a mirror of the exact same immutable v0.1.0 artifacts; v0.1.0 will not be rebuilt for PyPI.
 
 For repository development:
 
@@ -122,7 +125,7 @@ kcc discover-config mcp.json my-server \
 
 KCC is not a hosted gateway, desktop service, local daemon, IAM replacement, secret manager, or autonomous remediation system. Live discovery does not automatically execute discovered tools. Runtime enforcement is intentionally a small portable primitive.
 
-M0–M10 engineering is complete. M11 closes reproducible release engineering and metadata verification; external publication remains a separate founder approval.
+M0–M11 engineering is complete. The v0.1 launch path is GitHub Release first, with a standards-compliant Simple Repository index available through GitHub Pages and PyPI retained as a later mirror.
 
 See `docs/EMBEDDED_SDK.md`, `docs/SDK_COMPATIBILITY.md`, `docs/ADVERSARIAL_SDK.md`, `docs/UNIVERSAL_MANIFEST.md`, `docs/INTEGRATION_RECIPES.md`, `docs/OPENAI_AGENTS_VALIDATION.md`, `docs/ANTHROPIC_SDK_VALIDATION.md`, `docs/LANGGRAPH_TOOLNODE_VALIDATION.md`, `docs/EXTERNAL_VALIDATION_V0.1.md`, and `docs/BENCHMARK_REPORT_V0.1.md`.
 

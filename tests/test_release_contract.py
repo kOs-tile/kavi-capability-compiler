@@ -58,3 +58,21 @@ def test_project_specific_case_study_code_is_not_in_core_package():
     assert not Path("src/kavi_capability_compiler/live_probe.py").exists()
     assert Path("case_studies/kavi/kavi_dispatch.py").is_file()
     assert Path("case_studies/kavi/live_probe.py").is_file()
+
+def test_github_first_distribution_files_exist():
+    for path in (
+        ".github/workflows/pages.yml",
+        "scripts/build_simple_index.py",
+        "scripts/verify_simple_index.py",
+        "scripts/verify_release_workflow.py",
+        "scripts/verify_pages_workflow.py",
+        "docs/DISTRIBUTION_V0.1.md",
+    ):
+        assert Path(path).is_file(), path
+
+
+def test_release_and_pages_workflow_security_contracts():
+    from scripts.verify_release_workflow import main as verify_release
+    from scripts.verify_pages_workflow import main as verify_pages
+    verify_release(".github/workflows/release.yml")
+    verify_pages(".github/workflows/pages.yml")
