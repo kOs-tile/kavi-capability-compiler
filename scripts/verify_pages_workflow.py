@@ -10,6 +10,8 @@ def main(path: str | Path | None = None) -> None:
     text=path.read_text()
     if "pull_request" in text or "push:" in text:
         raise SystemExit("Pages index deployment must be manual-only")
+    if re.search(r"v0\.1\.\d+",text):
+        raise SystemExit("Pages workflow must derive the patch tag instead of hardcoding v0.1.x")
     for marker in (
         "workflow_dispatch:",
         "contents: read",
@@ -17,7 +19,10 @@ def main(path: str | Path | None = None) -> None:
         "id-token: write",
         "environment:",
         "name: github-pages",
-        "gh release download v0.1.0",
+        "scripts/release_version.py version",
+        "scripts/release_version.py tag",
+        'gh release download "$KCC_TAG"',
+        'release.get("immutable") is not True',
         "sha256sum --check SHA256SUMS",
         "build_simple_index.py",
         "verify_simple_index.py",

@@ -12,7 +12,7 @@ on:
       - "scripts/**"
       - "README.md"
       - "CHANGELOG.md"
-      - "docs/RELEASE_NOTES_V0.1.md"
+      - "docs/RELEASE_NOTES_*.md"
       - "docs/RELEASE_CHECKLIST.md"
       - "docs/DISTRIBUTION_V0.1.md"
       - "docs/EMBEDDED_SDK.md"
@@ -24,18 +24,18 @@ on:
         required: true
         type: string
       publish:
-        description: "Create GitHub v0.1.0 release after verification"
+        description: "Create the current project-version GitHub Release after verification"
         required: true
         type: boolean
         default: false
       confirm_version:
-        description: "Type v0.1.0 for real publication"
+        description: "Type the current project tag exactly"
         required: false
         type: string
         default: ""
 
 concurrency:
-  group: kcc-release-v0.1.0-${{ github.event.pull_request.number || inputs.target_sha || github.ref }}
+  group: kcc-release-${{ github.event.pull_request.number || inputs.target_sha || github.ref }}
   cancel-in-progress: false
 
 permissions:
@@ -58,6 +58,17 @@ jobs:
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.11"
+
+      - name: Resolve project release metadata
+        run: |
+          set -euo pipefail
+          VERSION="$(python scripts/release_version.py version)"
+          TAG="$(python scripts/release_version.py tag)"
+          NOTES="$(python scripts/release_version.py notes)"
+          test -f "$NOTES"
+          echo "KCC_VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "KCC_TAG=$TAG" >> "$GITHUB_ENV"
+          echo "KCC_RELEASE_NOTES=$NOTES" >> "$GITHUB_ENV"
 
       - name: Verify exact manual target
         if: github.event_name == 'workflow_dispatch'
@@ -82,7 +93,7 @@ jobs:
           set -euo pipefail
           test "$KCC_REF" = "refs/heads/main"
           test "$TARGET_SHA" = "$WORKFLOW_SHA"
-          test "$KCC_CONFIRM_VERSION" = "v0.1.0"
+          test "$KCC_CONFIRM_VERSION" = "$KCC_TAG"
 
           gh api --method GET             "repos/$KCC_REPOSITORY/actions/runs?head_sha=$TARGET_SHA&status=success&per_page=100"             > /tmp/kcc-success-runs.json
           python - <<'PY'
@@ -100,12 +111,12 @@ jobs:
               raise SystemExit("target SHA has no successful main push test workflow")
           PY
 
-          if gh api "repos/$KCC_REPOSITORY/git/ref/tags/v0.1.0" >/dev/null 2>&1; then
-            echo "v0.1.0 tag already exists; refusing publication" >&2
+          if gh api "repos/$KCC_REPOSITORY/git/ref/tags/$KCC_TAG" >/dev/null 2>&1; then
+            echo "$KCC_TAG tag already exists; refusing publication" >&2
             exit 1
           fi
-          if gh release view v0.1.0 --repo "$KCC_REPOSITORY" >/dev/null 2>&1; then
-            echo "v0.1.0 release already exists; refusing publication" >&2
+          if gh release view "$KCC_TAG" --repo "$KCC_REPOSITORY" >/dev/null 2>&1; then
+            echo "$KCC_TAG release already exists; refusing publication" >&2
             exit 1
           fi
 
@@ -149,6 +160,8 @@ jobs:
           python scripts/release_checksums.py
           test "$(ls dist/*.whl | wc -l)" -eq 1
           test "$(ls dist/*.tar.gz | wc -l)" -eq 1
+          test -f "dist/$(python scripts/release_version.py wheel)"
+          test -f "dist/$(python scripts/release_version.py sdist)"
           test -f dist/SHA256SUMS
 
       - name: Clean-install exact wheel payload
@@ -156,15 +169,17 @@ jobs:
           set -euo pipefail
           python -m venv /tmp/kcc-release-install
           /tmp/kcc-release-install/bin/pip install --no-deps dist/*.whl
-          /tmp/kcc-release-install/bin/python - <<'PY'
+          EXPECTED_VERSION="$KCC_VERSION" /tmp/kcc-release-install/bin/python - <<'PY'
+          import os
           from importlib import metadata
           import kavi_capability_compiler as kcc
-          assert metadata.version("kavi-capability-compiler")=="0.1.0"
-          assert kcc.__version__=="0.1.0"
+          expected=os.environ["EXPECTED_VERSION"]
+          assert metadata.version("kavi-capability-compiler")==expected
+          assert kcc.__version__==expected
           assert kcc.SDK_VERSION=="kcc.sdk.v1"
           assert callable(kcc.Guard)
           PY
-          /tmp/kcc-release-install/bin/kcc --version | grep -Fx '0.1.0'
+          /tmp/kcc-release-install/bin/kcc --version | grep -Fx "$KCC_VERSION"
 
       - name: Build and verify Simple Repository index
         run: |
@@ -174,7 +189,7 @@ jobs:
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: kcc-v0.1.0-release-artifacts
+          name: kcc-release-artifacts
           path: |
             dist/*.whl
             dist/*.tar.gz
@@ -197,10 +212,21 @@ jobs:
           persist-credentials: false
           fetch-depth: 1
 
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+
+      - name: Resolve project release metadata
+        run: |
+          set -euo pipefail
+          echo "KCC_VERSION=$(python scripts/release_version.py version)" >> "$GITHUB_ENV"
+          echo "KCC_TAG=$(python scripts/release_version.py tag)" >> "$GITHUB_ENV"
+          echo "KCC_RELEASE_NOTES=$(python scripts/release_version.py notes)" >> "$GITHUB_ENV"
+
       - name: Download verified release payload
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: kcc-v0.1.0-release-artifacts
+          name: kcc-release-artifacts
           path: payload
 
       - name: Reverify exact release payload
@@ -210,6 +236,8 @@ jobs:
           sha256sum --check SHA256SUMS
           test "$(ls *.whl | wc -l)" -eq 1
           test "$(ls *.tar.gz | wc -l)" -eq 1
+          test -f "$(python "$GITHUB_WORKSPACE/scripts/release_version.py" wheel)"
+          test -f "$(python "$GITHUB_WORKSPACE/scripts/release_version.py" sdist)"
 
       - name: Create draft release, attach verified assets, then publish
         env:
@@ -218,19 +246,24 @@ jobs:
           KCC_REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
+          gh release create "$KCC_TAG"             --repo "$KCC_REPOSITORY"             --target "$TARGET_SHA"             --title "KAVI Capability Compiler $KCC_TAG"             --notes-file "$KCC_RELEASE_NOTES"             --draft             payload/dist/*.whl payload/dist/*.tar.gz payload/dist/SHA256SUMS
+          test "$(gh release view "$KCC_TAG" --repo "$KCC_REPOSITORY" --json isDraft --jq .isDraft)" = "true"
+          gh release edit "$KCC_TAG" --repo "$KCC_REPOSITORY" --draft=false
+          test "$(gh release view "$KCC_TAG" --repo "$KCC_REPOSITORY" --json isDraft --jq .isDraft)" = "false"
 
-          gh release create v0.1.0 \
-            --repo "$KCC_REPOSITORY" \
-            --target "$TARGET_SHA" \
-            --title "KAVI Capability Compiler v0.1.0" \
-            --notes-file docs/RELEASE_NOTES_V0.1.md \
-            --draft \
-            payload/dist/*.whl payload/dist/*.tar.gz payload/dist/SHA256SUMS
-
-          test "$(gh release view v0.1.0 --repo "$KCC_REPOSITORY" --json isDraft --jq .isDraft)" = "true"
-
-          gh release edit v0.1.0 \
-            --repo "$KCC_REPOSITORY" \
-            --draft=false
-
-          test "$(gh release view v0.1.0 --repo "$KCC_REPOSITORY" --json isDraft --jq .isDraft)" = "false"
+      - name: Verify published release immutability
+        env:
+          GH_TOKEN: ${{ github.token }}
+          KCC_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$KCC_REPOSITORY/releases/tags/$KCC_TAG" > /tmp/kcc-published-release.json
+          EXPECTED_TAG="$KCC_TAG" python - <<'PY'
+          import json,os
+          release=json.load(open("/tmp/kcc-published-release.json"))
+          assert release["tag_name"]==os.environ["EXPECTED_TAG"]
+          assert release["draft"] is False
+          if release.get("immutable") is not True:
+              raise SystemExit("published release is not protected by GitHub Immutable Releases")
+          print("KCC_PUBLISHED_RELEASE_IMMUTABLE: PASS")
+          PY
