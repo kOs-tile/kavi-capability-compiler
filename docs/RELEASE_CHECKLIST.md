@@ -36,6 +36,9 @@
 - [x] CI actions are pinned to immutable commit SHAs and checkout credentials are not persisted
 - [x] release verification toolchain is version-pinned
 - [x] zero-dependency security preflight checks workflow refs and obvious secret material
+- [x] Python 3.11/3.12/3.13/3.14 core compatibility is CI-gated
+- [x] source distribution clean-install smoke is CI-gated
+- [x] optional dependency tree is checked with pinned PyPA pip-audit before release
 
 ## Documentation
 - [x] README describes v0.1 behavior
