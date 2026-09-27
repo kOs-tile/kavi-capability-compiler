@@ -1,6 +1,9 @@
 import json
 from pathlib import Path
 
+from jsonschema import Draft202012Validator
+
+from kavi_capability_compiler import get_schema
 from kavi_capability_compiler.core import authorize_call, compile_capsule
 from case_studies.kavi.kavi_dispatch import scan_kavi_dispatch_contract
 
@@ -21,6 +24,7 @@ def _inventory():
 def test_kavi_adapter_preserves_authoritative_surface_and_provenance():
     inv=_inventory()
     assert inv["version"]=="kcc.inventory.v1"
+    Draft202012Validator(get_schema("kcc.inventory.v1")).validate(inv)
     assert len(inv["capabilities"])==5
     assert inv["provenance"]["sha"]=="80f521a9aba225bbc5abcb815feae24569fa8098"
     by_name={x["name"]:x for x in inv["capabilities"]}
