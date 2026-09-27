@@ -208,6 +208,53 @@ def _validate_parameter_constraints(capability, constraints):
         if unknown:
             raise ValueError(f"Constraint references unknown parameter(s) for {capability['id']}: {unknown}")
 
+    supported_rule_keys={"required","type","min","max","enum","max_length","pattern"}
+    supported_types={"string","integer","number","boolean","array","object"}
+    for key, rule in params.items():
+        if not isinstance(rule,dict):
+            continue
+
+        unsupported=sorted(set(rule)-supported_rule_keys)
+        if unsupported:
+            raise ValueError(
+                f"Unsupported parameter rule(s) for {capability['id']}.{key}: {unsupported}"
+            )
+
+        if "required" in rule and not isinstance(rule["required"],bool):
+            raise ValueError(f"Invalid required rule for {capability['id']}.{key}")
+
+        if "type" in rule:
+            if not isinstance(rule["type"],str) or rule["type"] not in supported_types:
+                raise ValueError(f"Unsupported parameter type rule for {capability['id']}.{key}")
+
+        for bound in ("min","max"):
+            if bound in rule:
+                value=rule[bound]
+                if not isinstance(value,(int,float)) or isinstance(value,bool):
+                    raise ValueError(f"Invalid {bound} rule for {capability['id']}.{key}")
+
+        if "min" in rule and "max" in rule and rule["min"] > rule["max"]:
+            raise ValueError(f"Invalid numeric range for {capability['id']}.{key}")
+
+        if "enum" in rule and not isinstance(rule["enum"],(list,tuple)):
+            raise ValueError(f"Invalid enum rule for {capability['id']}.{key}")
+
+        if "max_length" in rule:
+            value=rule["max_length"]
+            if not isinstance(value,int) or isinstance(value,bool) or value < 0:
+                raise ValueError(f"Invalid max_length rule for {capability['id']}.{key}")
+
+        if "pattern" in rule:
+            pattern=rule["pattern"]
+            if not isinstance(pattern,str):
+                raise ValueError(f"Invalid pattern rule for {capability['id']}.{key}")
+            try:
+                re.compile(pattern)
+            except re.error as exc:
+                raise ValueError(
+                    f"Invalid pattern rule for {capability['id']}.{key}"
+                ) from exc
+
 def compile_capsule(inv,intent,policy,now=None):
     if inv.get("version") != INVENTORY_VERSION:
         raise ValueError(f"Unsupported inventory contract: {inv.get('version')}")
@@ -524,10 +571,22 @@ def authorize_call(cap, capability_id, operation=None, parameters=None, now=None
                 if expected is None: return {"allowed":False,"reason":f"unsupported_parameter_type_rule:{key}"}
                 if not isinstance(value,expected) or (rule["type"] in {"integer","number"} and isinstance(value,bool)):
                     return {"allowed":False,"reason":f"parameter_type_mismatch:{key}"}
-            if "max" in rule and value > rule["max"]: return {"allowed":False,"reason":f"parameter_above_max:{key}"}
-            if "min" in rule and value < rule["min"]: return {"allowed":False,"reason":f"parameter_below_min:{key}"}
+            if "max" in rule:
+                try:
+                    if value > rule["max"]: return {"allowed":False,"reason":f"parameter_above_max:{key}"}
+                except (TypeError,ValueError):
+                    return {"allowed":False,"reason":f"parameter_type_mismatch:{key}"}
+            if "min" in rule:
+                try:
+                    if value < rule["min"]: return {"allowed":False,"reason":f"parameter_below_min:{key}"}
+                except (TypeError,ValueError):
+                    return {"allowed":False,"reason":f"parameter_type_mismatch:{key}"}
             if "enum" in rule and value not in rule["enum"]: return {"allowed":False,"reason":f"parameter_not_allowed:{key}"}
-            if "max_length" in rule and len(value) > rule["max_length"]: return {"allowed":False,"reason":f"parameter_too_long:{key}"}
+            if "max_length" in rule:
+                try:
+                    if len(value) > rule["max_length"]: return {"allowed":False,"reason":f"parameter_too_long:{key}"}
+                except TypeError:
+                    return {"allowed":False,"reason":f"parameter_type_mismatch:{key}"}
             if "pattern" in rule and not re.fullmatch(rule["pattern"],str(value)): return {"allowed":False,"reason":f"parameter_pattern_mismatch:{key}"}
         elif value != rule:
             return {"allowed":False,"reason":f"parameter_mismatch:{key}"}

@@ -13,7 +13,7 @@ KCC `kcc.capsule.v1` capsules are deny-by-default authority artifacts.
 7. parameter constraints, when present, accept the supplied values;
 8. when a current inventory is bound, that inventory still matches the capsule's compiled authority surface.
 
-Current parameter constraints support exact-value rules and structured rules for `required`, primitive `type`, numeric `min`/`max`, `enum`, `max_length`, and regex `pattern`.
+Current parameter constraints support exact-value rules and structured rules for `required`, primitive `type`, numeric `min`/`max`, `enum`, `max_length`, and regex `pattern`. Structured rule objects are validated at compile time: unknown rule keys and malformed rule values are rejected rather than silently ignored.
 
 When a capsule includes a `parameters` constraint object, its keys are also an allowlist. A runtime parameter that is not named in that object is rejected with `parameter_not_granted:<name>`. Use an empty rule object (`{}`) to explicitly permit a parameter without narrowing its value.
 
@@ -51,7 +51,7 @@ Every authorization exception exposes the exact decision as `.decision` and its 
 
 ## Fail-closed behavior
 
-Approval entries are not executable grants. Unsupported capsule versions, missing `fail_closed=true`, malformed capsule structures, invalid bound-inventory integrity, inventory drift, expired capsules, explicit denials, absent grants, operation mismatches, undeclared parameter keys, and parameter mismatches are rejected before host dispatch.
+Approval entries are not executable grants. Unsupported capsule versions, missing `fail_closed=true`, malformed capsule structures, invalid bound-inventory integrity, inventory drift, expired capsules, explicit denials, absent grants, operation mismatches, undeclared parameter keys, unsupported/malformed parameter rules, and parameter mismatches are rejected before host dispatch. Runtime values that cannot be evaluated against numeric or length bounds fail closed with `parameter_type_mismatch:<name>` rather than escaping the Guard as a comparison error.
 
 KCC does not authenticate application users, provide IAM/KMS/secrets management, sandbox the underlying tool, or evaluate arbitrary JSON Schema predicates at runtime. Those remain host responsibilities.
 
