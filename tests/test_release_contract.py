@@ -59,6 +59,7 @@ def test_project_specific_case_study_code_is_not_in_core_package():
     assert Path("case_studies/kavi/kavi_dispatch.py").is_file()
     assert Path("case_studies/kavi/live_probe.py").is_file()
 
+
 def test_release_workflow_security_contract():
     from scripts.verify_release_workflow_dry_run import main
-    main()
+    main(".github/workflows/release.yml")
