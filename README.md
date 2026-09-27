@@ -98,7 +98,7 @@ After the optional GitHub Pages Simple Repository index is enabled, pip can also
 python -m pip install --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/ kavi-capability-compiler
 ```
 
-PyPI will be added later as a mirror of the exact same immutable v0.1.0 artifacts; v0.1.0 will not be rebuilt for PyPI.
+PyPI may be added later as a mirror of the exact same verified v0.1.0 artifacts; v0.1.0 will not be rebuilt for PyPI.
 
 For repository development:
 
@@ -121,11 +121,25 @@ kcc discover-config mcp.json my-server \
   -o discovery.json --lock-output inventory.lock.json
 ```
 
+## Try KCC and report what breaks
+
+v0.2 development is feedback-driven. The most useful reports are reproducible cases where KCC is hard to embed, classifies authority unexpectedly, blocks legitimate authority, or fails to block authority that should require denial or approval.
+
+Use the GitHub issue chooser and select the closest report type:
+
+- **Integration friction** for adapter, install, framework, dispatcher, or embedding problems.
+- **Authority misclassification** when observed effect/risk/decision semantics differ from the expected result.
+- **Bug report** for deterministic correctness failures that are not security-sensitive.
+
+Do not paste credentials, tokens, private endpoints, or proprietary capability definitions that you cannot share. If a report could expose credentials, bypass a capsule/Guard boundary, forge trust, or cause a denied call to reach the host dispatcher, use GitHub's private security advisory flow instead of a public issue.
+
+See `docs/FEEDBACK_V0.2.md` for the minimum reproduction bundle.
+
 ## Current boundary
 
 KCC is not a hosted gateway, desktop service, local daemon, IAM replacement, secret manager, or autonomous remediation system. Live discovery does not automatically execute discovered tools. Runtime enforcement is intentionally a small portable primitive.
 
-M0–M11 engineering is complete and v0.1.0 is published through GitHub Release. The release artifacts were reproduced, checksummed, clean-installed, and matched against the public GitHub asset digests. A standards-compliant Simple Repository index can be deployed through GitHub Pages; PyPI remains a later mirror.
+M0–M11 engineering is complete and v0.1.0 is published through GitHub Release. The release artifacts were reproduced, checksummed, clean-installed, and matched against the public GitHub asset digests. The standards-compliant Simple Repository index is live on GitHub Pages; PyPI remains an optional later mirror.
 
 See `docs/EMBEDDED_SDK.md`, `docs/SDK_COMPATIBILITY.md`, `docs/ADVERSARIAL_SDK.md`, `docs/UNIVERSAL_MANIFEST.md`, `docs/INTEGRATION_RECIPES.md`, `docs/OPENAI_AGENTS_VALIDATION.md`, `docs/ANTHROPIC_SDK_VALIDATION.md`, `docs/LANGGRAPH_TOOLNODE_VALIDATION.md`, `docs/EXTERNAL_VALIDATION_V0.1.md`, and `docs/BENCHMARK_REPORT_V0.1.md`.
 

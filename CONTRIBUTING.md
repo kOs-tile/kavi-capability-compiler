@@ -23,6 +23,26 @@ pytest -q
 9. Add a regression test for every security-relevant bug.
 10. Public benchmark claims must identify whether data is development, holdout, or regression evidence.
 
+## Reporting feedback and bugs
+
+For v0.2, feedback should be reproducible and privacy-safe.
+
+Include the smallest useful reproduction:
+- KCC version and Python version
+- source format or adapter used
+- relevant framework/runtime version, if any
+- a minimized/redacted capability definition
+- task intent and policy fragment needed to reproduce
+- expected authority/effect/risk result
+- actual result
+- exact command or minimal code path
+
+Never include API keys, bearer tokens, cookies, private repository credentials, secret headers, or production-only proprietary data.
+
+If the behavior could allow a denied operation to reach the host dispatcher, expose secrets, forge a signed capsule, bypass approval, or otherwise cross a security boundary, do not file it publicly. Use the repository's private security advisory flow.
+
+See `docs/FEEDBACK_V0.2.md`.
+
 ## Pull requests
 
 A change is ready when:

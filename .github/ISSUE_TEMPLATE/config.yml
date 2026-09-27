@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/kOs-tile/kavi-capability-compiler/security/advisories/new
+    about: Report security-sensitive bypasses, credential exposure, forged trust, or denied-call execution privately.

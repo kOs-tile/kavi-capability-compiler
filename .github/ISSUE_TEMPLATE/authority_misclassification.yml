@@ -1,0 +1,81 @@
+name: Authority misclassification
+description: Report an authority/effect/risk classification that differs from the expected semantics.
+title: "[authority] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for false-positive/false-negative authority semantics, over-blocking, or unexpected approval/deny behavior.
+        If the case demonstrates an exploitable bypass, denied-call execution, forged trust, or secret exposure, stop and use a private security advisory instead.
+  - type: input
+    id: version
+    attributes:
+      label: KCC version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: source
+    attributes:
+      label: Capability source format
+      options:
+        - kcc.capabilities.v1
+        - Generic JSON
+        - MCP
+        - OpenAI tool shape
+        - Anthropic tool shape
+        - OpenAPI
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: capability
+    attributes:
+      label: Minimized capability definition
+      description: Redact secrets and proprietary fields. Include only what is needed to reproduce.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: intent_policy
+    attributes:
+      label: Relevant task intent / policy
+      description: Include only the minimal intent/policy fragment needed to reproduce.
+      render: json
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected authority semantics
+      description: What effect/risk/decision should KCC produce, and why?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual KCC result
+      description: Include the observed effect/risk/decision and any useful CLI/SDK output.
+    validations:
+      required: true
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact class
+      options:
+        - Over-blocking / legitimate authority denied
+        - Unnecessary approval required
+        - Authority appears broader than task requires
+        - Authority appears narrower than task requires
+        - Effect / risk classification mismatch
+        - Unknown classification unexpectedly produced
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed secrets and sensitive production data.
+          required: true
+        - label: This case does not disclose an exploitable security-boundary bypass; otherwise I will use a private advisory.
+          required: true
