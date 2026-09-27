@@ -208,6 +208,9 @@ def compile_capsule(inv,intent,policy,now=None):
     task=intent.get("task")
     if task is not None and not isinstance(task,str):
         raise ValueError("Task must be a string or null")
+    global_constraints=intent.get("constraints",{})
+    if not isinstance(global_constraints,dict):
+        raise ValueError("Intent constraints must be an object")
     now=int(now if now is not None else time.time()); by_id={c["id"]:c for c in inv["capabilities"]}
     grants=[]; approvals=[]; denials=[]
     for cid in intent.get("capabilities",[]):
@@ -228,7 +231,7 @@ def compile_capsule(inv,intent,policy,now=None):
     status="denied" if denials else ("approval_required" if approvals else "ready")
     cap={"version":CAPSULE_VERSION,"status":status,"issued_at":now,"expires_at":now+ttl,
         "inventory_digest":inv["digest"],"intent_digest":digest(intent),"policy_digest":digest(policy),
-        "task":task,"constraints":intent.get("constraints",{}),
+        "task":task,"constraints":global_constraints,
         "grants":grants,"approvals":approvals,"denials":denials,"fail_closed":True}
     cap["capsule_id"]=digest(cap)
     return cap
