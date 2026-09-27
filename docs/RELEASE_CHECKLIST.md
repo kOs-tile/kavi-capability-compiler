@@ -43,6 +43,9 @@
 - [x] external runtime validation evidence and limitations are consolidated in `docs/EXTERNAL_VALIDATION_V0.1.md`
 
 ## Publication
+- [ ] create protected GitHub Environment `pypi` with a required reviewer
+- [ ] configure PyPI pending Trusted Publisher for `kOs-tile/kavi-capability-compiler`, workflow `release.yml`, environment `pypi`
+- [ ] activate the production publication jobs only after both trust bindings above exist
 - [ ] create `v0.1.0` tag
 - [ ] create GitHub Release from `docs/RELEASE_NOTES_V0.1.md`
 - [ ] attach/rebuild wheel, sdist, and checksums for the release commit

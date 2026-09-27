@@ -88,3 +88,23 @@ read-only and is not left configured in the repository working tree.
 The optional signing dependency requires a vulnerability-audited
 `cryptography>=50.0.1,<51` release line; older vulnerable release lines are
 not accepted by the signing extra.
+
+## Publication trust boundary
+
+The production release workflow separates build, PyPI publication, registry
+verification, and GitHub Release creation into distinct jobs.
+
+The artifact is built once from an exact 40-character commit SHA, then moved
+between jobs through GitHub Actions artifacts. Publication jobs do not rebuild
+the package.
+
+PyPI publication requires a protected GitHub Environment named `pypi` and
+uses Trusted Publishing/OIDC. No long-lived PyPI credential is stored. The PyPI
+job receives `id-token: write` but not repository write authority. The GitHub
+Release job receives `contents: write` but no OIDC permission. Both jobs are
+gated by the protected environment.
+
+Before first publication, the workflow fails closed if the PyPI project name is
+already registered, if the intended Git tag already exists, if the requested
+release SHA is not the current `main` head, or if any artifact checksum differs
+from the verified build payload.
