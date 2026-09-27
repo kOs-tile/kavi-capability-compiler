@@ -17,8 +17,11 @@ def section(text: str, start: str, end: str | None = None) -> str:
     return text[left:right]
 
 
-def main() -> None:
-    path=Path(sys.argv[1]) if len(sys.argv)>1 else Path(".github/workflows/release.yml")
+def main(path: str | Path | None = None) -> None:
+    if path is None:
+        path=Path(sys.argv[1]) if len(sys.argv)>1 else Path(".github/workflows/release.yml")
+    else:
+        path=Path(path)
     text=path.read_text()
 
     if "pull_request_target:" in text:
