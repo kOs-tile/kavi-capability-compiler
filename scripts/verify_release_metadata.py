@@ -37,7 +37,7 @@ def main() -> None:
     require("CHANGELOG.md","## 0.1.0")
     require("docs/RELEASE_NOTES_V0.1.md","# KAVI Capability Compiler v0.1.0")
     require("docs/RELEASE_CHECKLIST.md","# v0.1 Release Checklist")
-    require("docs/DISTRIBUTION_V0.1.md","KCC v0.1.0 launches through GitHub Release first.")
+    distribution=Path("docs/DISTRIBUTION_V0.1.md").read_text()\n    if not any(marker in distribution for marker in (\n        "KCC v0.1.0 launches through GitHub Release first.",\n        "KCC v0.1.0 is published through GitHub Release.",\n    )):\n        raise SystemExit("docs/DISTRIBUTION_V0.1.md: missing GitHub-first distribution marker")
     require("README.md",EXPECTED_DIRECT_WHEEL)
     require("docs/RELEASE_NOTES_V0.1.md",EXPECTED_DIRECT_WHEEL)
     require("SECURITY.md","cryptography>=50.0.1,<51")
