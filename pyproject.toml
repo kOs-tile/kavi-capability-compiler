@@ -35,7 +35,7 @@ all = ["mcp>=2.2,<3", "httpx2>=2.5.0", "cryptography>=42,<49"]
 kcc = "kavi_capability_compiler.cli:main"
 
 [tool.pytest.ini_options]
-pythonpath = ["src"]
+pythonpath = ["src", "."]
 testpaths = ["tests"]
 
 
