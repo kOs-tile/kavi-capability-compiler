@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from kavi_capability_compiler.core import authorize_call, compile_capsule
-from kavi_capability_compiler.kavi_dispatch import scan_kavi_dispatch_contract
+from case_studies.kavi.kavi_dispatch import scan_kavi_dispatch_contract
 
 root=Path(__file__).parent
 raw=json.loads((root/"dispatch_contract.json").read_text())
