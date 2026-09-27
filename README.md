@@ -1,6 +1,6 @@
 # KAVI Capability Compiler
 
-> **Status — Active flagship.** M0, M1, and M2 exit gates are CI-backed and passed. M3A KAVI control-plane dogfood passed; M3B authenticated live observation is probe-ready and remains pending secure bearer availability.
+> **Status — v0.1 release candidate.** M0–M4 are shipped. M5 distribution hardening is complete on `main`; pre-publication M5.1 is freezing the remaining public authority contracts before any tag or PyPI release.
 
 KCC is a framework-agnostic **least-authority compiler for AI agents**.
 
@@ -60,6 +60,7 @@ These are benchmark checkpoint measurements, not production security guarantees.
 
 ### M3 framework-agnostic integration
 - universal `kcc.capabilities.v1` capability manifest
+- versioned `kcc.inventory.v1`, `kcc.inventory-lock.v1`, and `kcc.capsule.v1` contracts
 - adapters for MCP, OpenAI function tools, Anthropic tools, OpenAPI, and generic JSON
 - semantic fingerprints independent of source format/provenance
 - generic runtime guard in front of any caller-supplied dispatcher
@@ -117,7 +118,7 @@ KCC is not a hosted gateway, desktop service, local daemon, IAM replacement, sec
 
 M0–M4 exit gates have passed. KCC is now in v0.1 distribution hardening: package metadata, executable integration recipes, release artifacts, and documentation consistency.
 
-See `docs/EMBEDDED_SDK.md`, `docs/UNIVERSAL_MANIFEST.md`, `docs/INTEGRATION_RECIPES.md`, and `docs/BENCHMARK_REPORT_V0.1.md`.
+See `docs/EMBEDDED_SDK.md`, `docs/SDK_COMPATIBILITY.md`, `docs/UNIVERSAL_MANIFEST.md`, `docs/INTEGRATION_RECIPES.md`, and `docs/BENCHMARK_REPORT_V0.1.md`.
 
 ## Embed it into an existing agent
 
