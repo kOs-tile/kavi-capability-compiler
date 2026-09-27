@@ -7,6 +7,7 @@
   "properties": {
     "version": {"const": "kcc.inventory.v1"},
     "adapter": {"type": "string", "minLength": 1},
+    "provenance": {"type": "object"},
     "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
     "capabilities": {
       "type": "array",
