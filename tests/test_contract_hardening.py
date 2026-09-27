@@ -277,7 +277,7 @@ def test_inventory_lock_diff_rejects_tampered_current_inventory_integrity():
     inv=_inventory()
     lock=kcc.inventory_lock(inv)
     tampered=copy.deepcopy(inv)
-    tampered["capabilities"][0]["description"]="tampered without digest update"
+    tampered["capabilities"][0]["fingerprint"]="f"*64
 
     with pytest.raises(ValueError,match="Invalid inventory integrity"):
         kcc.diff_inventory_lock(lock,tampered)
