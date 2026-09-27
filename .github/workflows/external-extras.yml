@@ -1,0 +1,142 @@
+name: external-extras-dogfood
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/external-extras.yml"
+      - "scripts/external_extras_dogfood.py"
+      - "docs/EXTERNAL_EXTRAS_DOGFOOD.md"
+
+permissions:
+  contents: read
+
+jobs:
+  extras:
+    name: python-${{ matrix.python }} / ${{ matrix.extra }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.14"]
+        extra: ["signing", "mcp", "all"]
+
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python }}
+          check-latest: false
+
+      - name: Create isolated consumer environment
+        run: |
+          set -euo pipefail
+          python -m venv /tmp/kcc-extras
+          cd /tmp
+          PYTHONPATH="" /tmp/kcc-extras/bin/python - <<'PY'
+          import importlib.util
+          assert importlib.util.find_spec("kavi_capability_compiler") is None
+          PY
+
+      - name: Install exact GitHub Release wheel with requested extra
+        env:
+          EXTRA: ${{ matrix.extra }}
+        run: |
+          set -euo pipefail
+          cd /tmp
+          PYTHONPATH="" /tmp/kcc-extras/bin/python -m pip install             --disable-pip-version-check             --no-cache-dir             "kavi-capability-compiler[${EXTRA}] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
+
+      - name: Exercise installed optional extra
+        env:
+          EXTRA: ${{ matrix.extra }}
+          PYTHON_VERSION: ${{ matrix.python }}
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/kcc-extras-dogfood
+          mkdir -p /tmp/kcc-extras-dogfood
+          cp "$GITHUB_WORKSPACE/scripts/external_extras_dogfood.py" /tmp/kcc-extras-dogfood/
+          cd /tmp/kcc-extras-dogfood
+          PYTHONPATH="" /tmp/kcc-extras/bin/python external_extras_dogfood.py             --extra "$EXTRA"             --output "$GITHUB_WORKSPACE/evidence/${PYTHON_VERSION}-${EXTRA}.json"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: kcc-external-extras-${{ matrix.python }}-${{ matrix.extra }}
+          path: evidence/*.json
+          if-no-files-found: error
+          retention-days: 14
+
+  aggregate:
+    name: aggregate-extras-evidence
+    needs: extras
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: kcc-external-extras-*
+          path: /tmp/evidence
+          merge-multiple: true
+
+      - name: Verify complete optional-extras cohort
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          files=sorted(Path("/tmp/evidence").glob("*.json"))
+          if len(files)!=6:
+              raise SystemExit(f"expected 6 evidence files, got {len(files)}")
+
+          rows=[json.loads(path.read_text()) for path in files]
+          expected={
+              (python,extra)
+              for python in ("3.11","3.14")
+              for extra in ("signing","mcp","all")
+          }
+          actual={
+              (".".join(row["python"].split(".")[:2]),row["extra"])
+              for row in rows
+          }
+          if actual!=expected:
+              raise SystemExit(f"cohort mismatch: {sorted(actual)}")
+          if not all(row.get("pass") is True for row in rows):
+              raise SystemExit("one or more optional-extras cells failed")
+
+          for row in rows:
+              extra=row["extra"]
+              if extra in {"signing","all"} and "signing" not in row:
+                  raise SystemExit(f"missing signing evidence for {extra}")
+              if extra in {"mcp","all"} and "mcp" not in row:
+                  raise SystemExit(f"missing MCP evidence for {extra}")
+
+          combined={
+              "schema":"kcc.external-extras-cohort.v1",
+              "pass":True,
+              "cells":rows,
+          }
+          Path("/tmp/kcc-external-extras-cohort.json").write_text(
+              json.dumps(combined,indent=2,sort_keys=True)+"\n"
+          )
+          print(json.dumps({
+              "validation":"KCC_EXTERNAL_EXTRAS_COHORT",
+              "cells":len(rows),
+              "pass":True,
+          },sort_keys=True))
+          PY
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: kcc-external-extras-cohort
+          path: /tmp/kcc-external-extras-cohort.json
+          if-no-files-found: error
+          retention-days: 30
