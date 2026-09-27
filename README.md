@@ -116,7 +116,7 @@ kcc discover-config mcp.json my-server \
 
 KCC is not a hosted gateway, desktop service, local daemon, IAM replacement, secret manager, or autonomous remediation system. Live discovery does not automatically execute discovered tools. Runtime enforcement is intentionally a small portable primitive.
 
-M2's recorded exit gate passes. M3 now focuses on a universal capability contract so existing runtimes can integrate without framework migration. Specific agent systems are optional validation targets.
+M0–M4 exit gates have passed. KCC is now in v0.1 distribution hardening: package metadata, executable integration recipes, release artifacts, and documentation consistency.
 
 See `docs/M2_EXIT.md`, `docs/RUNTIME_AUTHORIZATION.md`, and `docs/EXECUTION_EVIDENCE.md`.
 
