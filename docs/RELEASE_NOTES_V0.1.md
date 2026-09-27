@@ -56,16 +56,13 @@ See `docs/BENCHMARK_REPORT_V0.1.md` for limitations and exact interpretation.
 
 ## Install
 
-```bash
-pip install kavi-capability-compiler
-```
-
-Optional extras:
+Until the PyPI mirror is available, install the exact v0.1.0 wheel from this GitHub Release:
 
 ```bash
-pip install "kavi-capability-compiler[mcp]"
-pip install "kavi-capability-compiler[signing]"
+python -m pip install https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl
 ```
+
+The release includes the wheel, source distribution, and `SHA256SUMS`. An optional standards-compliant Simple Repository index can expose these same release assets through GitHub Pages without rebuilding them.
 
 ## Important limits
 

@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - ".github/workflows/release.yml"
+      - ".github/workflows/pages.yml"
       - "pyproject.toml"
       - "src/kavi_capability_compiler/**"
       - "scripts/**"
@@ -17,13 +18,23 @@ on:
   workflow_dispatch:
     inputs:
       target_sha:
-        description: "Exact 40-character commit SHA to build"
+        description: "Exact 40-character main commit SHA to build"
         required: true
         type: string
+      publish:
+        description: "Create GitHub v0.1.0 release after verification"
+        required: true
+        type: boolean
+        default: false
+      confirm_version:
+        description: "Type v0.1.0 for real publication"
+        required: false
+        type: string
+        default: ""
 
 concurrency:
-  group: kcc-release-dry-run-${{ github.event.pull_request.number || inputs.target_sha || github.ref }}
-  cancel-in-progress: true
+  group: kcc-release-v0.1.0-${{ github.event.pull_request.number || inputs.target_sha || github.ref }}
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -31,32 +42,84 @@ permissions:
 jobs:
   build-release-artifacts:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.target_sha || github.sha }}
           persist-credentials: false
           fetch-depth: 1
+
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.11"
+
       - name: Verify exact manual target
         if: github.event_name == 'workflow_dispatch'
         env:
           TARGET_SHA: ${{ inputs.target_sha }}
         run: |
+          set -euo pipefail
           [[ "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]]
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          printf '%s' "$TARGET_SHA" > /tmp/kcc-target-sha
+
+      - name: Require current green main for publication
+        if: github.event_name == 'workflow_dispatch' && inputs.publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ inputs.target_sha }}
+          WORKFLOW_SHA: ${{ github.sha }}
+          KCC_REF: ${{ github.ref }}
+          KCC_CONFIRM_VERSION: ${{ inputs.confirm_version }}
+          KCC_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test "$KCC_REF" = "refs/heads/main"
+          test "$TARGET_SHA" = "$WORKFLOW_SHA"
+          test "$KCC_CONFIRM_VERSION" = "v0.1.0"
+
+          gh api --method GET             "repos/$KCC_REPOSITORY/actions/runs?head_sha=$TARGET_SHA&status=success&per_page=100"             > /tmp/kcc-success-runs.json
+          python - <<'PY'
+          import json
+          rows=json.load(open("/tmp/kcc-success-runs.json"))["workflow_runs"]
+          target=open("/tmp/kcc-target-sha","r").read().strip()
+          valid=any(
+              row.get("name")=="test"
+              and row.get("event")=="push"
+              and row.get("head_sha")==target
+              and row.get("conclusion")=="success"
+              for row in rows
+          )
+          if not valid:
+              raise SystemExit("target SHA has no successful main push test workflow")
+          PY
+
+          if gh api "repos/$KCC_REPOSITORY/git/ref/tags/v0.1.0" >/dev/null 2>&1; then
+            echo "v0.1.0 tag already exists; refusing publication" >&2
+            exit 1
+          fi
+          if gh release view v0.1.0 --repo "$KCC_REPOSITORY" >/dev/null 2>&1; then
+            echo "v0.1.0 release already exists; refusing publication" >&2
+            exit 1
+          fi
+
       - name: Verify workflow and release metadata gates
         run: |
           python scripts/verify_workflow_action_pins.py .github/workflows
-          python scripts/verify_release_workflow_dry_run.py .github/workflows/release.yml
+          python scripts/verify_release_workflow.py .github/workflows/release.yml
+          python scripts/verify_pages_workflow.py .github/workflows/pages.yml
           python scripts/verify_release_metadata.py
+
       - name: Install pinned release tooling
         run: python -m pip install "build==1.6.1" "twine==7.0.0" "wheel==0.48.0" "setuptools==84.0.0"
+
       - name: Build twice from the checked-out commit
         run: |
+          set -euo pipefail
           export SOURCE_DATE_EPOCH="$(git log -1 --format=%ct)"
           echo "$SOURCE_DATE_EPOCH" > /tmp/kcc-release-epoch
           rm -rf build dist /tmp/kcc-release-a /tmp/kcc-release-b
@@ -65,25 +128,92 @@ jobs:
           rm -rf build
           find src -maxdepth 1 -name '*.egg-info' -type d -exec rm -rf {} +
           python -m build --no-isolation --outdir /tmp/kcc-release-b
+
       - name: Canonicalize and verify release artifacts
         run: |
+          set -euo pipefail
           epoch="$(cat /tmp/kcc-release-epoch)"
           python scripts/normalize_sdist.py /tmp/kcc-release-a/*.tar.gz "$epoch"
           python scripts/normalize_sdist.py /tmp/kcc-release-b/*.tar.gz "$epoch"
           python scripts/verify_reproducible_builds.py /tmp/kcc-release-a /tmp/kcc-release-b
           python -m twine check /tmp/kcc-release-a/*
-      - name: Stage exact dry-run release payload
+
+      - name: Stage exact verified release payload
         run: |
+          set -euo pipefail
           rm -rf dist
           mkdir dist
           cp /tmp/kcc-release-a/*.whl /tmp/kcc-release-a/*.tar.gz dist/
           python scripts/release_checksums.py
+          test "$(ls dist/*.whl | wc -l)" -eq 1
+          test "$(ls dist/*.tar.gz | wc -l)" -eq 1
+          test -f dist/SHA256SUMS
+
+      - name: Clean-install exact wheel payload
+        run: |
+          set -euo pipefail
+          python -m venv /tmp/kcc-release-install
+          /tmp/kcc-release-install/bin/pip install --no-deps dist/*.whl
+          /tmp/kcc-release-install/bin/python - <<'PY'
+          from importlib import metadata
+          import kavi_capability_compiler as kcc
+          assert metadata.version("kavi-capability-compiler")=="0.1.0"
+          assert kcc.__version__=="0.1.0"
+          assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          assert callable(kcc.Guard)
+          PY
+          /tmp/kcc-release-install/bin/kcc --version | grep -Fx '0.1.0'
+
+      - name: Build and verify Simple Repository index
+        run: |
+          set -euo pipefail
+          python scripts/build_simple_index.py dist site
+          python scripts/verify_simple_index.py site
+
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: kcc-v0.1.0-release-dry-run
+          name: kcc-v0.1.0-release-artifacts
           path: |
             dist/*.whl
             dist/*.tar.gz
             dist/SHA256SUMS
+            site/**
           if-no-files-found: error
-          retention-days: 3
+          retention-days: 7
+
+  create-github-release:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish }}
+    needs: build-release-artifacts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ inputs.target_sha }}
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Download verified release payload
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: kcc-v0.1.0-release-artifacts
+          path: payload
+
+      - name: Reverify exact release payload
+        run: |
+          set -euo pipefail
+          cd payload/dist
+          sha256sum --check SHA256SUMS
+          test "$(ls *.whl | wc -l)" -eq 1
+          test "$(ls *.tar.gz | wc -l)" -eq 1
+
+      - name: Create immutable GitHub v0.1.0 release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ inputs.target_sha }}
+          KCC_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh release create v0.1.0             --repo "$KCC_REPOSITORY"             --target "$TARGET_SHA"             --title "KAVI Capability Compiler v0.1.0"             --notes-file docs/RELEASE_NOTES_V0.1.md             payload/dist/*.whl payload/dist/*.tar.gz payload/dist/SHA256SUMS

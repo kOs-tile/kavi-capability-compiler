@@ -28,8 +28,10 @@ jobs:
           python-version: "3.11"
       - name: Enforce immutable GitHub Action references
         run: python scripts/verify_workflow_action_pins.py .github/workflows
-      - name: Enforce non-publishing release workflow
-        run: python scripts/verify_release_workflow_dry_run.py .github/workflows/release.yml
+      - name: Enforce GitHub-first distribution workflow security
+        run: |
+          python scripts/verify_release_workflow.py .github/workflows/release.yml
+          python scripts/verify_pages_workflow.py .github/workflows/pages.yml
       - name: Verify release metadata coherence
         run: python scripts/verify_release_metadata.py
       - name: Install core only

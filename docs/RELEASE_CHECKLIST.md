@@ -43,9 +43,16 @@
 - [x] external runtime validation evidence and limitations are consolidated in `docs/EXTERNAL_VALIDATION_V0.1.md`
 
 ## Publication
-- [ ] create `v0.1.0` tag
-- [ ] create GitHub Release from `docs/RELEASE_NOTES_V0.1.md`
-- [ ] attach/rebuild wheel, sdist, and checksums for the release commit
-- [ ] configure an explicitly authorized PyPI publishing path
-- [ ] publish `kavi-capability-compiler==0.1.0` to PyPI
+- [x] GitHub-first release workflow is manual, exact-main-SHA gated, version-confirmed, and requires prior green main CI
+- [x] release build job has no repository write or OIDC permission
+- [x] only the GitHub Release job has `contents: write`
+- [x] release payload is reproducibility-checked, Twine-checked, clean-installed, checksummed, and Simple-Index validated before publication
+- [x] Simple Repository links bind release assets with SHA-256 fragments
+- [x] GitHub Pages deployment is isolated in a separate manual workflow and cannot affect GitHub Release success
+- [ ] create `v0.1.0` tag + GitHub Release from the final verified main SHA
+- [ ] attach the verified wheel, sdist, and `SHA256SUMS`
+- [ ] enable GitHub Pages with GitHub Actions as source
+- [ ] deploy the Simple Repository index from the immutable v0.1.0 release assets
+- [ ] later mirror the exact same v0.1.0 artifacts to PyPI when account registration is available
+- [x] do not rebuild v0.1.0 for PyPI
 - [x] do not claim production certification or universal framework support
