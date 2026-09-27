@@ -29,6 +29,50 @@ jobs:
       - name: Enforce release security hygiene
         run: python scripts/security_preflight.py
 
+  python-compat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependency-free KCC core
+        run: python -m pip install .
+      - name: Smoke public core surface
+        run: |
+          python - <<'PY'
+          import kavi_capability_compiler as kcc
+          assert kcc.__version__=="0.1.0"
+          assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          assert callable(kcc.Guard)
+          assert len(kcc.schema_names())==5
+          PY
+          kcc --version
+
+  dependency-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+      - name: Install pinned PyPA audit tool
+        run: python -m pip install "pip-audit==2.10.1"
+      - name: Resolve KCC optional dependency surface in an isolated target
+        run: python -m pip install --target /tmp/kcc-audit-target ".[all]"
+      - name: Fail on known dependency vulnerabilities
+        run: python -m pip_audit --path /tmp/kcc-audit-target --strict --progress-spinner off
+
   core-minimal-install:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -109,6 +153,15 @@ jobs:
         run: |
           python -m venv /tmp/kcc-wheel
           /tmp/kcc-wheel/bin/pip install --no-deps dist/*.whl
+      - name: Install sdist without runtime dependencies
+        run: |
+          python -m venv /tmp/kcc-sdist
+          /tmp/kcc-sdist/bin/pip install --no-deps dist/*.tar.gz
+          /tmp/kcc-sdist/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          assert kcc.__version__=="0.1.0"
+          assert kcc.SDK_VERSION=="kcc.sdk.v1"
+          PY
       - name: Smoke embedded SDK and core CLI from wheel
         run: |
           /tmp/kcc-wheel/bin/python - <<'PY'
