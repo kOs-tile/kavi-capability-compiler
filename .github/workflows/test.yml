@@ -72,8 +72,11 @@ jobs:
           assert kcc.SDK_VERSION=="kcc.sdk.v1"
           assert callable(kcc.Guard)
           assert metadata.version("kavi-capability-compiler")=="0.1.0"
+          import importlib.util
           assert metadata.metadata("kavi-capability-compiler")["Requires-Python"]==">=3.11"
           assert kcc.get_schema("kcc.capabilities.v1")["title"]=="KCC Universal Capability Manifest"
+          assert importlib.util.find_spec("kavi_capability_compiler.kavi_dispatch") is None
+          assert importlib.util.find_spec("kavi_capability_compiler.live_probe") is None
           PY
           cat > /tmp/tools.json <<'JSON'
           {"tools":[{"name":"read","description":"Read","input_schema":{"type":"object"}}]}
