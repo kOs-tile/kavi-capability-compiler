@@ -1,0 +1,70 @@
+name: Integration friction
+description: Tell us where KCC is difficult or awkward to embed in a real agent stack.
+title: "[integration] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        v0.2 prioritizes real integration friction over speculative framework support.
+        Please describe the smallest point where KCC makes your existing stack harder to use.
+  - type: input
+    id: version
+    attributes:
+      label: KCC version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: stack
+    attributes:
+      label: Agent stack / framework
+      placeholder: "Custom Python, MCP, OpenAI Agents SDK 0.22.3, Anthropic SDK, LangGraph..."
+    validations:
+      required: true
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Where did integration become difficult?
+      options:
+        - Install / packaging
+        - Capability adaptation
+        - Discovery / inventory
+        - Task intent / policy authoring
+        - Capsule compilation
+        - Guard placement
+        - Dispatcher integration
+        - Approval handoff
+        - Drift handling
+        - Observability / debugging
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: existing_flow
+    attributes:
+      label: Existing execution flow
+      description: Briefly show how tools/capabilities currently reach your dispatcher.
+    validations:
+      required: true
+  - type: textarea
+    id: friction
+    attributes:
+      label: Exact friction
+      description: What extra glue, ambiguity, duplication, or failure did you hit?
+    validations:
+      required: true
+  - type: textarea
+    id: desired
+    attributes:
+      label: What would make the integration materially better?
+      description: Describe the interface or behavior, not just a framework name.
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: I removed credentials, secrets, private endpoints, and sensitive production data.
+          required: true

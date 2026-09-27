@@ -1,0 +1,74 @@
+name: Bug report
+description: Report a deterministic KCC correctness problem that is not security-sensitive.
+title: "[bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing KCC. Please minimize the case before submitting it.
+        Do not include credentials, tokens, cookies, secret headers, or private production data.
+        Security-sensitive bypasses belong in a private security advisory, not a public issue.
+  - type: input
+    id: version
+    attributes:
+      label: KCC version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: "3.11.16"
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Affected surface
+      options:
+        - CLI
+        - Embedded SDK
+        - Guard / dispatch
+        - Capsule compile / verify
+        - Inventory / drift
+        - MCP discovery
+        - Adapter
+        - Packaging / install
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      description: Include the smallest command or code path that reproduces the problem.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Redacted context
+      description: Adapter/source format, framework version, or minimized capability/intent/policy details if relevant.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed secrets and sensitive production data from this report.
+          required: true
+        - label: This report does not describe a security-boundary bypass that should be reported privately.
+          required: true
