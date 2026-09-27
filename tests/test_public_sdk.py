@@ -18,6 +18,9 @@ def _inventory():
 def test_public_api_exposes_framework_neutral_sdk():
     assert kcc.SDK_VERSION=="kcc.sdk.v1"
     assert kcc.SCHEMA_VERSION=="kcc.capabilities.v1"
+    assert kcc.INVENTORY_VERSION=="kcc.inventory.v1"
+    assert kcc.INVENTORY_LOCK_VERSION=="kcc.inventory-lock.v1"
+    assert kcc.CAPSULE_VERSION=="kcc.capsule.v1"
     assert "openai" in kcc.SUPPORTED_SOURCE_FORMATS
     assert callable(kcc.Guard)
 
@@ -86,7 +89,8 @@ def test_sync_dispatch_works_without_event_loop():
 
 def test_public_api_contract_is_explicit_and_framework_neutral():
     expected={
-        "__version__","SDK_VERSION","SCHEMA_VERSION","SUPPORTED_SOURCE_FORMATS",
+        "__version__","SDK_VERSION","SCHEMA_VERSION","INVENTORY_VERSION",
+        "INVENTORY_LOCK_VERSION","CAPSULE_VERSION","SUPPORTED_SOURCE_FORMATS",
         "adapt_capabilities","build_manifest","scan_manifest","compile_capsule",
         "verify_capsule","authorize_call","inventory_lock","diff_inventory_lock",
         "Guard","AuthorityDenied","ApprovalRequired","CapabilityDenied",
@@ -98,8 +102,21 @@ def test_public_api_contract_is_explicit_and_framework_neutral():
 
 def test_packaged_public_schemas_are_available():
     names=kcc.schema_names()
-    assert names==("kcc.capabilities.v1","kcc.signed-capsule.v1")
+    assert names==(
+        "kcc.capabilities.v1",
+        "kcc.capsule.v1",
+        "kcc.inventory-lock.v1",
+        "kcc.inventory.v1",
+        "kcc.signed-capsule.v1",
+    )
     capabilities=kcc.get_schema("kcc.capabilities.v1")
+    inventory=kcc.get_schema("kcc.inventory.v1")
+    inventory_lock=kcc.get_schema("kcc.inventory-lock.v1")
+    capsule=kcc.get_schema("kcc.capsule.v1")
     signed=kcc.get_schema("kcc.signed-capsule.v1")
     assert capabilities["title"]=="KCC Universal Capability Manifest"
+    assert inventory["title"]=="KCC Capability Inventory"
+    assert inventory_lock["title"]=="KCC Inventory Lock"
+    assert capsule["title"]=="KCC Execution Capsule"
     assert signed["title"]=="KCC Signed Capsule Envelope"
+    assert signed["properties"]["capsule"]["$ref"]=="kcc.capsule.v1.schema.json"
