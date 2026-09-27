@@ -6,6 +6,7 @@ from importlib import metadata
 import kavi_capability_compiler as kcc
 from langchain_core.tools import tool
 from langgraph.prebuilt import ToolNode
+from langgraph.runtime import Runtime
 
 
 get_invocations=[]
@@ -57,14 +58,17 @@ def inventory_for(tools):
 
 def invoke_toolnode(node: ToolNode, tool_name: str, params: dict, call_id: str):
     toolnode_invocations.append(tool_name)
-    result=node.invoke([
-        {
-            "name":tool_name,
-            "args":dict(params),
-            "id":call_id,
-            "type":"tool_call",
-        }
-    ])
+    result=node.invoke(
+        [
+            {
+                "name":tool_name,
+                "args":dict(params),
+                "id":call_id,
+                "type":"tool_call",
+            }
+        ],
+        runtime=Runtime(),
+    )
     messages=result["messages"] if isinstance(result,dict) else result
     assert messages
     return messages[-1].content

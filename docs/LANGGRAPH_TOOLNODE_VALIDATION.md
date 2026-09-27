@@ -12,6 +12,8 @@ The case study uses:
 
 No model, LLM provider, API request, or credential is used.
 
+When `ToolNode` is invoked directly outside a compiled graph, LangGraph requires a run-scoped `Runtime`; the case study supplies the public default `Runtime()` explicitly. Inside a compiled graph, LangGraph injects this runtime itself.
+
 ## Flow
 
 ```
