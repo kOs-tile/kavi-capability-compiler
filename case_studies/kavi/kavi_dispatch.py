@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
-from kavi_capability_compiler.core import INVENTORY_VERSION, capability_id, digest
+from kavi_capability_compiler import adapt_capabilities, scan_manifest
 
 
 def scan_kavi_dispatch_contract(
@@ -12,15 +12,16 @@ def scan_kavi_dispatch_contract(
     source_path: str,
     source_sha: str,
 ) -> dict[str, Any]:
-    """Adapt the declared KAVI Dispatch Bridge contract into KCC inventory IR.
+    """Adapt the KAVI bridge contract through KCC's public generic manifest path.
 
-    This adapter is intentionally outside the core compiler. The contract's
-    read/write declaration is preserved as declared authority evidence; it is
-    not treated as observed runtime proof.
+    KAVI remains a repository-only case study. It does not define a private
+    inventory contract or bypass KCC's framework-neutral manifest/inventory
+    integrity rules.
     """
     tools=contract.get("tools")
     if not isinstance(tools,list) or not tools:
         raise ValueError("KAVI dispatch contract must contain tools")
+
     server=str(contract.get("name") or "KAVI Dispatch Bridge")
     provenance={
         "kind":"declared_contract",
@@ -30,7 +31,8 @@ def scan_kavi_dispatch_contract(
         "contract_version":str(contract.get("version") or ""),
         "schema_version":contract.get("schema_version"),
     }
-    caps=[]
+
+    normalized=[]
     seen=set()
     for raw in tools:
         if not isinstance(raw,Mapping):
@@ -39,61 +41,36 @@ def scan_kavi_dispatch_contract(
         if not name or name in seen:
             raise ValueError(f"Invalid or duplicate KAVI dispatch tool: {name!r}")
         seen.add(name)
+
         declared_write=raw.get("write")
         if not isinstance(declared_write,bool):
             raise ValueError(f"KAVI dispatch tool missing boolean write declaration: {name}")
-        effect="write" if declared_write else "read"
-        risk_flags=["declared_mutation"] if declared_write else []
-        if raw.get("fail_closed_until_operator_contract") is True:
-            risk_flags.append("approval_contract_required")
-        declared={
-            "write":declared_write,
-            "approval":raw.get("approval"),
-            "actors":list(raw.get("actors") or []),
-            "fail_closed_until_operator_contract":bool(raw.get("fail_closed_until_operator_contract",False)),
+
+        fail_closed=bool(raw.get("fail_closed_until_operator_contract",False))
+        annotations={
+            "kaviDeclaredWrite":declared_write,
+            "kaviApproval":raw.get("approval"),
+            "kaviActors":list(raw.get("actors") or []),
+            "kaviFailClosedUntilOperatorContract":fail_closed,
         }
-        fp=digest({
+        description=(
+            "Update KAVI Dispatch Bridge execution state through a declared write capability."
+            if declared_write else
+            "Read KAVI Dispatch Bridge execution state through a declared read capability."
+        )
+        normalized.append({
             "name":name,
-            "declared":declared,
-            "contract_version":provenance["contract_version"],
+            "description":description,
+            "input_schema":raw.get("input_schema") or raw.get("inputSchema") or {},
+            "annotations":annotations,
         })
-        caps.append({
-            "id":capability_id("kavi",server,name),
-            "provider":"kavi",
-            "server":server,
-            "name":name,
-            "description":f"KAVI Dispatch Bridge declared {'write' if declared_write else 'read'} capability.",
-            "input_schema":{},
-            "fingerprint":fp,
-            "effect":effect,
-            "confidence":1.0,
-            "analysis":{
-                "effect":effect,
-                "confidence":1.0,
-                "risk_flags":risk_flags,
-                "declared":declared,
-                "evidence":[{
-                    "kind":"declared_contract",
-                    "field":"write",
-                    "value":declared_write,
-                    "source_sha":source_sha,
-                }],
-            },
-            "annotations":{},
-            "provenance":provenance,
-        })
-    inv={
-        "version":INVENTORY_VERSION,
-        "adapter":"kavi-dispatch-contract.v0",
-        "provenance":provenance,
-        "capabilities":caps,
-    }
-    inv["digest"]=digest({
-        "version":inv["version"],
-        "adapter":inv["adapter"],
-        "capabilities":sorted(
-            [{"id":c["id"],"fingerprint":c["fingerprint"]} for c in caps],
-            key=lambda x:x["id"],
-        ),
-    })
-    return inv
+
+    manifest=adapt_capabilities(
+        "generic",
+        {"tools":normalized},
+        namespace=server,
+        source_metadata=provenance,
+    )
+    inventory=scan_manifest(manifest)
+    inventory["provenance"]=provenance
+    return inventory

@@ -81,3 +81,10 @@ therefore use host authentication and, where applicable, KCC signed capsules.
 
 CI also audits the currently resolved optional runtime dependency set against
 the Python Packaging Authority vulnerability audit database before release.
+
+Git checkout steps disable credential persistence after checkout. The CI token is
+read-only and is not left configured in the repository working tree.
+
+The optional signing dependency requires a vulnerability-audited
+`cryptography>=50.0.1,<51` release line; older vulnerable release lines are
+not accepted by the signing extra.

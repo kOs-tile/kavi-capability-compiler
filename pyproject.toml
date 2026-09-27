@@ -28,8 +28,8 @@ Issues = "https://github.com/kOs-tile/kavi-capability-compiler/issues"
 
 [project.optional-dependencies]
 mcp = ["mcp>=2.2,<3", "httpx2>=2.5.0"]
-signing = ["cryptography>=42,<49"]
-all = ["mcp>=2.2,<3", "httpx2>=2.5.0", "cryptography>=42,<49"]
+signing = ["cryptography>=50.0.1,<51"]
+all = ["mcp>=2.2,<3", "httpx2>=2.5.0", "cryptography>=50.0.1,<51"]
 
 [project.scripts]
 kcc = "kavi_capability_compiler.cli:main"
