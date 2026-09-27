@@ -52,6 +52,7 @@ All notable changes to KAVI Capability Compiler are documented here.
 - authenticated non-loopback MCP discovery requires HTTPS and rejects URL userinfo credentials
 - GitHub Actions are pinned to immutable commit SHAs and checkout credentials are not persisted
 - release build/check tooling is version-pinned
+- security-sensitive optional dependency floors exclude known affected httpx2 and cryptography ranges at the v0.1 security preflight
 
 ### Known limits
 - v0.1 is alpha software

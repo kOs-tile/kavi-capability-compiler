@@ -58,3 +58,12 @@ def test_project_specific_case_study_code_is_not_in_core_package():
     assert not Path("src/kavi_capability_compiler/live_probe.py").exists()
     assert Path("case_studies/kavi/kavi_dispatch.py").is_file()
     assert Path("case_studies/kavi/live_probe.py").is_file()
+
+
+def test_security_sensitive_optional_dependency_floors_exclude_known_affected_ranges():
+    data=tomllib.loads(Path("pyproject.toml").read_text())
+    extras=data["project"]["optional-dependencies"]
+    assert "httpx2>=2.12.0,<3" in extras["mcp"]
+    assert "httpx2>=2.12.0,<3" in extras["all"]
+    assert "cryptography>=48.0.1,<49" in extras["signing"]
+    assert "cryptography>=48.0.1,<49" in extras["all"]

@@ -52,3 +52,5 @@ Before a public release:
 - release artifacts must still pass reproducibility, wheel-surface, metadata, and clean-install gates.
 
 Self-integrity digests are tamper-evidence inside the documented trust boundary; they are not authentication. Signed capsules or equivalent authenticated transport remain required across untrusted boundaries.
+
+Security-sensitive optional dependency floors are set above known affected ranges at release time. The v0.1 preflight requires `httpx2>=2.12.0,<3` and `cryptography>=48.0.1,<49`; future releases must re-check current advisories rather than treating these floors as permanently sufficient.

@@ -27,9 +27,9 @@ Repository = "https://github.com/kOs-tile/kavi-capability-compiler"
 Issues = "https://github.com/kOs-tile/kavi-capability-compiler/issues"
 
 [project.optional-dependencies]
-mcp = ["mcp>=2.2,<3", "httpx2>=2.5.0,<3"]
-signing = ["cryptography>=42,<49"]
-all = ["mcp>=2.2,<3", "httpx2>=2.5.0,<3", "cryptography>=42,<49"]
+mcp = ["mcp>=2.2,<3", "httpx2>=2.12.0,<3"]
+signing = ["cryptography>=48.0.1,<49"]
+all = ["mcp>=2.2,<3", "httpx2>=2.12.0,<3", "cryptography>=48.0.1,<49"]
 
 [project.scripts]
 kcc = "kavi_capability_compiler.cli:main"
