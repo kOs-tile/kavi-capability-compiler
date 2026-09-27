@@ -36,3 +36,29 @@ KCC does not replace:
 - human approval systems
 
 A valid KCC capsule means the request fits the authority KCC compiled under its current model. It is not a certification that the underlying tool or application is safe.
+
+## MCP transport boundary
+
+Remote Streamable HTTP discovery requires HTTPS.
+
+Plaintext `http://` discovery is accepted only for loopback hosts such as
+`localhost`, `127.0.0.1`, and `::1`, where it is useful for local development
+and test fixtures. KCC rejects remote plaintext HTTP before opening a connection.
+
+KCC also rejects URL userinfo credentials such as
+`https://user:password@example.com/...`. Supply authentication through the
+host-owned header configuration instead. Header values remain in memory for the
+request and are not copied into discovery artifacts.
+
+These controls reduce credential exposure and prevent a remote plaintext
+network path from silently modifying the capability surface returned by
+`tools/list`.
+
+## CI and release supply chain
+
+Repository workflows pin external GitHub Actions to full immutable commit SHAs.
+CI contains a regression check that rejects mutable action references.
+
+Release reproducibility tooling is version-pinned. Publication credentials must
+not be stored in the repository; the preferred publication path is short-lived
+OIDC / trusted publishing with build and publish permissions separated.
