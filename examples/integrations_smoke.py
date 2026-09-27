@@ -57,7 +57,7 @@ async def exercise(source_format, payload):
         {"default":"allow"},
         now=100,
     )
-    guard=kcc.Guard.from_capsule(capsule)
+    guard=kcc.Guard.from_capsule(capsule,inventory=inventory)
     dispatched=[]
 
     async def existing_agent_dispatcher(params):

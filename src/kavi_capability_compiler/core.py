@@ -294,36 +294,84 @@ def diff_inventory_lock(lock, inv):
     return {"clean":not (added or removed or changed),"added":added,"removed":removed,"changed":changed}
 
 
-def authorize_call(cap, capability_id, operation=None, parameters=None, now=None):
-    verification_inventory={
-        "version":INVENTORY_VERSION,
-        "digest":cap.get("inventory_digest") if isinstance(cap,dict) else None,
-        "capabilities":[],
-    }
+def _inventory_integrity(inv):
+    if not isinstance(inv,dict) or inv.get("version") != INVENTORY_VERSION:
+        return False
+    claimed=inv.get("digest")
+    caps=inv.get("capabilities")
+    if not isinstance(claimed,str) or not isinstance(caps,list):
+        return False
+    try:
+        if "adapter" in inv:
+            entries=[]
+            for c in caps:
+                if not isinstance(c,dict) or not isinstance(c.get("id"),str) or not isinstance(c.get("fingerprint"),str):
+                    return False
+                entries.append({"id":c["id"],"fingerprint":c["fingerprint"]})
+            expected=digest({
+                "version":inv["version"],
+                "adapter":inv["adapter"],
+                "capabilities":sorted(entries,key=lambda x:x["id"]),
+            })
+        else:
+            body=dict(inv)
+            body.pop("digest",None)
+            expected=digest(body)
+    except (KeyError,TypeError,ValueError):
+        return False
+    return claimed==expected
+
+
+def _verification_failure_reason(verification, *, inventory_bound=False):
+    failed={x["name"] for x in verification.get("checks",[]) if not x.get("ok")}
+    if "integrity" in failed:
+        return "invalid_capsule_integrity"
+    if "version" in failed:
+        return "unsupported_capsule_version"
+    if "fail_closed" in failed:
+        return "fail_closed_required"
+    if inventory_bound and failed.intersection({"inventory","fingerprints","shape"}):
+        return "inventory_drift"
+    if "expiry" in failed:
+        return "expired"
+    return "invalid_capsule"
+
+
+def authorize_call(cap, capability_id, operation=None, parameters=None, now=None, inventory=None):
     if not isinstance(cap,dict):
         return {"allowed":False,"reason":"invalid_capsule_shape"}
-    for key in ("grants","approvals","denials"):
-        entries=cap.get(key,[])
-        if not isinstance(entries,list):
-            return {"allowed":False,"reason":"invalid_capsule_shape"}
-        for entry in entries:
-            if not isinstance(entry,dict) or not isinstance(entry.get("id"),str) or not isinstance(entry.get("fingerprint"),str):
+
+    inventory_bound=inventory is not None
+    if inventory_bound:
+        if not isinstance(inventory,dict):
+            return {"allowed":False,"reason":"invalid_inventory_binding"}
+        if inventory.get("version") != INVENTORY_VERSION:
+            return {"allowed":False,"reason":"unsupported_inventory_version"}
+        if not _inventory_integrity(inventory):
+            return {"allowed":False,"reason":"invalid_inventory_integrity"}
+        verification_inventory=inventory
+    else:
+        verification_inventory={
+            "version":INVENTORY_VERSION,
+            "digest":cap.get("inventory_digest"),
+            "capabilities":[],
+        }
+        for key in ("grants","approvals","denials"):
+            entries=cap.get(key,[])
+            if not isinstance(entries,list):
                 return {"allowed":False,"reason":"invalid_capsule_shape"}
-            verification_inventory["capabilities"].append({"id":entry["id"],"fingerprint":entry["fingerprint"]})
+            for entry in entries:
+                if not isinstance(entry,dict) or not isinstance(entry.get("id"),str) or not isinstance(entry.get("fingerprint"),str):
+                    return {"allowed":False,"reason":"invalid_capsule_shape"}
+                verification_inventory["capabilities"].append({"id":entry["id"],"fingerprint":entry["fingerprint"]})
+
     verification=verify_capsule(cap,verification_inventory,now=now)
     if not verification["valid"]:
-        failed={x["name"] for x in verification["checks"] if not x["ok"]}
-        if "integrity" in failed:
-            reason="invalid_capsule_integrity"
-        elif "version" in failed:
-            reason="unsupported_capsule_version"
-        elif "fail_closed" in failed:
-            reason="fail_closed_required"
-        elif "expiry" in failed:
-            reason="expired"
-        else:
-            reason="invalid_capsule"
-        return {"allowed":False,"reason":reason,"verification":verification}
+        return {
+            "allowed":False,
+            "reason":_verification_failure_reason(verification,inventory_bound=inventory_bound),
+            "verification":verification,
+        }
     grants={x["id"]:x for x in cap.get("grants",[])}
     approvals={x["id"]:x for x in cap.get("approvals",[])}
     denials={x["id"]:x for x in cap.get("denials",[])}
@@ -345,8 +393,22 @@ def authorize_call(cap, capability_id, operation=None, parameters=None, now=None
     ops=constraints.get("operations")
     if ops and operation not in ops:
         return {"allowed":False,"reason":"operation_not_granted"}
-    params=parameters or {}
-    for key, rule in (constraints.get("parameters") or {}).items():
+    try:
+        params=dict(parameters or {})
+    except (TypeError,ValueError):
+        return {"allowed":False,"reason":"invalid_parameters"}
+    parameter_rules=constraints.get("parameters") if "parameters" in constraints else None
+    if parameter_rules is not None:
+        if not isinstance(parameter_rules,dict):
+            return {"allowed":False,"reason":"invalid_parameter_constraints"}
+        unexpected=sorted(set(params)-set(parameter_rules))
+        if unexpected:
+            return {
+                "allowed":False,
+                "reason":f"parameter_not_granted:{unexpected[0]}",
+                "parameters":unexpected,
+            }
+    for key, rule in (parameter_rules or {}).items():
         if isinstance(rule,dict) and rule.get("required") is True and key not in params:
             return {"allowed":False,"reason":f"required_parameter_missing:{key}"}
         if key not in params: continue

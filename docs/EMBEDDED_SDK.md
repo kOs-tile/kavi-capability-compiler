@@ -101,7 +101,7 @@ capsule = kcc.compile_capsule(
     {"default": "allow"},
 )
 
-guard = kcc.Guard.from_capsule(capsule)
+guard = kcc.Guard.from_capsule(capsule, inventory=inventory)
 
 async def my_existing_dispatcher(params):
     return await crm.read_customer(**params)
@@ -116,6 +116,10 @@ result = await guard.dispatch(
 No KCC server is required. The dispatcher remains the application's own function.
 
 A capability outside the capsule is rejected before the dispatcher is called.
+
+Binding the Guard to the inventory used for compilation is the recommended runtime pattern. The binding makes the Guard fail closed if the capability surface is added to, removed from, or semantically changed before dispatch.
+
+An unbound Guard remains available for trusted static registries, but it cannot independently detect post-compile registry drift.
 
 An unsigned capsule is intended for a trusted in-process boundary. Its digest detects accidental or post-compile mutation; it does not authenticate an untrusted sender. If the capsule crosses a process, service, client, or network trust boundary, use the signed-capsule path or an equivalent host-authenticated transport.
 
