@@ -89,6 +89,7 @@
 - [x] external public dogfood defaults continue to target v0.1.1 until v0.2.0 is published
 - [x] delegation attenuation design/provenance gates completed
 - [x] bounded deterministic delegation core merged with full green main CI
+- [x] candidate v0.2 RC scope frozen without closing the external-feedback gate
 - [ ] collect external feedback on v0.2 development behavior
 - [ ] decide final v0.2 release scope from evidence
 - [ ] final v0.2 test workflow fully green
