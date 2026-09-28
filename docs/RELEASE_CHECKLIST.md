@@ -70,12 +70,27 @@
 - [x] public SDK and data-contract versions remain unchanged
 - [x] release tooling derives package version/tag/artifact names from pyproject metadata
 - [x] Pages tooling derives the current release version/tag
-- [ ] PR test workflow fully green
-- [ ] PR release dry-run fully green
-- [ ] post-merge main test fully green
-- [ ] final manual publish dry-run artifact payload verified
-- [ ] publish immutable v0.1.1 GitHub Release from exact green main SHA
-- [ ] deploy the Simple Repository index from v0.1.1
-- [ ] rerun external consumer, diagnostics, and optional-extras evidence against v0.1.1
-- [ ] update current public install/status docs to v0.1.1 after publication
-- [ ] do not rebuild v0.1.1 for a later PyPI mirror
+- [x] PR test workflow fully green
+- [x] PR release dry-run fully green
+- [x] post-merge main test fully green
+- [x] final manual publish dry-run artifact payload verified
+- [x] publish immutable v0.1.1 GitHub Release from exact green main SHA
+- [x] deploy the Simple Repository index from v0.1.1
+- [x] rerun external consumer, diagnostics, and optional-extras evidence against v0.1.1
+- [x] update current public install/status docs to v0.1.1 after publication
+- [x] do not rebuild v0.1.1 for a later PyPI mirror
+
+
+## v0.2.0 release
+
+- [x] main version identity moved off published v0.1.1 after additive public API expansion
+- [x] `pyproject.toml` and `kcc.__version__` identify main as 0.2.0
+- [x] latest stable/public install documentation continues to target v0.1.1
+- [x] external public dogfood defaults continue to target v0.1.1 until v0.2.0 is published
+- [x] delegation attenuation design/provenance gates completed
+- [x] bounded deterministic delegation core merged with full green main CI
+- [ ] collect external feedback on v0.2 development behavior
+- [ ] decide final v0.2 release scope from evidence
+- [ ] final v0.2 test workflow fully green
+- [ ] final v0.2 release dry-run fully green
+- [ ] publish only from an exact green main SHA after explicit manual confirmation
