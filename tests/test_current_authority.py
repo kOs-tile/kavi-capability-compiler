@@ -112,3 +112,107 @@ def test_guard_denies_stale_capsule_after_host_revokes_current_authority():
     assert len(resolver_calls) == 2
     assert all(call["capsule_id"] == capsule["capsule_id"] for call in resolver_calls)
     assert all(call["capability_id"] == capability_id for call in resolver_calls)
+
+
+
+def test_current_authority_unknown_fails_closed_before_dispatch():
+    inventory, capability_id, capsule = _context()
+    guard = kcc.Guard.from_capsule(
+        capsule,
+        inventory=inventory,
+        current_authority_resolver=lambda context: {"reason": "state_unavailable"},
+    )
+    dispatches = []
+
+    with pytest.raises(kcc.AuthorityDenied) as exc:
+        guard.dispatch_sync(
+            capability_id,
+            lambda parameters: dispatches.append(dict(parameters)),
+            operation="update",
+            parameters={"id": "record-1", "value": "x"},
+            now=101,
+        )
+
+    assert exc.value.reason == "current_authority_unknown"
+    assert dispatches == []
+
+
+def test_current_authority_resolver_error_fails_closed_before_dispatch():
+    inventory, capability_id, capsule = _context()
+
+    def resolver(_context):
+        raise RuntimeError("control plane unavailable")
+
+    guard = kcc.Guard.from_capsule(
+        capsule,
+        inventory=inventory,
+        current_authority_resolver=resolver,
+    )
+    dispatches = []
+
+    with pytest.raises(kcc.AuthorityDenied) as exc:
+        guard.dispatch_sync(
+            capability_id,
+            lambda parameters: dispatches.append(dict(parameters)),
+            operation="update",
+            parameters={"id": "record-1", "value": "x"},
+            now=101,
+        )
+
+    assert exc.value.reason == "current_authority_resolver_error"
+    assert dispatches == []
+
+
+def test_current_authority_resolver_cannot_widen_capsule_authority():
+    inventory, capability_id, capsule = _context()
+    resolver_calls = []
+
+    def resolver(context):
+        resolver_calls.append(dict(context))
+        return {"active": True, "reason": "active"}
+
+    guard = kcc.Guard.from_capsule(
+        capsule,
+        inventory=inventory,
+        current_authority_resolver=resolver,
+    )
+    dispatches = []
+
+    with pytest.raises(kcc.AuthorityDenied) as exc:
+        guard.dispatch_sync(
+            "kcc:records:delete_record",
+            lambda parameters: dispatches.append(dict(parameters)),
+            operation="delete",
+            parameters={"id": "record-1"},
+            now=101,
+        )
+
+    assert exc.value.reason == "capability_not_granted"
+    assert resolver_calls == []
+    assert dispatches == []
+
+
+def test_current_authority_async_resolver_fails_closed_in_sync_guard():
+    inventory, capability_id, capsule = _context()
+
+    async def resolver(_context):
+        return {"active": True}
+
+    guard = kcc.Guard.from_capsule(
+        capsule,
+        inventory=inventory,
+        current_authority_resolver=resolver,
+    )
+    dispatches = []
+
+    with pytest.raises(kcc.AuthorityDenied) as exc:
+        guard.dispatch_sync(
+            capability_id,
+            lambda parameters: dispatches.append(dict(parameters)),
+            operation="update",
+            parameters={"id": "record-1", "value": "x"},
+            now=101,
+        )
+
+    assert exc.value.reason == "current_authority_resolver_async_unsupported"
+    assert dispatches == []
