@@ -2,6 +2,18 @@
 
 All notable changes to KAVI Capability Compiler are documented here.
 
+## 0.1.1 — security patch
+
+### Security
+- reject unsupported or malformed structured parameter predicates at capsule compile time instead of allowing them to be silently ineffective
+- fail closed with `parameter_type_mismatch:<name>` when runtime values cannot be evaluated against numeric or length bounds
+
+### Compatibility
+- preserve `kcc.sdk.v1`
+- preserve `kcc.capabilities.v1`, `kcc.inventory.v1`, `kcc.inventory-lock.v1`, `kcc.capsule.v1`, and `kcc.signed-capsule.v1`
+- no new required core dependency
+- no framework-specific core dependency
+
 ## 0.1.0 — release candidate
 
 ### Added

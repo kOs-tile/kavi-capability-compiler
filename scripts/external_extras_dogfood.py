@@ -15,7 +15,6 @@ from typing import Any
 import kavi_capability_compiler as kcc
 
 
-EXPECTED_VERSION = "0.1.0"
 
 
 def dist_version(name: str) -> str | None:
@@ -274,11 +273,12 @@ def exercise_mcp() -> dict[str, Any]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--extra", choices=("signing", "mcp", "all"), required=True)
+    parser.add_argument("--expected-version", required=True)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
 
-    assert metadata.version("kavi-capability-compiler") == EXPECTED_VERSION
-    assert kcc.__version__ == EXPECTED_VERSION
+    assert metadata.version("kavi-capability-compiler") == args.expected_version
+    assert kcc.__version__ == args.expected_version
     assert kcc.SDK_VERSION == "kcc.sdk.v1"
 
     package_path = Path(kcc.__file__).resolve()

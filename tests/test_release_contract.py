@@ -5,9 +5,12 @@ import kavi_capability_compiler as kcc
 
 
 def test_release_version_is_coherent():
+    from scripts.release_version import project_version
+
     data=tomllib.loads(Path("pyproject.toml").read_text())
-    assert data["project"]["version"]=="0.1.0"
-    assert kcc.__version__=="0.1.0"
+    version=data["project"]["version"]
+    assert version==project_version()
+    assert kcc.__version__==version
 
 
 def test_release_metadata_keeps_core_dependency_free():

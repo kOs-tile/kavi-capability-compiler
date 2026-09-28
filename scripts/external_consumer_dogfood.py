@@ -11,7 +11,6 @@ from pathlib import Path
 import kavi_capability_compiler as kcc
 
 
-EXPECTED_VERSION = "0.1.0"
 EXPECTED_SCHEMAS = (
     "kcc.capabilities.v1",
     "kcc.capsule.v1",
@@ -193,12 +192,13 @@ def exercise(source_format: str) -> dict[str, object]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--distribution", required=True)
+    parser.add_argument("--expected-version", required=True)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
 
     installed_version = metadata.version("kavi-capability-compiler")
-    assert installed_version == EXPECTED_VERSION
-    assert kcc.__version__ == EXPECTED_VERSION
+    assert installed_version == args.expected_version
+    assert kcc.__version__ == args.expected_version
     assert kcc.SDK_VERSION == "kcc.sdk.v1"
     assert kcc.schema_names() == EXPECTED_SCHEMAS
 
@@ -216,7 +216,7 @@ def main() -> None:
         capture_output=True,
         text=True,
     ).stdout.strip()
-    assert cli == EXPECTED_VERSION
+    assert cli == args.expected_version
 
     formats = ("generic", "openai", "anthropic", "mcp", "openapi")
     results = [exercise(source_format) for source_format in formats]

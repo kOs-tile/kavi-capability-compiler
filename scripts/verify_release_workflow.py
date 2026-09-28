@@ -29,6 +29,8 @@ def main(path: str | Path | None = None) -> None:
     for marker in ("pypa/gh-action-pypi-publish","id-token: write","PYPI_API_TOKEN","twine upload"):
         if marker.lower() in text.lower():
             raise SystemExit(f"PyPI/publication credential primitive forbidden in GitHub-first workflow: {marker}")
+    if re.search(r"v0\.1\.\d+",text):
+        raise SystemExit("release workflow must derive the patch tag instead of hardcoding v0.1.x")
 
     build=section(text,"  build-release-artifacts:\n","  create-github-release:\n")
     release=section(text,"  create-github-release:\n")
@@ -37,9 +39,11 @@ def main(path: str | Path | None = None) -> None:
     for marker in (
         "actions: read",
         "contents: read",
+        "scripts/release_version.py version",
+        "scripts/release_version.py tag",
         'test "$KCC_REF" = "refs/heads/main"',
         'test "$TARGET_SHA" = "$WORKFLOW_SHA"',
-        'test "$KCC_CONFIRM_VERSION" = "v0.1.0"',
+        'test "$KCC_CONFIRM_VERSION" = "$KCC_TAG"',
         'row.get("name")=="test"',
         'row.get("event")=="push"',
         'row.get("conclusion")=="success"',
@@ -60,17 +64,16 @@ def main(path: str | Path | None = None) -> None:
     if "sha256sum --check SHA256SUMS" not in release:
         raise SystemExit("GitHub release job must reverify checksums")
     for marker in (
-        "gh release create v0.1.0",
+        'gh release create "$KCC_TAG"',
         "--draft",
-        "gh release edit v0.1.0",
+        'gh release edit "$KCC_TAG"',
         "--draft=false",
         '--json isDraft --jq .isDraft',
+        "KCC_PUBLISHED_RELEASE_IMMUTABLE: PASS",
     ):
         if marker not in release:
             raise SystemExit(f"draft-first immutable-release pattern missing: {marker}")
-    create_index=release.find("gh release create v0.1.0")
-    publish_index=release.find("gh release edit v0.1.0")
-    if create_index<0 or publish_index<0 or create_index>=publish_index:
+    if release.find('gh release create "$KCC_TAG"') >= release.find('gh release edit "$KCC_TAG"'):
         raise SystemExit("release must be created as a draft before publication")
     if text.count("contents: write")!=1:
         raise SystemExit("contents:write must exist in exactly one job")

@@ -2,6 +2,12 @@ name: external-consumer-dogfood
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Published KCC version to validate"
+        required: true
+        default: "0.1.0"
+        type: string
   pull_request:
     branches:
       - main
@@ -12,6 +18,9 @@ on:
 
 permissions:
   contents: read
+
+env:
+  KCC_TARGET_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || '0.1.0' }}
 
 jobs:
   external-consumer:
@@ -50,14 +59,14 @@ jobs:
         run: |
           set -euo pipefail
           cd /tmp
-          PYTHONPATH="" /tmp/kcc-consumer/bin/python -m pip install             --disable-pip-version-check             --no-cache-dir             --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/             "kavi-capability-compiler==0.1.0"
+          PYTHONPATH="" /tmp/kcc-consumer/bin/python -m pip install             --disable-pip-version-check             --no-cache-dir             --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/             "kavi-capability-compiler==${KCC_TARGET_VERSION}"
 
       - name: Install direct GitHub Release wheel
         if: matrix.distribution == 'release-wheel'
         run: |
           set -euo pipefail
           cd /tmp
-          PYTHONPATH="" /tmp/kcc-consumer/bin/python -m pip install             --disable-pip-version-check             --no-cache-dir             https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl
+          PYTHONPATH="" /tmp/kcc-consumer/bin/python -m pip install             --disable-pip-version-check             --no-cache-dir             https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v${KCC_TARGET_VERSION}/kavi_capability_compiler-${KCC_TARGET_VERSION}-py3-none-any.whl
 
       - name: Exercise installed public SDK only
         env:
@@ -69,7 +78,7 @@ jobs:
           mkdir -p /tmp/kcc-external-consumer
           cp "$GITHUB_WORKSPACE/scripts/external_consumer_dogfood.py" /tmp/kcc-external-consumer/
           cd /tmp/kcc-external-consumer
-          PYTHONPATH="" /tmp/kcc-consumer/bin/python external_consumer_dogfood.py             --distribution "$DISTRIBUTION"             --output "$GITHUB_WORKSPACE/evidence/${PYTHON_VERSION}-${DISTRIBUTION}.json"
+          PYTHONPATH="" /tmp/kcc-consumer/bin/python external_consumer_dogfood.py             --distribution "$DISTRIBUTION"             --expected-version "$KCC_TARGET_VERSION"             --output "$GITHUB_WORKSPACE/evidence/${PYTHON_VERSION}-${DISTRIBUTION}.json"
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
