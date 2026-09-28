@@ -1,7 +1,9 @@
 # Delegation / Authority Attenuation Design
 
-Status: design-only, implementation blocked  
+Status: design accepted; bounded core attenuation implementation merged in #74  
 Tracks: #71
+
+The design gate is closed. Runtime Guard integration, orchestration, and signed-delegator identity remain separate future concerns and are not implied by the bounded core implementation.
 
 ## Objective
 
