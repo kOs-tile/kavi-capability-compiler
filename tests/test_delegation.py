@@ -1,6 +1,7 @@
 import copy
 
 import pytest
+from jsonschema import Draft202012Validator
 
 import kavi_capability_compiler as kcc
 from kavi_capability_compiler.core import digest
@@ -395,3 +396,31 @@ def test_unsupported_child_parameter_rule_is_rejected():
             inv,
             now=110,
         )
+
+
+def test_delegation_artifacts_validate_against_public_schemas():
+    inv=_inventory()
+    cid=_ids(inv)["update_record"]
+    parent=_parent(
+        inv,
+        constraints={
+            "operations":["update"],
+            "parameters":{"mode":{"type":"string","enum":["safe"]}},
+        },
+    )
+    request=_request(
+        parent,
+        cid,
+        constraints_marker={
+            "operations":["update"],
+            "parameters":{"mode":{"type":"string","enum":["safe"]}},
+        },
+        ttl=120,
+    )
+    envelope=kcc.attenuate_capsule(parent,request,inv,now=110)
+
+    Draft202012Validator(kcc.get_schema("kcc.delegation-request.v1")).validate(request)
+
+    delegated_schema=copy.deepcopy(kcc.get_schema("kcc.delegated-capsule.v1"))
+    delegated_schema["properties"]["child_capsule"]=kcc.get_schema("kcc.capsule.v1")
+    Draft202012Validator(delegated_schema).validate(envelope)
