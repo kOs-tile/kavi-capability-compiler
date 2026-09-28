@@ -90,8 +90,12 @@
 - [x] delegation attenuation design/provenance gates completed
 - [x] bounded deterministic delegation core merged with full green main CI
 - [x] candidate v0.2 RC scope frozen without closing the external-feedback gate
-- [ ] collect external feedback on v0.2 development behavior
-- [ ] decide final v0.2 release scope from evidence
-- [ ] final v0.2 test workflow fully green
-- [ ] final v0.2 release dry-run fully green
+- [x] externally reported stale-authority/revocation gap reproduced with a failing regression before implementation (#95)
+- [x] dispatch-time current-authority attenuation merged with revoked/unknown/error/non-widening coverage
+- [x] current-authority behavior verified from a clean installed wheel
+- [x] candidate refrozen after #95 with fresh green main CI
+- [ ] complete independent external validation cohort #94 (target: 3 builders, 2 distinct host/runtime shapes, >=1 real dispatcher-boundary report)
+- [ ] decide final v0.2 release scope from that evidence
+- [ ] final exact-candidate v0.2 test workflow fully green
+- [ ] final exact-main-SHA v0.2 release dry-run fully green and artifacts inspected
 - [ ] publish only from an exact green main SHA after explicit manual confirmation
