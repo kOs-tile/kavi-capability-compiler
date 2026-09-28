@@ -415,6 +415,30 @@ jobs:
           assert r["approve_blocked"], r
           assert r["mutation_grants"] == [], r
           PY
+      - name: Run real-consumer exchange execution boundary dogfood
+        run: python -m case_studies.exchange_execution.run | tee exchange-execution-validation.json
+      - name: Enforce exchange execution authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("exchange-execution-validation.json"))
+          assert r["validation"]=="kcc.real-consumer.exchange-execution.v1", r
+          assert r["pass"] is True, r
+          assert r["inventory_capabilities"]==3, r
+          assert r["limit_order_effect"]=="financial", r
+          assert r["market_order_effect"]=="financial", r
+          assert r["fetch_order_effect"]=="read", r
+          assert r["compiled_grants"]==1, r
+          assert r["allowed_host_dispatches"]==1, r
+          assert r["denied_host_dispatches"]==0, r
+          assert r["denied_reasons"]["wrong_symbol"]=="parameter_not_allowed:symbol", r
+          assert r["denied_reasons"]["opposite_side"]=="parameter_not_allowed:side", r
+          assert r["denied_reasons"]["larger_quantity"]=="parameter_above_max:quantity", r
+          assert r["denied_reasons"]["market_order_outside_capsule"]=="capability_not_granted", r
+          assert r["host_injected_idempotency"] is True, r
+          assert r["network_or_exchange_call_performed"] is False, r
+          assert r["model_or_api_call_performed"] is False, r
+          PY
       - name: Run framework equivalence benchmark
         run: python benchmark/framework_equivalence.py | tee framework-equivalence.json
       - name: Enforce framework equivalence
