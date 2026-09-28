@@ -96,7 +96,7 @@ def test_public_api_contract_is_explicit_and_framework_neutral():
         "DELEGATED_CAPSULE_VERSION","SUPPORTED_SOURCE_FORMATS",
         "adapt_capabilities","build_manifest","scan_manifest","compile_capsule",
         "verify_capsule","attenuate_capsule","verify_delegated_capsule",
-        "authorize_call","inventory_lock","diff_inventory_lock",
+        "authorize_call","capability_id","inventory_lock","diff_inventory_lock",
         "Guard","AuthorityDenied","ApprovalRequired","CapabilityDenied",
         "get_schema","schema_names",
     }
@@ -131,3 +131,36 @@ def test_packaged_public_schemas_are_available():
     assert delegated["properties"]["child_capsule"]["$ref"]=="kcc.capsule.v1.schema.json"
     assert signed["title"]=="KCC Signed Capsule Envelope"
     assert signed["properties"]["capsule"]["$ref"]=="kcc.capsule.v1.schema.json"
+
+
+def test_public_capability_id_matches_mcp_and_manifest_inventory_identity():
+    from kavi_capability_compiler.core import scan_mcp_snapshot
+
+    mcp_expected=kcc.capability_id("MCP"," Research Desk ","Fetch:Price%Now")
+    assert mcp_expected=="mcp:research-desk:fetch%3aprice%25now"
+    mcp_inventory=scan_mcp_snapshot({
+        "server":{"name":" Research Desk "},
+        "tools":[{
+            "name":"Fetch:Price%Now",
+            "description":"Fetch a bounded price record.",
+            "inputSchema":{"type":"object","properties":{}},
+        }],
+    })
+    assert mcp_inventory["capabilities"][0]["id"]==mcp_expected
+
+    manifest=kcc.adapt_capabilities(
+        "generic",
+        {"tools":[{
+            "name":"Fetch:Price%Now",
+            "description":"Fetch a bounded price record.",
+            "input_schema":{"type":"object","properties":{}},
+        }]},
+        namespace=" Research Desk ",
+    )
+    manifest_inventory=kcc.scan_manifest(manifest)
+    manifest_expected=kcc.capability_id("KCC"," Research Desk ","Fetch:Price%Now")
+    assert manifest_expected=="kcc:research-desk:fetch%3aprice%25now"
+    assert manifest_inventory["capabilities"][0]["id"]==manifest_expected
+
+    # Reserved delimiters stay component-local instead of aliasing another ID.
+    assert kcc.capability_id("mcp","a:b","c") != kcc.capability_id("mcp","a","b:c")
