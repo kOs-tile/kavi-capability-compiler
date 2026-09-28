@@ -94,6 +94,8 @@ jobs:
           tar -tzf "$sdist" | grep '/schemas/kcc.inventory.v1.schema.json$'
           tar -tzf "$sdist" | grep '/schemas/kcc.inventory-lock.v1.schema.json$'
           tar -tzf "$sdist" | grep '/schemas/kcc.capsule.v1.schema.json$'
+          tar -tzf "$sdist" | grep '/schemas/kcc.delegation-request.v1.schema.json$'
+          tar -tzf "$sdist" | grep '/schemas/kcc.delegated-capsule.v1.schema.json$'
           tar -tzf "$sdist" | grep '/schemas/kcc.signed-capsule.v1.schema.json$'
           tar -tzf "$sdist" | grep '/examples/integrations_smoke.py$'
           tar -tzf "$sdist" | grep '/examples/integrations/_shared.py$'
@@ -124,6 +126,8 @@ jobs:
           assert kcc.schema_names()==(
               "kcc.capabilities.v1",
               "kcc.capsule.v1",
+              "kcc.delegated-capsule.v1",
+              "kcc.delegation-request.v1",
               "kcc.inventory-lock.v1",
               "kcc.inventory.v1",
               "kcc.signed-capsule.v1",
@@ -485,7 +489,7 @@ jobs:
           import kavi_capability_compiler as kcc
           assert kcc.__version__==os.environ["KCC_VERSION"]
           assert kcc.SDK_VERSION=="kcc.sdk.v1"
-          assert len(kcc.schema_names())==5
+          assert len(kcc.schema_names())==7
           manifest=kcc.adapt_capabilities(
               "generic",
               {"tools":[{"name":"get_record","description":"Get record","input_schema":{"type":"object"}}]},
@@ -565,6 +569,8 @@ jobs:
           assert kcc.schema_names()==(
               "kcc.capabilities.v1",
               "kcc.capsule.v1",
+              "kcc.delegated-capsule.v1",
+              "kcc.delegation-request.v1",
               "kcc.inventory-lock.v1",
               "kcc.inventory.v1",
               "kcc.signed-capsule.v1",

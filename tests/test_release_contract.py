@@ -39,6 +39,8 @@ def test_public_contract_schema_sources_exist():
         "schemas/kcc.inventory.v1.schema.json",
         "schemas/kcc.inventory-lock.v1.schema.json",
         "schemas/kcc.capsule.v1.schema.json",
+        "schemas/kcc.delegation-request.v1.schema.json",
+        "schemas/kcc.delegated-capsule.v1.schema.json",
         "schemas/kcc.signed-capsule.v1.schema.json",
     ):
         assert Path(path).is_file(), path

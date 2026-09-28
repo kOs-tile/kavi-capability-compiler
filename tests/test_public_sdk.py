@@ -21,6 +21,8 @@ def test_public_api_exposes_framework_neutral_sdk():
     assert kcc.INVENTORY_VERSION=="kcc.inventory.v1"
     assert kcc.INVENTORY_LOCK_VERSION=="kcc.inventory-lock.v1"
     assert kcc.CAPSULE_VERSION=="kcc.capsule.v1"
+    assert kcc.DELEGATION_REQUEST_VERSION=="kcc.delegation-request.v1"
+    assert kcc.DELEGATED_CAPSULE_VERSION=="kcc.delegated-capsule.v1"
     assert "openai" in kcc.SUPPORTED_SOURCE_FORMATS
     assert callable(kcc.Guard)
 
@@ -90,9 +92,11 @@ def test_sync_dispatch_works_without_event_loop():
 def test_public_api_contract_is_explicit_and_framework_neutral():
     expected={
         "__version__","SDK_VERSION","SCHEMA_VERSION","INVENTORY_VERSION",
-        "INVENTORY_LOCK_VERSION","CAPSULE_VERSION","SUPPORTED_SOURCE_FORMATS",
+        "INVENTORY_LOCK_VERSION","CAPSULE_VERSION","DELEGATION_REQUEST_VERSION",
+        "DELEGATED_CAPSULE_VERSION","SUPPORTED_SOURCE_FORMATS",
         "adapt_capabilities","build_manifest","scan_manifest","compile_capsule",
-        "verify_capsule","authorize_call","inventory_lock","diff_inventory_lock",
+        "verify_capsule","attenuate_capsule","verify_delegated_capsule",
+        "authorize_call","inventory_lock","diff_inventory_lock",
         "Guard","AuthorityDenied","ApprovalRequired","CapabilityDenied",
         "get_schema","schema_names",
     }
@@ -105,6 +109,8 @@ def test_packaged_public_schemas_are_available():
     assert names==(
         "kcc.capabilities.v1",
         "kcc.capsule.v1",
+        "kcc.delegated-capsule.v1",
+        "kcc.delegation-request.v1",
         "kcc.inventory-lock.v1",
         "kcc.inventory.v1",
         "kcc.signed-capsule.v1",
@@ -113,10 +119,15 @@ def test_packaged_public_schemas_are_available():
     inventory=kcc.get_schema("kcc.inventory.v1")
     inventory_lock=kcc.get_schema("kcc.inventory-lock.v1")
     capsule=kcc.get_schema("kcc.capsule.v1")
+    delegation_request=kcc.get_schema("kcc.delegation-request.v1")
+    delegated=kcc.get_schema("kcc.delegated-capsule.v1")
     signed=kcc.get_schema("kcc.signed-capsule.v1")
     assert capabilities["title"]=="KCC Universal Capability Manifest"
     assert inventory["title"]=="KCC Capability Inventory"
     assert inventory_lock["title"]=="KCC Inventory Lock"
     assert capsule["title"]=="KCC Execution Capsule"
+    assert delegation_request["title"]=="KCC Delegation Request"
+    assert delegated["title"]=="KCC Delegated Capsule Envelope"
+    assert delegated["properties"]["child_capsule"]["$ref"]=="kcc.capsule.v1.schema.json"
     assert signed["title"]=="KCC Signed Capsule Envelope"
     assert signed["properties"]["capsule"]["$ref"]=="kcc.capsule.v1.schema.json"
