@@ -71,6 +71,10 @@ Delegation may narrow verified parent authority. It may not manufacture trust, w
 
 KCC also does not replace consumer domain-risk accounting. In the exchange execution dogfood, business portfolio/risk checks remain consumer responsibility; KCC bounds what the execution path is authorized to dispatch.
 
+## Candidate RC scope
+
+The current candidate release scope is frozen in `docs/V0.2_RC_SCOPE.md`. New feature work does not enter the candidate unless new evidence satisfies the #58 admission gate. This is a scope-control checkpoint, not a final release decision.
+
 ## Publication status
 
 v0.2.0 remains unreleased. External feedback collection and final release-scope selection are still open.
