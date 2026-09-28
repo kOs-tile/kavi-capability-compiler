@@ -49,7 +49,7 @@ def main() -> None:
     require(notes,direct_wheel)
     require("README.md",EXPECTED_PAGES_INDEX)
     require("docs/EMBEDDED_SDK.md",EXPECTED_PAGES_INDEX)
-    require("docs/RELEASE_CHECKLIST.md",f"## {tag} security patch")
+    require("docs/RELEASE_CHECKLIST.md",f"## {tag}")
     require("SECURITY.md","cryptography>=50.0.1,<51")
     require("SECURITY.md","Remote Streamable HTTP discovery requires HTTPS.")
 

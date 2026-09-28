@@ -2,6 +2,26 @@
 
 All notable changes to KAVI Capability Compiler are documented here.
 
+## 0.2.0 — unreleased development line
+
+### Added
+- deterministic delegation-request and delegated-capsule contracts
+- provable child-authority attenuation across capability, operation, parameter, lifetime, inventory, and trust boundaries
+- additive public schemas `kcc.delegation-request.v1` and `kcc.delegated-capsule.v1`
+- public `attenuate_capsule` and `verify_delegated_capsule` APIs
+
+### Security
+- delegated authority must remain a deterministic subset of verified parent grants
+- parent approval/deny authority cannot be upgraded into child grants
+- ambiguous or unsupported attenuation comparisons fail closed
+- structured-parent to scalar-child attenuation is rejected in v1 to avoid Python equality alias widening such as `1 == True` and `1 == 1.0`
+- child lifetime is clamped to parent expiry and inventory drift invalidates delegation verification
+
+### Compatibility
+- existing `kcc.capsule.v1` and `kcc.sdk.v1` contracts remain intact
+- no new required core dependency
+- latest published stable release remains v0.1.1 until v0.2.0 publication gates are completed
+
 ## 0.1.1 — security patch
 
 ### Security
