@@ -34,7 +34,11 @@ def _context():
         namespace="records",
     )
     inventory = kcc.scan_manifest(manifest)
-    capability_id = inventory["capabilities"][0]["id"]
+    capability_id = next(
+        item["id"]
+        for item in inventory["capabilities"]
+        if item["name"] == "update_record"
+    )
     capsule = kcc.compile_capsule(
         inventory,
         {
