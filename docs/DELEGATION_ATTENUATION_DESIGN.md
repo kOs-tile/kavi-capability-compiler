@@ -119,7 +119,7 @@ Safe cases:
 
 - parent scalar, child same scalar: valid
 - parent scalar, child different scalar: invalid
-- parent structured rule, child scalar: valid only if the scalar deterministically satisfies every parent rule
+- parent structured rule, child scalar: reject in v1; runtime scalar equality can cross structured type boundaries (`1 == True`, `1 == 1.0`), so a safe subset proof is not assumed
 - parent unconstrained, child scalar: valid
 - parent scalar, child structured rule: reject unless a future proof rule can establish that the structured domain is exactly a subset of the singleton parent value
 
@@ -181,7 +181,7 @@ Rules are conjunctive.
 
 For structured parent and child rules, every parent restriction must be preserved or tightened.
 
-A child exact scalar may be accepted against a structured parent rule only after executing the same deterministic rule semantics used by runtime authorization and proving that exact value would be accepted.
+Structured-parent to scalar-child attenuation is rejected in v1. Merely testing the requested scalar against the parent rule is insufficient because the child scalar runtime rule accepts every value that compares equal under Python equality, which can include values the structured parent rejects. A future contract may add typed exact-value semantics if it can prove the full accepted domain.
 
 Malformed or unsupported rules fail closed.
 
@@ -356,7 +356,7 @@ Implementation MUST begin with tests for at least:
 - parent required true, child required false -> reject
 - parent parameter map, child introduces unknown key -> reject
 - parent constrained, child removes whole parameter map -> reject
-- parent structured rule, child exact scalar satisfying parent -> pass
+- parent structured rule, child exact scalar -> reject until typed exact-value subset semantics exist
 - parent structured rule, child exact scalar violating parent -> reject
 
 ### Time widening
