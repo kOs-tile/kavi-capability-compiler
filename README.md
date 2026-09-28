@@ -131,6 +131,24 @@ kcc discover-config mcp.json my-server \
   -o discovery.json --lock-output inventory.lock.json
 ```
 
+## Install KCC with a coding agent
+
+You can hand this repository to a coding agent and ask it to integrate KCC into an existing agent project.
+
+Use the stable published `v0.1.1` release by default. Main is the unreleased v0.2 development line.
+
+Copy/paste:
+
+```text
+Integrate KAVI Capability Compiler into this project using stable v0.1.1.
+Reference: https://github.com/kOs-tile/kavi-capability-compiler
+Read AGENT_INTEGRATION.md before changing code.
+
+Find the real tool dispatcher, inventory the current capability surface, audit before enforcement, and place an inventory-bound KCC Guard immediately before protected dispatch. Do not invent broad allow policy. Unknown authority must fail closed. Add tests proving granted calls reach the dispatcher exactly once and denied/approval-required calls reach it zero times. Preserve existing behavior and report any remaining bypass path or unresolved policy decision.
+```
+
+Full integration contract: `AGENT_INTEGRATION.md`.
+
 ## Try KCC and report what breaks
 
 v0.2 development is feedback-driven. The most useful reports are reproducible cases where KCC is hard to embed, classifies authority unexpectedly, blocks legitimate authority, or fails to block authority that should require denial or approval.
