@@ -216,3 +216,56 @@ def test_current_authority_async_resolver_fails_closed_in_sync_guard():
 
     assert exc.value.reason == "current_authority_resolver_async_unsupported"
     assert dispatches == []
+
+
+
+def test_async_dispatch_supports_async_current_authority_resolver():
+    import asyncio
+
+    inventory, capability_id, capsule = _context()
+    authority_state = {"active": True, "reason": "active"}
+    resolver_calls = []
+
+    async def resolver(context):
+        resolver_calls.append(dict(context))
+        return dict(authority_state)
+
+    guard = kcc.Guard.from_capsule(
+        capsule,
+        inventory=inventory,
+        current_authority_resolver=resolver,
+    )
+    dispatches = []
+
+    async def dispatcher(parameters):
+        dispatches.append(dict(parameters))
+        return {"ok": True}
+
+    first = asyncio.run(
+        guard.dispatch(
+            capability_id,
+            dispatcher,
+            operation="update",
+            parameters={"id": "record-1", "value": "first"},
+            now=101,
+        )
+    )
+    assert first["executed"] is True
+    assert dispatches == [{"id": "record-1", "value": "first"}]
+
+    authority_state.update(active=False, reason="task_reassigned")
+
+    with pytest.raises(kcc.AuthorityDenied) as exc:
+        asyncio.run(
+            guard.dispatch(
+                capability_id,
+                dispatcher,
+                operation="update",
+                parameters={"id": "record-1", "value": "second"},
+                now=102,
+            )
+        )
+
+    assert exc.value.reason == "current_authority_revoked"
+    assert dispatches == [{"id": "record-1", "value": "first"}]
+    assert len(resolver_calls) == 2
