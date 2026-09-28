@@ -26,11 +26,13 @@ class Guard:
         signed_envelope: Mapping[str, Any] | None = None,
         trusted_keys: Mapping[str, Any] | None = None,
         inventory: Mapping[str, Any] | None = None,
+        current_authority_resolver: Callable[[Mapping[str, Any]], Any] | None = None,
     ) -> None:
         self._capsule=deepcopy(dict(capsule))
         self._signed_envelope=deepcopy(dict(signed_envelope)) if signed_envelope is not None else None
         self._trusted_keys=dict(trusted_keys or {})
         self._inventory=deepcopy(dict(inventory)) if inventory is not None else None
+        self._current_authority_resolver=current_authority_resolver
 
     @classmethod
     def from_capsule(
@@ -38,8 +40,13 @@ class Guard:
         capsule: Mapping[str, Any],
         *,
         inventory: Mapping[str, Any] | None = None,
+        current_authority_resolver: Callable[[Mapping[str, Any]], Any] | None = None,
     ) -> "Guard":
-        return cls(capsule,inventory=inventory)
+        return cls(
+            capsule,
+            inventory=inventory,
+            current_authority_resolver=current_authority_resolver,
+        )
 
     @classmethod
     def from_signed(
@@ -49,6 +56,7 @@ class Guard:
         *,
         now: int | None = None,
         inventory: Mapping[str, Any] | None = None,
+        current_authority_resolver: Callable[[Mapping[str, Any]], Any] | None = None,
     ) -> "Guard":
         from .signing import verify_signed_capsule
         result=verify_signed_capsule(envelope,trusted_keys,now=now)
@@ -59,6 +67,7 @@ class Guard:
             signed_envelope=envelope,
             trusted_keys=trusted_keys,
             inventory=inventory,
+            current_authority_resolver=current_authority_resolver,
         )
 
     @property
@@ -73,7 +82,134 @@ class Guard:
     def inventory_bound(self) -> bool:
         return self._inventory is not None
 
-    def authorize(
+    @property
+    def current_authority_bound(self) -> bool:
+        return self._current_authority_resolver is not None
+
+    def _current_authority_context(
+        self,
+        capability_id: str,
+        *,
+        operation: str | None,
+        parameters: Mapping[str, Any],
+        now: int | None,
+    ) -> dict[str, Any]:
+        return {
+            "capsule_id":self.capsule_id,
+            "task":self._capsule.get("task"),
+            "capability_id":capability_id,
+            "operation":operation,
+            "parameters":dict(parameters),
+            "now":now,
+        }
+
+    def _current_authority_decision(
+        self,
+        state: Any,
+        *,
+        capsule_decision: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        if not isinstance(state,Mapping) or type(state.get("active")) is not bool:
+            return {
+                "allowed":False,
+                "reason":"current_authority_unknown",
+                "capsule_decision":dict(capsule_decision),
+            }
+
+        current={"active":state["active"]}
+        if isinstance(state.get("reason"),str) and state["reason"]:
+            current["reason"]=state["reason"]
+
+        if state["active"] is not True:
+            return {
+                "allowed":False,
+                "reason":"current_authority_revoked",
+                "current_authority":current,
+                "capsule_decision":dict(capsule_decision),
+            }
+
+        out=dict(capsule_decision)
+        out["current_authority"]=current
+        return out
+
+    def _resolve_current_authority(
+        self,
+        capability_id: str,
+        *,
+        operation: str | None,
+        parameters: Mapping[str, Any],
+        now: int | None,
+        capsule_decision: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        resolver=self._current_authority_resolver
+        if resolver is None:
+            return dict(capsule_decision)
+
+        context=self._current_authority_context(
+            capability_id,
+            operation=operation,
+            parameters=parameters,
+            now=now,
+        )
+        try:
+            state=resolver(context)
+        except Exception:
+            return {
+                "allowed":False,
+                "reason":"current_authority_resolver_error",
+                "capsule_decision":dict(capsule_decision),
+            }
+
+        if inspect.isawaitable(state):
+            if inspect.iscoroutine(state):
+                state.close()
+            return {
+                "allowed":False,
+                "reason":"current_authority_resolver_async_unsupported",
+                "capsule_decision":dict(capsule_decision),
+            }
+
+        return self._current_authority_decision(
+            state,
+            capsule_decision=capsule_decision,
+        )
+
+    async def _resolve_current_authority_async(
+        self,
+        capability_id: str,
+        *,
+        operation: str | None,
+        parameters: Mapping[str, Any],
+        now: int | None,
+        capsule_decision: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        resolver=self._current_authority_resolver
+        if resolver is None:
+            return dict(capsule_decision)
+
+        context=self._current_authority_context(
+            capability_id,
+            operation=operation,
+            parameters=parameters,
+            now=now,
+        )
+        try:
+            state=resolver(context)
+            if inspect.isawaitable(state):
+                state=await state
+        except Exception:
+            return {
+                "allowed":False,
+                "reason":"current_authority_resolver_error",
+                "capsule_decision":dict(capsule_decision),
+            }
+
+        return self._current_authority_decision(
+            state,
+            capsule_decision=capsule_decision,
+        )
+
+    def _authorize_capsule(
         self,
         capability_id: str,
         *,
@@ -97,6 +233,31 @@ class Guard:
             parameters=dict(parameters or {}),
             now=now,
             inventory=self._inventory,
+        )
+
+    def authorize(
+        self,
+        capability_id: str,
+        *,
+        operation: str | None = None,
+        parameters: Mapping[str, Any] | None = None,
+        now: int | None = None,
+    ) -> dict[str, Any]:
+        params=dict(parameters or {})
+        decision=self._authorize_capsule(
+            capability_id,
+            operation=operation,
+            parameters=params,
+            now=now,
+        )
+        if not decision["allowed"]:
+            return decision
+        return self._resolve_current_authority(
+            capability_id,
+            operation=operation,
+            parameters=params,
+            now=now,
+            capsule_decision=decision,
         )
 
     def require(
@@ -163,12 +324,26 @@ class Guard:
         now: int | None = None,
     ) -> dict[str, Any]:
         params=dict(parameters or {})
-        decision=self.require(
+        decision=self._authorize_capsule(
             capability_id,
             operation=operation,
             parameters=params,
             now=now,
         )
+        if decision["allowed"]:
+            decision=await self._resolve_current_authority_async(
+                capability_id,
+                operation=operation,
+                parameters=params,
+                now=now,
+                capsule_decision=decision,
+            )
+        if not decision["allowed"]:
+            if decision.get("reason")=="approval_required":
+                raise ApprovalRequired(decision)
+            if decision.get("reason")=="capability_denied":
+                raise CapabilityDenied(decision)
+            raise AuthorityDenied(decision)
         result=dispatcher(params)
         if inspect.isawaitable(result):
             result=await result
