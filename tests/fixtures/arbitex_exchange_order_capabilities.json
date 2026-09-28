@@ -1,0 +1,91 @@
+{
+  "server": {
+    "name": "arbitex-execution"
+  },
+  "tools": [
+    {
+      "name": "create_limit_order",
+      "description": "Submit a live limit order to a configured exchange venue",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string"
+          },
+          "side": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "limit_price": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "symbol",
+          "side",
+          "quantity",
+          "limit_price"
+        ]
+      }
+    },
+    {
+      "name": "create_market_order",
+      "description": "Submit a live market order to a configured exchange venue",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string"
+          },
+          "side": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "symbol",
+          "side",
+          "quantity"
+        ]
+      }
+    },
+    {
+      "name": "fetch_order",
+      "description": "Fetch live exchange order status",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "order_id",
+          "symbol"
+        ]
+      }
+    },
+    {
+      "name": "create_work_order",
+      "description": "Create a maintenance work order for a technician",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      }
+    }
+  ]
+}

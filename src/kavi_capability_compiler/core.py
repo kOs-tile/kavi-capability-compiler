@@ -33,6 +33,18 @@ def analyze_capability(tool):
     delete_actions={"delete","remove","destroy","drop","clear","flush","pop","trim","teardown"}
     execute_actions={"exec","execute","evaluate","shell"}
     financial_actions={"payment","transfer","trade","purchase"}
+    financial_order_actions={"create","place","submit","cancel","amend"}
+    name_token_set=set(name_tokens)
+    desc_token_set=set(desc_tokens)
+    financial_order_context=(
+        "order" in name_token_set
+        and bool(name_token_set.intersection(financial_order_actions))
+        and (
+            {"limit","order"} <= name_token_set
+            or {"market","order"} <= name_token_set
+            or bool(desc_token_set.intersection({"exchange","broker","trading","trade","venue"}))
+        )
+    )
     write_actions={"create","update","write","edit","merge","upload","add","append","set","put",
         "insert","rename","push","mark","ack","acknowledge","connect","disconnect","pause","resume",
         "upgrade","build","replace","touch","expire","move","patch","containerize","join","leave"}
@@ -52,8 +64,21 @@ def analyze_capability(tool):
         matches=[x for x in name_tokens if x in execute_actions]
         effect,confidence="execute",0.95
         evidence.append({"kind":"lexical","source":"action","effect":"execute","matches":matches or [leading or "explicit execution evidence"],"confidence":confidence})
-    elif any(x in financial_actions for x in name_tokens) or leading in financial_actions:
+    elif any(x in financial_actions for x in name_tokens) or leading in financial_actions or financial_order_context:
         matches=[x for x in name_tokens if x in financial_actions]
+        if financial_order_context and not matches:
+            matches=[
+                x for x in name_tokens
+                if x in financial_order_actions or x in {"order","limit","market"}
+            ]
+            if "exchange" in desc_token_set:
+                matches.append("exchange")
+            elif "broker" in desc_token_set:
+                matches.append("broker")
+            elif "trading" in desc_token_set or "trade" in desc_token_set:
+                matches.append("trading")
+            elif "venue" in desc_token_set:
+                matches.append("venue")
         effect,confidence="financial",0.95
         evidence.append({"kind":"lexical","source":"action","effect":"financial","matches":matches or [leading],"confidence":confidence})
     elif "deploy" in name_tokens or leading=="deploy" or _phrase(description,"publish production"):
