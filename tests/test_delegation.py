@@ -231,35 +231,36 @@ def test_max_length_can_only_tighten_and_pattern_must_match():
             )
 
 
-def test_structured_parent_accepts_safe_exact_scalar_child():
+@pytest.mark.parametrize(
+    "parent_rule,child_value",
+    [
+        ({"type":"string","enum":["safe","fast"]},"safe"),
+        ({"type":"integer"},1),
+        ({"required":True,"type":"string","enum":["safe"]},"safe"),
+    ],
+)
+def test_structured_parent_to_exact_scalar_fails_closed(parent_rule,child_value):
     inv=_inventory()
     cid=_ids(inv)["update_record"]
-    parent=_parent(inv,constraints={"parameters":{"mode":{"type":"string","enum":["safe","fast"]}}})
-    env=kcc.attenuate_capsule(
-        parent,
-        _request(parent,cid,constraints_marker={"parameters":{"mode":"safe"}}),
-        inv,
-        now=110,
-    )
-    assert kcc.verify_delegated_capsule(env,parent,inv,now=111)["valid"] is True
-
+    key="amount" if parent_rule.get("type")=="integer" else "mode"
+    parent=_parent(inv,constraints={"parameters":{key:parent_rule}})
     with pytest.raises(ValueError,match="parameter"):
         kcc.attenuate_capsule(
             parent,
-            _request(parent,cid,constraints_marker={"parameters":{"mode":"other"}}),
+            _request(parent,cid,constraints_marker={"parameters":{key:child_value}}),
             inv,
             now=110,
         )
 
 
-def test_required_structured_parent_rejects_exact_scalar_child_because_scalar_is_optional():
+def test_python_equality_alias_cannot_widen_typed_parent():
     inv=_inventory()
     cid=_ids(inv)["update_record"]
-    parent=_parent(inv,constraints={"parameters":{"mode":{"required":True,"type":"string","enum":["safe"]}}})
+    parent=_parent(inv,constraints={"parameters":{"amount":{"type":"integer"}}})
     with pytest.raises(ValueError,match="parameter"):
         kcc.attenuate_capsule(
             parent,
-            _request(parent,cid,constraints_marker={"parameters":{"mode":"safe"}}),
+            _request(parent,cid,constraints_marker={"parameters":{"amount":1}}),
             inv,
             now=110,
         )
