@@ -46,61 +46,17 @@ def _validate_constraint_shape(capability: Mapping[str,Any], constraints: Any) -
     return copy.deepcopy(constraints)
 
 
-def _value_satisfies_rule(value: Any, rule: Mapping[str,Any]) -> bool:
-    if "type" in rule:
-        kinds={
-            "string":str,
-            "integer":int,
-            "number":(int,float),
-            "boolean":bool,
-            "array":list,
-            "object":dict,
-        }
-        expected=kinds.get(rule["type"])
-        if expected is None:
-            return False
-        if not isinstance(value,expected):
-            return False
-        if rule["type"] in {"integer","number"} and isinstance(value,bool):
-            return False
-
-    if "max" in rule:
-        try:
-            if value > rule["max"]:
-                return False
-        except (TypeError,ValueError):
-            return False
-    if "min" in rule:
-        try:
-            if value < rule["min"]:
-                return False
-        except (TypeError,ValueError):
-            return False
-    if "enum" in rule and value not in rule["enum"]:
-        return False
-    if "max_length" in rule:
-        try:
-            if len(value) > rule["max_length"]:
-                return False
-        except TypeError:
-            return False
-    if "pattern" in rule:
-        try:
-            if not re.fullmatch(rule["pattern"],str(value)):
-                return False
-        except re.error:
-            return False
-    return True
-
-
 def _rule_is_subset(child: Any, parent: Any) -> bool:
     if not isinstance(parent,dict):
         return not isinstance(child,dict) and child==parent
 
     if not isinstance(child,dict):
-        if parent.get("required") is True:
-            return False
-        return _value_satisfies_rule(child,parent)
+        # Runtime scalar rules use Python equality, whose equivalence classes
+        # can cross structured type boundaries (for example 1 == True and
+        # 1 == 1.0). Until scalar-domain subset semantics can be proven
+        # independently of those aliases, structured -> scalar attenuation
+        # fails closed.
+        return False
 
     if parent.get("required") is True and child.get("required") is not True:
         return False
