@@ -322,6 +322,94 @@ jobs:
           else:
               raise AssertionError("operation widening must fail closed")
           PY
+      - name: Exercise current-authority revocation from installed wheel
+        run: |
+          cd /tmp
+          PYTHONPATH="" /tmp/kcc-wheel/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+
+          manifest=kcc.adapt_capabilities(
+              "generic",
+              {
+                  "tools":[
+                      {
+                          "name":"update_record",
+                          "description":"Update one bounded record",
+                          "input_schema":{
+                              "type":"object",
+                              "properties":{"id":{"type":"string"}},
+                              "required":["id"],
+                          },
+                      }
+                  ]
+              },
+              namespace="wheel-current-authority",
+          )
+          inventory=kcc.scan_manifest(manifest)
+          cid=inventory["capabilities"][0]["id"]
+          capsule=kcc.compile_capsule(
+              inventory,
+              {
+                  "task":"update assigned record",
+                  "capabilities":[cid],
+                  "ttl_seconds":300,
+                  "capability_constraints":{
+                      cid:{
+                          "operations":["update"],
+                          "parameters":{"id":{"type":"string","enum":["record-1"]}},
+                      }
+                  },
+              },
+              {"default":"allow"},
+              now=100,
+          )
+
+          state={"active":True}
+          def resolver(context):
+              assert context["capsule_id"]==capsule["capsule_id"]
+              assert context["capability_id"]==cid
+              return {
+                  "active":state["active"],
+                  "reason":"active" if state["active"] else "task_reassigned",
+              }
+
+          dispatches=[]
+          def dispatcher(params):
+              dispatches.append(dict(params))
+              return {"ok":True}
+
+          guard=kcc.Guard.from_capsule(
+              capsule,
+              inventory=inventory,
+              current_authority_resolver=resolver,
+          )
+          first=guard.dispatch_sync(
+              cid,
+              dispatcher,
+              operation="update",
+              parameters={"id":"record-1"},
+              now=101,
+          )
+          assert first["executed"] is True
+          assert dispatches==[{"id":"record-1"}]
+
+          state["active"]=False
+          try:
+              guard.dispatch_sync(
+                  cid,
+                  dispatcher,
+                  operation="update",
+                  parameters={"id":"record-1"},
+                  now=102,
+              )
+          except kcc.AuthorityDenied as exc:
+              assert exc.reason=="current_authority_revoked", exc.decision
+          else:
+              raise AssertionError("revoked current authority must fail closed")
+
+          assert dispatches==[{"id":"record-1"}]
+          PY
+
       - name: Verify optional MCP command fails with install guidance
         run: |
           set +e
