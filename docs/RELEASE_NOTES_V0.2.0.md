@@ -13,6 +13,7 @@
 - deterministic classifier hardening for explicit exchange/trading order mutations
 - credential-free real-consumer exchange execution boundary dogfood
 - public deterministic capability-ID construction for external planning layers
+- optional dispatch-time host-owned current-authority attenuation before side effects
 - no new required dependency in the default core
 - existing `kcc.capsule.v1` and `kcc.sdk.v1` remain intact
 
@@ -73,7 +74,7 @@ KCC also does not replace consumer domain-risk accounting. In the exchange execu
 
 ## Candidate RC scope
 
-The current candidate release scope is frozen in `docs/V0.2_RC_SCOPE.md`. New feature work does not enter the candidate unless new evidence satisfies the #58 admission gate. This is a scope-control checkpoint, not a final release decision.
+The current candidate release scope is frozen again in `docs/V0.2_RC_SCOPE.md` after the bounded #95 stale-authority fix. New feature work does not enter the candidate unless new evidence satisfies the #58 admission gate. This is a scope-control checkpoint, not a final release decision.
 
 ## Dispatch-time current authority
 
