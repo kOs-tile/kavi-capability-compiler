@@ -151,6 +151,132 @@ jobs:
           inventory=json.load(open("/tmp/inventory.json"))
           assert inventory["version"]=="kcc.inventory.v1"
           PY
+      - name: Exercise delegation API from installed wheel
+        run: |
+          cd /tmp
+          PYTHONPATH="" /tmp/kcc-wheel/bin/python - <<'PY'
+          from pathlib import Path
+          import kavi_capability_compiler as kcc
+
+          module_path=Path(kcc.__file__).resolve()
+          assert module_path.is_relative_to(Path("/tmp/kcc-wheel").resolve()), module_path
+          assert kcc.DELEGATION_REQUEST_VERSION=="kcc.delegation-request.v1"
+          assert kcc.DELEGATED_CAPSULE_VERSION=="kcc.delegated-capsule.v1"
+
+          manifest=kcc.adapt_capabilities(
+              "generic",
+              {
+                  "tools":[
+                      {
+                          "name":"update_record",
+                          "description":"Update a record",
+                          "input_schema":{
+                              "type":"object",
+                              "properties":{"mode":{"type":"string"}},
+                              "required":["mode"],
+                          },
+                      }
+                  ]
+              },
+              namespace="wheel-delegation-smoke",
+          )
+          inventory=kcc.scan_manifest(manifest)
+          assert len(inventory["capabilities"])==1
+          cid=inventory["capabilities"][0]["id"]
+
+          parent_intent={
+              "task":"update a record in an explicitly allowed mode",
+              "capabilities":[cid],
+              "ttl_seconds":600,
+              "capability_constraints":{
+                  cid:{
+                      "operations":["update"],
+                      "parameters":{
+                          "mode":{
+                              "required":True,
+                              "type":"string",
+                              "enum":["safe","fast"],
+                          }
+                      },
+                  }
+              },
+          }
+          parent_policy={
+              "default":"deny",
+              "allow":[{"capabilities":[cid]}],
+          }
+          parent=kcc.compile_capsule(
+              inventory,
+              parent_intent,
+              parent_policy,
+              now=100,
+          )
+          assert parent["status"]=="ready"
+
+          request={
+              "version":kcc.DELEGATION_REQUEST_VERSION,
+              "parent_capsule_id":parent["capsule_id"],
+              "task":"perform only the safe update",
+              "ttl_seconds":120,
+              "capabilities":[
+                  {
+                      "id":cid,
+                      "constraints":{
+                          "operations":["update"],
+                          "parameters":{
+                              "mode":{
+                                  "required":True,
+                                  "type":"string",
+                                  "enum":["safe"],
+                              }
+                          },
+                      },
+                  }
+              ],
+          }
+          delegated=kcc.attenuate_capsule(
+              parent,
+              request,
+              inventory,
+              now=110,
+          )
+          verification=kcc.verify_delegated_capsule(
+              delegated,
+              parent,
+              inventory,
+              now=111,
+          )
+          assert verification["valid"] is True, verification
+          child=delegated["child_capsule"]
+          assert child["expires_at"] <= parent["expires_at"]
+          assert child["grants"][0]["constraints"]["operations"]==["update"]
+          assert child["grants"][0]["constraints"]["parameters"]["mode"]["enum"]==["safe"]
+
+          widening={
+              **request,
+              "capabilities":[
+                  {
+                      "id":cid,
+                      "constraints":{
+                          "operations":["update","delete"],
+                          "parameters":{
+                              "mode":{
+                                  "required":True,
+                                  "type":"string",
+                                  "enum":["safe"],
+                              }
+                          },
+                      },
+                  }
+              ],
+          }
+          try:
+              kcc.attenuate_capsule(parent,widening,inventory,now=110)
+          except ValueError:
+              pass
+          else:
+              raise AssertionError("operation widening must fail closed")
+          PY
       - name: Verify optional MCP command fails with install guidance
         run: |
           set +e
