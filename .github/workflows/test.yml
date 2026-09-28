@@ -252,6 +252,51 @@ jobs:
           assert child["grants"][0]["constraints"]["operations"]==["update"]
           assert child["grants"][0]["constraints"]["parameters"]["mode"]["enum"]==["safe"]
 
+          dispatches=[]
+          def dispatcher(params):
+              dispatches.append(dict(params))
+              return {"ok":True,"params":dict(params)}
+
+          guard=kcc.Guard.from_capsule(child,inventory=inventory)
+          allowed=guard.dispatch_sync(
+              cid,
+              dispatcher,
+              operation="update",
+              parameters={"mode":"safe"},
+              now=111,
+          )
+          assert allowed["executed"] is True
+          assert allowed["result"]["ok"] is True
+          assert dispatches==[{"mode":"safe"}]
+
+          try:
+              guard.dispatch_sync(
+                  cid,
+                  dispatcher,
+                  operation="delete",
+                  parameters={"mode":"safe"},
+                  now=111,
+              )
+          except kcc.AuthorityDenied as exc:
+              assert exc.reason=="operation_not_granted", exc.decision
+          else:
+              raise AssertionError("delegated operation widening must be denied before dispatch")
+          assert dispatches==[{"mode":"safe"}]
+
+          try:
+              guard.dispatch_sync(
+                  cid,
+                  dispatcher,
+                  operation="update",
+                  parameters={"mode":"fast"},
+                  now=111,
+              )
+          except kcc.AuthorityDenied as exc:
+              assert exc.reason=="parameter_not_allowed:mode", exc.decision
+          else:
+              raise AssertionError("delegated parameter widening must be denied before dispatch")
+          assert dispatches==[{"mode":"safe"}]
+
           widening={
               **request,
               "capabilities":[
