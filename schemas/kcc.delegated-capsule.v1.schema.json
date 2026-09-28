@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kavi-ai.com/schemas/kcc.delegated-capsule.v1.schema.json",
+  "title": "KCC Delegated Capsule Envelope",
+  "type": "object",
+  "required": [
+    "version", "parent_capsule_id", "child_capsule",
+    "attenuation_request_digest", "provenance", "fail_closed", "envelope_id"
+  ],
+  "properties": {
+    "version": {"const": "kcc.delegated-capsule.v1"},
+    "parent_capsule_id": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "child_capsule": {"$ref": "kcc.capsule.v1.schema.json"},
+    "attenuation_request_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "provenance": {
+      "type": "object",
+      "required": [
+        "kind", "parent_intent_digest", "parent_policy_digest",
+        "child_policy_digest_semantics"
+      ],
+      "properties": {
+        "kind": {"const": "attenuation"},
+        "parent_intent_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "parent_policy_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "child_policy_digest_semantics": {"const": "inherited_authorization_provenance"}
+      },
+      "additionalProperties": false
+    },
+    "fail_closed": {"const": true},
+    "envelope_id": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}
