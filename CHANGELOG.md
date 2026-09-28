@@ -9,6 +9,9 @@ All notable changes to KAVI Capability Compiler are documented here.
 - provable child-authority attenuation across capability, operation, parameter, lifetime, inventory, and trust boundaries
 - additive public schemas `kcc.delegation-request.v1` and `kcc.delegated-capsule.v1`
 - public `attenuate_capsule` and `verify_delegated_capsule` APIs
+- safe coding-agent integration contract and copy/paste adoption path
+- clean installed-wheel delegation-to-Guard runtime evidence
+- credential-free real-consumer exchange execution boundary case study
 
 ### Security
 - delegated authority must remain a deterministic subset of verified parent grants
@@ -16,6 +19,13 @@ All notable changes to KAVI Capability Compiler are documented here.
 - ambiguous or unsupported attenuation comparisons fail closed
 - structured-parent to scalar-child attenuation is rejected in v1 to avoid Python equality alias widening such as `1 == True` and `1 == 1.0`
 - child lifetime is clamped to parent expiry and inventory drift invalidates delegation verification
+- explicit exchange/trading order mutations are classified as financial/high-impact while generic work-order creation and order-status reads retain their narrower semantics
+- real-consumer exchange dogfood proves wrong symbol, side, quantity, and ungranted order-mode calls are blocked before host dispatch
+
+### Evidence
+- clean installed-wheel delegated child executes through the public Guard with denied widening reaching the host zero times
+- first real-consumer authority misclassification was minimized into a deterministic regression fixture
+- real-consumer exchange execution authority is representable with current framework-neutral contracts without a new core dependency
 
 ### Compatibility
 - existing `kcc.capsule.v1` and `kcc.sdk.v1` contracts remain intact
