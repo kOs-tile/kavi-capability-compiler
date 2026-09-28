@@ -26,11 +26,13 @@ class Guard:
         signed_envelope: Mapping[str, Any] | None = None,
         trusted_keys: Mapping[str, Any] | None = None,
         inventory: Mapping[str, Any] | None = None,
+        current_authority_resolver: Callable[[Mapping[str, Any]], Mapping[str, Any]] | None = None,
     ) -> None:
         self._capsule=deepcopy(dict(capsule))
         self._signed_envelope=deepcopy(dict(signed_envelope)) if signed_envelope is not None else None
         self._trusted_keys=dict(trusted_keys or {})
         self._inventory=deepcopy(dict(inventory)) if inventory is not None else None
+        self._current_authority_resolver=current_authority_resolver
 
     @classmethod
     def from_capsule(
@@ -38,8 +40,13 @@ class Guard:
         capsule: Mapping[str, Any],
         *,
         inventory: Mapping[str, Any] | None = None,
+        current_authority_resolver: Callable[[Mapping[str, Any]], Mapping[str, Any]] | None = None,
     ) -> "Guard":
-        return cls(capsule,inventory=inventory)
+        return cls(
+            capsule,
+            inventory=inventory,
+            current_authority_resolver=current_authority_resolver,
+        )
 
     @classmethod
     def from_signed(
@@ -49,6 +56,7 @@ class Guard:
         *,
         now: int | None = None,
         inventory: Mapping[str, Any] | None = None,
+        current_authority_resolver: Callable[[Mapping[str, Any]], Mapping[str, Any]] | None = None,
     ) -> "Guard":
         from .signing import verify_signed_capsule
         result=verify_signed_capsule(envelope,trusted_keys,now=now)
@@ -59,6 +67,7 @@ class Guard:
             signed_envelope=envelope,
             trusted_keys=trusted_keys,
             inventory=inventory,
+            current_authority_resolver=current_authority_resolver,
         )
 
     @property
@@ -72,6 +81,80 @@ class Guard:
     @property
     def inventory_bound(self) -> bool:
         return self._inventory is not None
+
+    @property
+    def current_authority_bound(self) -> bool:
+        return self._current_authority_resolver is not None
+
+    def _resolve_current_authority(
+        self,
+        capability_id: str,
+        *,
+        operation: str | None,
+        parameters: Mapping[str, Any],
+        now: int | None,
+        capsule_decision: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        """Attenuate a capsule allow with host-owned current authority.
+
+        The resolver is deliberately host supplied. KCC owns no revocation
+        service or network dependency. The resolver cannot grant authority:
+        this method is only reached after the capsule decision is already allow.
+        """
+        resolver=self._current_authority_resolver
+        if resolver is None:
+            return dict(capsule_decision)
+
+        context={
+            "capsule_id":self.capsule_id,
+            "task":self._capsule.get("task"),
+            "capability_id":capability_id,
+            "operation":operation,
+            "parameters":dict(parameters),
+            "now":now,
+        }
+        try:
+            state=resolver(context)
+        except Exception:
+            return {
+                "allowed":False,
+                "reason":"current_authority_resolver_error",
+                "capsule_decision":dict(capsule_decision),
+            }
+
+        if inspect.isawaitable(state):
+            if inspect.iscoroutine(state):
+                state.close()
+            return {
+                "allowed":False,
+                "reason":"current_authority_resolver_async_unsupported",
+                "capsule_decision":dict(capsule_decision),
+            }
+
+        if not isinstance(state,Mapping) or type(state.get("active")) is not bool:
+            return {
+                "allowed":False,
+                "reason":"current_authority_unknown",
+                "capsule_decision":dict(capsule_decision),
+            }
+
+        current={
+            "active":state["active"],
+        }
+        if isinstance(state.get("reason"),str) and state["reason"]:
+            current["reason"]=state["reason"]
+
+        if state["active"] is not True:
+            return {
+                "allowed":False,
+                "reason":"current_authority_revoked",
+                "current_authority":current,
+                "capsule_decision":dict(capsule_decision),
+            }
+
+        out=dict(capsule_decision)
+        out["current_authority"]=current
+        return out
 
     def authorize(
         self,
@@ -90,13 +173,23 @@ class Guard:
                     "reason":"signed_capsule_invalid",
                     "verification":verified,
                 }
-        return authorize_call(
+        params=dict(parameters or {})
+        decision=authorize_call(
             self._capsule,
             capability_id,
             operation=operation,
-            parameters=dict(parameters or {}),
+            parameters=params,
             now=now,
             inventory=self._inventory,
+        )
+        if not decision["allowed"]:
+            return decision
+        return self._resolve_current_authority(
+            capability_id,
+            operation=operation,
+            parameters=params,
+            now=now,
+            capsule_decision=decision,
         )
 
     def require(
