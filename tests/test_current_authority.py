@@ -19,6 +19,15 @@ def _context():
                         },
                         "required": ["id", "value"],
                     },
+                },
+                {
+                    "name": "delete_record",
+                    "description": "Delete one record",
+                    "input_schema": {
+                        "type": "object",
+                        "properties": {"id": {"type": "string"}},
+                        "required": ["id"],
+                    },
                 }
             ]
         },
@@ -178,9 +187,15 @@ def test_current_authority_resolver_cannot_widen_capsule_authority():
     )
     dispatches = []
 
+    ungranted_capability = next(
+        item["id"]
+        for item in inventory["capabilities"]
+        if item["name"] == "delete_record"
+    )
+
     with pytest.raises(kcc.AuthorityDenied) as exc:
         guard.dispatch_sync(
-            "kcc:records:delete_record",
+            ungranted_capability,
             lambda parameters: dispatches.append(dict(parameters)),
             operation="delete",
             parameters={"id": "record-1"},
