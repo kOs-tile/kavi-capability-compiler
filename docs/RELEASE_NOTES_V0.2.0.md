@@ -75,6 +75,18 @@ KCC also does not replace consumer domain-risk accounting. In the exchange execu
 
 The current candidate release scope is frozen in `docs/V0.2_RC_SCOPE.md`. New feature work does not enter the candidate unless new evidence satisfies the #58 admission gate. This is a scope-control checkpoint, not a final release decision.
 
+## Dispatch-time current authority
+
+External integration feedback exposed a stale-authority gap: a capsule can remain
+valid and unexpired after the host revokes, reassigns, or withdraws the underlying
+authority.
+
+The v0.2 candidate therefore adds an optional host-owned
+`current_authority_resolver` at the Guard boundary. It is evaluated after normal
+capsule authorization and before dispatch, so it can only preserve or reduce
+authority. Revoked, unknown, malformed, or resolver-error states fail closed
+before the dispatcher. See `docs/CURRENT_AUTHORITY_V0.2.md`.
+
 ## Publication status
 
 v0.2.0 remains unreleased. External feedback collection and final release-scope selection are still open.
