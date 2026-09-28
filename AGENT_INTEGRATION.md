@@ -18,6 +18,29 @@ python -m pip install --index-url https://kos-tile.github.io/kavi-capability-com
 
 Do not use repository main or unreleased v0.2 behavior unless the user explicitly asks to test development code and accepts an unreleased API surface.
 
+## Unreleased v0.2 current-authority testing
+
+If the user explicitly asks to test the frozen v0.2 candidate rather than stable
+v0.1.1, also inspect whether the host has mutable authority that can change after
+capsule compilation: approval withdrawal, task reassignment, worker/session
+invalidations, or grant revocation.
+
+The v0.2 development Guard can accept a host-owned
+`current_authority_resolver`. When configured, it is evaluated only after normal
+capsule authorization and immediately before dispatch. It may preserve or reduce
+authority; it cannot widen a capsule denial.
+
+For hosts that require immediate revocation semantics, prove:
+
+1. the valid capsule dispatches while host authority is active;
+2. host authority is revoked/reassigned without mutating the capsule;
+3. the same unexpired capsule is denied before the next side effect;
+4. unknown/malformed resolver state and resolver failure also fail closed;
+5. the dispatcher count does not increase on any stale-authority denial.
+
+Do not claim that stable v0.1.1 has this resolver surface. It is an unreleased
+v0.2 development behavior until publication.
+
 ## Integration invariant
 
 For every protected tool call:
