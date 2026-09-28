@@ -1,4 +1,6 @@
 import copy
+import json
+from pathlib import Path
 from kavi_capability_compiler.core import *
 
 SNAP={"server":{"name":"demo"},"tools":[
@@ -195,3 +197,64 @@ def test_compile_rejects_inventory_with_security_analysis_tampering():
         assert False, "expected invalid inventory integrity"
     except ValueError as exc:
         assert "Invalid inventory integrity" in str(exc)
+
+
+def test_real_consumer_exchange_order_mutations_are_financial():
+    fixture=json.loads(
+        Path("tests/fixtures/arbitex_exchange_order_capabilities.json").read_text()
+    )
+    inv=scan_mcp_snapshot(fixture)
+    by_name={c["name"]:c for c in inv["capabilities"]}
+
+    assert by_name["create_limit_order"]["effect"]=="financial"
+    assert by_name["create_market_order"]["effect"]=="financial"
+    assert by_name["fetch_order"]["effect"]=="read"
+    assert by_name["create_work_order"]["effect"]=="write"
+
+    findings=audit_inventory(inv)["findings"]
+    financial_ids={
+        by_name["create_limit_order"]["id"],
+        by_name["create_market_order"]["id"],
+    }
+    assert financial_ids <= {
+        f["capability"]
+        for f in findings
+        if f["code"]=="KCC-A110" and f["severity"]=="high"
+    }
+
+
+def test_exchange_order_financial_rule_requires_mutation_and_trading_context():
+    positive=[
+        {
+            "name":"place_order",
+            "description":"Place an order on a cryptocurrency exchange",
+        },
+        {
+            "name":"submit_order",
+            "description":"Submit an order to the trading venue",
+        },
+        {
+            "name":"cancel_limit_order",
+            "description":"Cancel a limit order on an exchange",
+        },
+    ]
+    for tool in positive:
+        effect,confidence=classify(tool)
+        assert effect=="financial", (tool,effect)
+        assert confidence >= 0.5
+
+    negative=[
+        {
+            "name":"create_work_order",
+            "description":"Create a maintenance work order for a technician",
+            "expected":"write",
+        },
+        {
+            "name":"fetch_order",
+            "description":"Fetch order status from an exchange",
+            "expected":"read",
+        },
+    ]
+    for tool in negative:
+        effect,_=classify(tool)
+        assert effect==tool["expected"], (tool,effect)
