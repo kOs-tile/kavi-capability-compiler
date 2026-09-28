@@ -1,6 +1,8 @@
 # KAVI Capability Compiler
 
-> **Status — v0.1.1 published.** The GitHub Release is live at tag `v0.1.1`, bound to commit `3b49a4c05069bbad5bb192451642e63b1e8a5110`. Wheel and source-distribution digests are published in `SHA256SUMS`. PyPI remains an optional later mirror.
+> **Stable release — v0.1.1 published.** The GitHub Release is live at tag `v0.1.1`, bound to commit `3b49a4c05069bbad5bb192451642e63b1e8a5110`. Wheel and source-distribution digests are published in `SHA256SUMS`. PyPI remains an optional later mirror.
+>
+> **Main branch — v0.2.0 development.** Main contains unreleased additive delegation/attenuation work. Public install commands below intentionally continue to target the verified v0.1.1 release until v0.2.0 is explicitly published.
 
 KCC is a framework-agnostic **least-authority compiler for AI agents**.
 
