@@ -12,6 +12,7 @@
 - clean installed-wheel execution of the public delegation API and delegated-child Guard boundary
 - deterministic classifier hardening for explicit exchange/trading order mutations
 - credential-free real-consumer exchange execution boundary dogfood
+- public deterministic capability-ID construction for external planning layers
 - no new required dependency in the default core
 - existing `kcc.capsule.v1` and `kcc.sdk.v1` remain intact
 
@@ -45,6 +46,12 @@ A minimized real-consumer exchange execution case study now also proves:
 - wrong symbol, opposite side, larger quantity, and an ungranted market-order call never reach the host dispatcher
 - consumer-owned idempotency metadata can remain host-injected after authorization rather than becoming agent-controlled authority
 - no exchange, network, credentials, model, or paid API is required for the regression evidence
+
+### External identity contract
+
+A second real integration audit found that an external capability planner could correctly prepare a KCC task intent for simple snake_case tool names yet mis-predict the inventory ID when a valid server/tool name contained case differences, spaces, `:`, or `%`.
+
+v0.2 exposes KCC's existing deterministic `capability_id(...)` constructor publicly and documents its normalization/escaping rules. This does not change any existing capability ID or authority behavior; it removes the need for external planners to copy a private identity algorithm.
 
 ### Adoption
 

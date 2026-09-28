@@ -12,6 +12,7 @@ All notable changes to KAVI Capability Compiler are documented here.
 - safe coding-agent integration contract and copy/paste adoption path
 - clean installed-wheel delegation-to-Guard runtime evidence
 - credential-free real-consumer exchange execution boundary case study
+- public `capability_id(...)` utility for deterministic external capability identity construction
 
 ### Security
 - delegated authority must remain a deterministic subset of verified parent grants
@@ -28,6 +29,7 @@ All notable changes to KAVI Capability Compiler are documented here.
 - real-consumer exchange execution authority is representable with current framework-neutral contracts without a new core dependency
 
 ### Compatibility
+- canonical capability ID behavior is unchanged; v0.2 exposes the existing constructor publicly so external planners do not have to copy a private normalization rule
 - existing `kcc.capsule.v1` and `kcc.sdk.v1` contracts remain intact
 - no new required core dependency
 - latest published stable release remains v0.1.1 until v0.2.0 publication gates are completed
