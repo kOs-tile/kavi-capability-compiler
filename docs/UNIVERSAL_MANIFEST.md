@@ -37,11 +37,32 @@ Each capability has:
 - semantic `fingerprint`
 - non-authoritative `source` provenance
 
-KCC identity is:
+KCC identity for a universal-manifest capability is:
 
 `kcc:<namespace>:<name>`
 
-Same-named tools in different namespaces do not collide.
+Identity components are canonicalized deterministically before joining:
+
+1. trim surrounding whitespace;
+2. lowercase;
+3. replace spaces with `-`;
+4. escape `%` as `%25`;
+5. escape `:` as `%3a`.
+
+Use the public `kcc.capability_id(provider, namespace_or_server, name)` helper when an external planner must name an exact KCC capability before compilation. This helper is an identity utility only; it does not classify, authorize, or grant anything.
+
+For example:
+
+```python
+import kavi_capability_compiler as kcc
+
+cid = kcc.capability_id("mcp", "Research Desk", "Fetch:Price%Now")
+assert cid == "mcp:research-desk:fetch%3aprice%25now"
+```
+
+Direct MCP snapshot scanning uses `provider="mcp"` plus the observed MCP server name. Universal-manifest inventory scanning uses `provider="kcc"` plus the manifest namespace.
+
+Same-named tools in different namespaces do not collide, and escaped delimiters cannot alias component boundaries.
 
 ## Semantic fingerprint
 
