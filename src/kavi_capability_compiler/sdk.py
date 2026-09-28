@@ -26,7 +26,7 @@ class Guard:
         signed_envelope: Mapping[str, Any] | None = None,
         trusted_keys: Mapping[str, Any] | None = None,
         inventory: Mapping[str, Any] | None = None,
-        current_authority_resolver: Callable[[Mapping[str, Any]], Mapping[str, Any]] | None = None,
+        current_authority_resolver: Callable[[Mapping[str, Any]], Any] | None = None,
     ) -> None:
         self._capsule=deepcopy(dict(capsule))
         self._signed_envelope=deepcopy(dict(signed_envelope)) if signed_envelope is not None else None
@@ -40,7 +40,7 @@ class Guard:
         capsule: Mapping[str, Any],
         *,
         inventory: Mapping[str, Any] | None = None,
-        current_authority_resolver: Callable[[Mapping[str, Any]], Mapping[str, Any]] | None = None,
+        current_authority_resolver: Callable[[Mapping[str, Any]], Any] | None = None,
     ) -> "Guard":
         return cls(
             capsule,
@@ -56,7 +56,7 @@ class Guard:
         *,
         now: int | None = None,
         inventory: Mapping[str, Any] | None = None,
-        current_authority_resolver: Callable[[Mapping[str, Any]], Mapping[str, Any]] | None = None,
+        current_authority_resolver: Callable[[Mapping[str, Any]], Any] | None = None,
     ) -> "Guard":
         from .signing import verify_signed_capsule
         result=verify_signed_capsule(envelope,trusted_keys,now=now)
