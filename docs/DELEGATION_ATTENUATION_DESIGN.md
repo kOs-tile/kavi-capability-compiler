@@ -48,7 +48,11 @@ A valid attenuation proof does not make an invalid, expired, drifted, forged, or
 
 Delegation can narrow authority. It cannot manufacture trust.
 
-For a signed parent, signature verification remains a prerequisite. A child must not be treated as inheriting signature trust merely because it references a signed parent. Signed delegated authority, if added, requires an explicit signed delegation envelope or equivalent trust-chain contract.
+For a signed parent, signature verification remains a prerequisite.
+
+Once a signed parent has been verified, a deterministic proof that the child is a strict subset of that parent is sufficient to preserve the parent's authority safety boundary. A separate child signature is not required merely to prove that the child has no more authority than the trusted parent: anyone holding a valid parent can at worst derive less authority.
+
+This does **not** authenticate who performed the delegation. If an application needs authenticated delegator identity, non-repudiation, or an audit receipt for who created the child, that is a separate optional signed-delegation concern and must not be confused with authority attenuation safety.
 
 ## Source authority
 
@@ -233,21 +237,63 @@ The delegated envelope must distinguish:
 - the attenuation request;
 - the derived child capsule.
 
-Do not overwrite provenance fields in a way that falsely suggests the child was independently compiled from a policy that was never evaluated.
+The concrete provenance decision is:
 
-Before implementation, the concrete child provenance encoding must be reviewed against the existing capsule schema.
+1. define a canonical `kcc.delegation-request.v1` object;
+2. compute `attenuation_request_digest = digest(delegation_request)`;
+3. set the child capsule `intent_digest` to that attenuation-request digest;
+4. inherit the parent capsule `policy_digest` into the child as **authorization provenance**, not as evidence that the policy was independently re-evaluated;
+5. record that inheritance explicitly in the delegated envelope provenance block;
+6. copy the parent's top-level `constraints` field unchanged because it is currently non-authoritative metadata and must not be silently reinterpreted during delegation.
 
-## Proposed delegated-envelope shape
+A delegated child is therefore truthfully described as: "derived from this parent authority by this exact attenuation request under the parent policy provenance."
 
-Illustrative only:
+The child `task` may be supplied by the delegation request for audit/context purposes, but task text is not itself authority.
+
+A successful child uses empty `approvals` and `denials` arrays. Delegation does not transform parent approval/deny entries into a new decision state; requests for non-granted parent authority fail derivation.
+
+### Delegation request v1
+
+The initial request contract should contain only security-relevant derivation inputs:
+
+```json
+{
+  "version": "kcc.delegation-request.v1",
+  "parent_capsule_id": "<sha256>",
+  "task": "optional child task context",
+  "ttl_seconds": 300,
+  "capabilities": [
+    {
+      "id": "provider:server:tool",
+      "constraints": {
+        "operations": ["read"],
+        "parameters": {}
+      }
+    }
+  ]
+}
+```
+
+The final schema must be closed with `additionalProperties: false`.
+
+Effect, risk flags, fingerprints, inventory digest, policy digest, and trust material are not caller-controlled request fields. They are copied or derived from verified parent state.
+
+## Delegated-envelope shape
+
+The initial envelope binds the child to an externally supplied exact parent by digest rather than embedding a second full capsule:
 
 ```json
 {
   "version": "kcc.delegated-capsule.v1",
   "parent_capsule_id": "<sha256>",
-  "parent_capsule": { "...": "kcc.capsule.v1" },
   "child_capsule": { "...": "kcc.capsule.v1" },
   "attenuation_request_digest": "<sha256>",
+  "provenance": {
+    "kind": "attenuation",
+    "parent_intent_digest": "<sha256>",
+    "parent_policy_digest": "<sha256>",
+    "child_policy_digest_semantics": "inherited_authorization_provenance"
+  },
   "fail_closed": true,
   "envelope_id": "<sha256>"
 }
@@ -255,7 +301,11 @@ Illustrative only:
 
 The final schema must be closed with `additionalProperties: false`.
 
-Whether embedding the full parent capsule or binding it externally by digest is preferable remains an implementation-review decision; verification must never accept an unverifiable parent reference.
+Verification requires the exact parent capsule as an input and checks that its `capsule_id` equals `parent_capsule_id`. A caller may instead supply a verified signed-parent envelope through a signing helper, which first verifies the signature and then passes the contained parent capsule into the same core attenuation verifier.
+
+This keeps the core zero-required-dependency contract, avoids duplicating the parent artifact inside every child envelope, and prevents a bare parent digest from being treated as sufficient evidence.
+
+Applications that need a self-contained transport bundle may package parent + delegated envelope externally without changing the core contracts.
 
 ## Verification algorithm
 
@@ -263,8 +313,8 @@ A future `verify_delegated_capsule` should:
 
 1. verify delegated-envelope integrity and version;
 2. verify `fail_closed=true`;
-3. verify the supplied/embedded parent capsule using normal KCC verification;
-4. verify parent trust/signature requirements when applicable;
+3. require the exact parent capsule as verifier input and verify it using normal KCC verification;
+4. when the parent arrives through a signed envelope, verify that signature/trust first and then use the verified contained parent capsule;
 5. verify parent capsule ID binding;
 6. verify child capsule integrity and ordinary capsule invariants;
 7. compare child capability set to parent grants;
@@ -338,7 +388,8 @@ No runtime delegation API, Guard integration, signing extension, or public schem
 
 - this design is reviewed;
 - parameter subset semantics are encoded as deterministic tests;
-- provenance representation is resolved without lying about policy/intent origin;
-- compatibility impact on `kcc.capsule.v1`, `kcc.sdk.v1`, and signed capsules is explicitly checked.
+- provenance representation above is preserved without implying independent child policy evaluation;
+- compatibility impact on `kcc.capsule.v1`, `kcc.sdk.v1`, and signed capsules is explicitly checked;
+- authenticated delegator identity remains optional and separate from attenuation safety.
 
 The v0.1.1 invariants remain authoritative throughout.
