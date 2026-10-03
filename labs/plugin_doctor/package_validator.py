@@ -438,22 +438,8 @@ def validate_package(
             continue
         valid_skills += 1
 
-    for path in skill_paths:
-        if path.endswith("/SKILL.md") and len(path.split("/")) != 3:
-            findings.append(
-                PackageFinding(
-                    code="PD-SKILL-005",
-                    severity="high",
-                    path=path,
-                    blocker=True,
-                    message="SKILL.md must be in an immediate child directory of skills/.",
-                    remediation="Move the skill manifest to skills/<skill-name>/SKILL.md.",
-                    source_url=OPENAI_SUBMISSION_ERRORS,
-                )
-            )
-
     usable_mcp_servers = remote_mcp_servers if public_submission else configured_mcp_servers
-    if valid_skills == 0 and usable_mcp_servers == 0:
+    if public_submission and valid_skills == 0 and usable_mcp_servers == 0:
         findings.append(
             PackageFinding(
                 code="PD-PKG-007",
