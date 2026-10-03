@@ -159,6 +159,7 @@ def validate_package(
     valid_skills = 0
     configured_mcp_servers = 0
     remote_mcp_servers = 0
+    embedded_listing_complete = False
 
     if "plugin.json" not in normalized:
         findings.append(
@@ -242,18 +243,6 @@ def validate_package(
                         source_url=PLUGIN_SCHEMA,
                     )
                 )
-            elif public_submission and (not isinstance(description, str) or not description.strip()):
-                findings.append(
-                    PackageFinding(
-                        code="PD-PKG-005",
-                        severity="high",
-                        path="plugin.json",
-                        blocker=True,
-                        message="OpenAI directory submission requires a nonempty plugin description.",
-                        remediation="Add a concise, accurate root description.",
-                        source_url=OPENAI_SUBMISSION_ERRORS,
-                    )
-                )
 
             version = plugin.get("version")
             if version is not None and not isinstance(version, str):
@@ -281,20 +270,20 @@ def validate_package(
                     )
                 )
 
-            author = plugin.get("author")
-            author_name = author.get("name") if isinstance(author, dict) else None
-            if public_submission and (not isinstance(author_name, str) or not author_name.strip()):
-                findings.append(
-                    PackageFinding(
-                        code="PD-OAI-PKG-008",
-                        severity="high",
-                        path="plugin.json",
-                        blocker=True,
-                        message="OpenAI directory submission requires author.name.",
-                        remediation="Add a nonempty author.name to plugin.json.",
-                        source_url=OPENAI_SUBMISSION_ERRORS,
-                    )
-                )
+            extensions = plugin.get("extensions")
+            openai_extension = extensions.get("com.openai") if isinstance(extensions, dict) else None
+            interface = openai_extension.get("interface") if isinstance(openai_extension, dict) else None
+            required_listing_fields = (
+                "displayName",
+                "shortDescription",
+                "longDescription",
+                "developerName",
+                "category",
+            )
+            embedded_listing_complete = isinstance(interface, dict) and all(
+                isinstance(interface.get(field), str) and bool(interface.get(field).strip())
+                for field in required_listing_fields
+            )
 
     if "mcp.json" in normalized:
         mcp = _parse_json_file(normalized, "mcp.json", findings)
@@ -483,10 +472,12 @@ def validate_package(
             "valid_skills": valid_skills,
             "configured_mcp_servers": configured_mcp_servers,
             "remote_mcp_servers": remote_mcp_servers,
+            "embedded_listing_complete": embedded_listing_complete,
+            "portal_checks_unverified": bool(public_submission),
             "findings": len(rows),
             "unique_rule_codes": unique_rule_codes,
             "blockers": sum(1 for row in rows if row["blocker"]),
         },
         "findings": rows,
-        "disclaimer": "Package validation reflects published structure/review rules plus explicitly labeled KAVI checks; it does not guarantee approval.",
+        "disclaimer": "SHIP means no source-visible blockers were found. Portal-dependent requirements such as verified developer identity, listing completion, scans, domain verification, and reviewer setup are not verified by a repository audit and approval is not guaranteed.",
     }
