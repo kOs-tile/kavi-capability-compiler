@@ -11,3 +11,6 @@ dependencies = [
   "httpx>=0.28,<1",
   "kavi-capability-compiler[mcp] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.1/kavi_capability_compiler-0.1.1-py3-none-any.whl"
 ]
+
+[tool.setuptools]
+py-modules = ["main", "ingest", "doctor"]
