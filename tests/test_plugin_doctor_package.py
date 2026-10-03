@@ -14,6 +14,7 @@ def _plugin():
             "name": "doctor-fixture",
             "version": "0.1.0",
             "description": "Fixture plugin for deterministic package validation.",
+            "author": {"name": "KAVI Test"},
         }
     )
 
@@ -128,3 +129,53 @@ def test_local_only_package_accepts_configured_stdio_mcp():
     assert local_report["summary"]["configured_mcp_servers"] == 1
     assert public_report["state"] == "BLOCKED"
     assert any(f["code"] == "PD-MCP-007" for f in public_report["findings"])
+
+
+def test_portable_profile_allows_dot_name_and_optional_submission_metadata():
+    report = validate_package(
+        {
+            "plugin.json": json.dumps(
+                {
+                    "$schema": PLUGIN_SCHEMA,
+                    "name": "acme.tools",
+                }
+            ),
+            "skills/hello/SKILL.md": (
+                "---\n"
+                "name: hello\n"
+                "description: >-\n"
+                "  Greet the user when they explicitly ask\n"
+                "  for a greeting.\n"
+                "---\n"
+                "Say hello."
+            ),
+        },
+        public_submission=False,
+    )
+    assert report["state"] == "SHIP"
+    assert report["summary"]["validation_profile"] == "agent_plugins_1_0"
+    assert report["summary"]["valid_skills"] == 1
+
+
+def test_openai_directory_profile_blocks_portable_dot_name_and_missing_metadata():
+    report = validate_package(
+        {
+            "plugin.json": json.dumps(
+                {
+                    "$schema": PLUGIN_SCHEMA,
+                    "name": "acme.tools",
+                }
+            ),
+            "skills/hello/SKILL.md": (
+                "---\nname: hello\ndescription: Say hello.\n---\nHello."
+            ),
+        },
+        public_submission=True,
+    )
+    codes = {f["code"] for f in report["findings"]}
+    assert report["state"] == "BLOCKED"
+    assert report["summary"]["validation_profile"] == "openai_directory"
+    assert "PD-OAI-PKG-004" in codes
+    assert "PD-PKG-005" in codes
+    assert "PD-OAI-PKG-006" in codes
+    assert "PD-OAI-PKG-008" in codes
