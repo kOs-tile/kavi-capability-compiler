@@ -204,6 +204,20 @@ def audit_inventory_readiness(inventory: dict[str, Any]) -> dict[str, Any]:
             }
         )
 
+    ambiguous_capabilities = {
+        row.get("capability")
+        for row in kcc_rows
+        if row.get("code") == "KCC-A100"
+    }
+    doctor_rows = [
+        row
+        for row in doctor_rows
+        if not (
+            row.get("code") == "PD-S001"
+            and row.get("capability") in ambiguous_capabilities
+        )
+    ]
+
     findings = kcc_rows + doctor_rows
     score = max(
         0,
