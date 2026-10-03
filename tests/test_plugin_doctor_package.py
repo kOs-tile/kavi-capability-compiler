@@ -182,3 +182,31 @@ def test_openai_directory_profile_blocks_portable_dot_name_and_missing_metadata(
     assert "PD-PKG-005" in codes
     assert "PD-OAI-PKG-006" in codes
     assert "PD-OAI-PKG-008" in codes
+
+
+def test_repeated_rule_instances_do_not_size_bias_score():
+    report = validate_package(
+        {
+            "plugin.json": _plugin(),
+            "mcp.json": json.dumps(
+                {
+                    "$schema": MCP_SCHEMA,
+                    "mcpServers": {
+                        "one": {"type": "stdio", "command": "one"},
+                        "two": {"type": "stdio", "command": "two"},
+                        "three": {"type": "stdio", "command": "three"},
+                    },
+                }
+            ),
+            "skills/hello/SKILL.md": (
+                "---\nname: hello\ndescription: Say hello.\n---\nHello."
+            ),
+        },
+        public_submission=True,
+    )
+
+    assert report["state"] == "BLOCKED"
+    assert report["score"] == 85
+    assert report["summary"]["blockers"] == 3
+    assert report["summary"]["unique_rule_codes"] == 1
+    assert [f["code"] for f in report["findings"]].count("PD-MCP-007") == 3
