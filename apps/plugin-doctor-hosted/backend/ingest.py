@@ -124,6 +124,8 @@ async def _validate_public_mcp_url(raw_url: str) -> tuple[str, str]:
         raise ValueError("Remote MCP audit requires an HTTPS URL.")
     if parsed.username or parsed.password:
         raise ValueError("Remote MCP URL must not contain userinfo credentials.")
+    if parsed.query or parsed.fragment:
+        raise ValueError("Hosted remote MCP audit URLs must not contain query strings or fragments.")
 
     host = parsed.hostname.rstrip(".").lower()
     if host == "localhost" or host.endswith(".localhost"):
