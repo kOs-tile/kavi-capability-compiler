@@ -227,6 +227,19 @@ h1 span { color: #7d8794; }
 .state.fix { color: var(--amber); }
 .state.blocked { color: var(--red); }
 
+.score-wrap {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+
+.score-label {
+  color: var(--dim);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .14em;
+}
+
 .score {
   display: flex;
   align-items: baseline;
@@ -362,6 +375,7 @@ footer {
   .audit-form { grid-template-columns: 1fr; }
   .primary { min-height: 48px; }
   .result-head { align-items: flex-start; flex-wrap: wrap; gap: 20px; }
+  .score-wrap { justify-items: start; }
   .score strong { font-size: 58px; }
   .result-actions { align-items: flex-start; flex-direction: column; }
   footer { flex-direction: column; }
