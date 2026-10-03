@@ -73,7 +73,9 @@ def test_plugin_doctor_unknown_tool_is_blocked():
         namespace="test",
     )
     assert report["state"] == "BLOCKED"
-    assert any(f["code"] == "PD-S001" for f in report["findings"])
+    codes = {f["code"] for f in report["findings"]}
+    assert "KCC-A100" in codes
+    assert "PD-S001" not in codes
 
 
 def test_plugin_doctor_missing_metadata_is_blocked():
@@ -84,7 +86,8 @@ def test_plugin_doctor_missing_metadata_is_blocked():
     )
     codes = {f["code"] for f in report["findings"]}
     assert report["state"] == "BLOCKED"
-    assert {"PD-OAI-D001", "PD-Q001", "PD-S001", "PD-OAI-A001"} <= codes
+    assert {"PD-OAI-D001", "PD-Q001", "KCC-A100", "PD-OAI-A001"} <= codes
+    assert "PD-S001" not in codes
 
 
 def test_plugin_doctor_high_impact_tool_is_fix_not_auto_block():
