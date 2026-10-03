@@ -15,7 +15,8 @@ OPENAI_SKILLS_DOCS = "https://developers.openai.com/plugins/build/skills"
 OPENAI_SUBMISSION_ERRORS = "https://developers.openai.com/plugins/deploy/submission-errors"
 OPENAI_SUBMISSION_DOCS = "https://developers.openai.com/plugins/deploy/submission"
 
-_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+_PORTABLE_NAME_RE = re.compile(r"^(?!.*(?:--|\\.\\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")
+_OPENAI_SUBMISSION_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 _SEMVER_RE = re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:[-+][0-9A-Za-z.-]+)?$")
 
 _DEDUCTIONS = {"critical": 35, "high": 15, "medium": 6, "low": 2}
@@ -65,6 +66,11 @@ def _parse_json_file(files: Mapping[str, str], path: str, findings: list[Package
 
 
 def _frontmatter(text: str) -> tuple[dict[str, str] | None, str | None]:
+    """Parse the two Agent Skills identity fields without pretending to be a full YAML loader.
+
+    Supports plain/quoted scalar values and YAML literal/folded block scalars for
+    top-level name/description. Nested metadata is ignored.
+    """
     lines = text.splitlines()
     if not lines or lines[0].strip() != "---":
         return None, "missing"
@@ -74,20 +80,34 @@ def _frontmatter(text: str) -> tuple[dict[str, str] | None, str | None]:
         return None, "unclosed"
 
     data: dict[str, str] = {}
-    for line in lines[1:end]:
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#"):
+    i = 1
+    while i < end:
+        raw = lines[i]
+        stripped = raw.strip()
+        i += 1
+        if not stripped or stripped.startswith("#") or raw[:1].isspace():
             continue
-        if ":" not in stripped:
+        if ":" not in raw:
             return None, "malformed"
-        key, value = stripped.split(":", 1)
+        key, value = raw.split(":", 1)
         key = key.strip()
-        value = value.strip().strip('"').strip("'")
+        value = value.strip()
         if not key:
             return None, "malformed"
-        data[key] = value
-    return data, None
 
+        if value in {"|", "|-", "|+", ">", ">-", ">+"}:
+            block: list[str] = []
+            while i < end:
+                candidate = lines[i]
+                if candidate and not candidate[:1].isspace():
+                    break
+                block.append(candidate.strip())
+                i += 1
+            sep = "\n" if value.startswith("|") else " "
+            data[key] = sep.join(part for part in block if part).strip()
+        else:
+            data[key] = value.strip('"').strip("'")
+    return data, None
 
 def _is_public_https(url: str) -> bool:
     try:
@@ -166,43 +186,95 @@ def validate_package(
                 )
 
             name = plugin.get("name")
-            if not isinstance(name, str) or not name or len(name) > 64 or not _NAME_RE.fullmatch(name):
+            if not isinstance(name, str) or not name or len(name) > 64 or not _PORTABLE_NAME_RE.fullmatch(name):
                 findings.append(
                     PackageFinding(
                         code="PD-PKG-004",
                         severity="high",
                         path="plugin.json",
                         blocker=True,
-                        message="Plugin name is missing or not submission-safe kebab-case.",
-                        remediation="Use <=64 lowercase letters/numbers separated by single hyphens.",
+                        message="Plugin name does not conform to the Agent Plugins 1.0 manifest schema.",
+                        remediation="Use 1-64 lowercase letters/numbers/dots/single hyphens; do not use consecutive '--' or '..'.",
+                        source_url=PLUGIN_SCHEMA,
+                    )
+                )
+            elif public_submission and not _OPENAI_SUBMISSION_NAME_RE.fullmatch(name):
+                findings.append(
+                    PackageFinding(
+                        code="PD-OAI-PKG-004",
+                        severity="high",
+                        path="plugin.json",
+                        blocker=True,
+                        message="Plugin name is portable but does not meet OpenAI directory submission naming rules.",
+                        remediation="For OpenAI directory submission, use lowercase letters/numbers separated by single hyphens.",
                         source_url=OPENAI_SUBMISSION_DOCS,
                     )
                 )
 
             description = plugin.get("description")
-            if not isinstance(description, str) or not description.strip():
+            if description is not None and not isinstance(description, str):
+                findings.append(
+                    PackageFinding(
+                        code="PD-PKG-005A",
+                        severity="high",
+                        path="plugin.json",
+                        blocker=True,
+                        message="Plugin description must be a string when present.",
+                        remediation="Use a string value for description.",
+                        source_url=PLUGIN_SCHEMA,
+                    )
+                )
+            elif public_submission and (not isinstance(description, str) or not description.strip()):
                 findings.append(
                     PackageFinding(
                         code="PD-PKG-005",
                         severity="high",
                         path="plugin.json",
                         blocker=True,
-                        message="Plugin description is missing.",
+                        message="OpenAI directory submission requires a nonempty plugin description.",
                         remediation="Add a concise, accurate root description.",
-                        source_url=OPENAI_PACKAGE_DOCS,
+                        source_url=OPENAI_SUBMISSION_ERRORS,
                     )
                 )
 
             version = plugin.get("version")
-            if public_submission and (not isinstance(version, str) or not _SEMVER_RE.fullmatch(version)):
+            if version is not None and not isinstance(version, str):
                 findings.append(
                     PackageFinding(
-                        code="PD-PKG-006",
-                        severity="medium",
+                        code="PD-PKG-006A",
+                        severity="high",
                         path="plugin.json",
-                        message="Public submission should use an explicit semantic version.",
+                        blocker=True,
+                        message="Plugin version must be a string when present.",
+                        remediation="Use a string version or omit it for portable-only packages.",
+                        source_url=PLUGIN_SCHEMA,
+                    )
+                )
+            elif public_submission and (not isinstance(version, str) or not _SEMVER_RE.fullmatch(version)):
+                findings.append(
+                    PackageFinding(
+                        code="PD-OAI-PKG-006",
+                        severity="high",
+                        path="plugin.json",
+                        blocker=True,
+                        message="OpenAI directory submission requires an explicit semantic version.",
                         remediation="Add a semantic version such as 0.1.0.",
-                        source_url=OPENAI_SUBMISSION_DOCS,
+                        source_url=OPENAI_SUBMISSION_ERRORS,
+                    )
+                )
+
+            author = plugin.get("author")
+            author_name = author.get("name") if isinstance(author, dict) else None
+            if public_submission and (not isinstance(author_name, str) or not author_name.strip()):
+                findings.append(
+                    PackageFinding(
+                        code="PD-OAI-PKG-008",
+                        severity="high",
+                        path="plugin.json",
+                        blocker=True,
+                        message="OpenAI directory submission requires author.name.",
+                        remediation="Add a nonempty author.name to plugin.json.",
+                        source_url=OPENAI_SUBMISSION_ERRORS,
                     )
                 )
 
@@ -402,6 +474,7 @@ def validate_package(
         "state": "BLOCKED" if blocked else ("FIX" if rows else "SHIP"),
         "score": score,
         "summary": {
+            "validation_profile": "openai_directory" if public_submission else "agent_plugins_1_0",
             "files": len(normalized),
             "valid_skills": valid_skills,
             "configured_mcp_servers": configured_mcp_servers,
