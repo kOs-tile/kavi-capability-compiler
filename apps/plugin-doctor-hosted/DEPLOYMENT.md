@@ -101,3 +101,9 @@ Keep:
 
 After cleanup, re-list Vercel projects and verify the four temporary projects
 are absent before considering the cleanup complete.
+
+
+## Preview integration checkpoint
+
+A branch push on `product/plugin-doctor-web-v0` is used to verify the dedicated
+Vercel Git integration and preview deployment path before production promotion.
