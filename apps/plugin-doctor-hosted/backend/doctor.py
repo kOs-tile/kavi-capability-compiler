@@ -233,6 +233,12 @@ def audit_inventory_readiness(inventory: Mapping[str, Any]) -> dict[str, Any]:
             )
         )
 
+    kcc_unknown_capabilities = {
+        row.get("capability")
+        for row in kcc_audit.get("findings", [])
+        if row.get("code") == "KCC-A100"
+    }
+
     for capability in inventory.get("capabilities", []):
         cid = capability.get("id")
         description = str(capability.get("description") or "").strip()
@@ -254,7 +260,7 @@ def audit_inventory_readiness(inventory: Mapping[str, Any]) -> dict[str, Any]:
         if not schema:
             findings.append(Finding("PD-Q001", "high", "Tool has no bounded input schema.", True, "Provide an explicit JSON Schema for accepted arguments.", capability=cid))
 
-        if effect == "unknown":
+        if effect == "unknown" and cid not in kcc_unknown_capabilities:
             findings.append(Finding("PD-S001", "high", "Capability authority/effect is unknown.", True, "Clarify action semantics so authority can be classified without guessing.", capability=cid))
 
         if "annotation_conflict" in flags:
