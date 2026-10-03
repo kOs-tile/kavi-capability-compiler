@@ -1,0 +1,132 @@
+name: plugin-doctor-web
+
+on:
+  pull_request:
+    branches:
+      - main
+      - product/plugin-doctor-v0
+    paths:
+      - "apps/plugin-doctor-hosted/**"
+      - ".github/workflows/plugin-doctor-web.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Install frontend dependencies
+        working-directory: apps/plugin-doctor-hosted/frontend
+        run: npm install --no-audit --no-fund
+      - name: Build frontend
+        working-directory: apps/plugin-doctor-hosted/frontend
+        run: npm run build
+
+  backend-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - name: Install backend
+        working-directory: apps/plugin-doctor-hosted/backend
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install .
+          python -m pip install pytest
+      - name: Run backend tests
+        working-directory: apps/plugin-doctor-hosted/backend
+        run: pytest -q
+
+
+  services-e2e:
+    needs:
+      - frontend-build
+      - backend-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - name: Install Vercel CLI
+        run: npm install --global vercel@59.19.1
+      - name: Start local Vercel Services
+        working-directory: apps/plugin-doctor-hosted
+        env:
+          CI: "1"
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          vercel dev -L --listen 3000 > /tmp/plugin-doctor-vercel.log 2>&1 &
+          echo $! > /tmp/plugin-doctor-vercel.pid
+
+          for i in $(seq 1 90); do
+            if curl --fail --silent http://127.0.0.1:3000/api/health > /tmp/health.json; then
+              exit 0
+            fi
+            sleep 2
+          done
+
+          cat /tmp/plugin-doctor-vercel.log
+          exit 1
+      - name: Verify full hosted flow
+        run: |
+          curl --fail --silent http://127.0.0.1:3000/ > /tmp/home.html
+          grep -F "KAVI / PLUGIN DOCTOR" /tmp/home.html
+
+          curl --fail --silent \
+            -H "content-type: application/json" \
+            -d '{"kind":"github","target":"https://github.com/AvdLee/Swift-Concurrency-Agent-Skill"}' \
+            http://127.0.0.1:3000/api/audit > /tmp/audit.json
+
+          python - <<'PY'
+          import json
+
+          health=json.load(open("/tmp/health.json"))
+          audit=json.load(open("/tmp/audit.json"))
+          report=audit["report"]
+
+          assert health["ok"] is True, health
+          assert report["state"]=="SHIP", report
+          assert report["score"]==100, report
+          assert report["summary"]["blockers"]==0, report
+          assert report["summary"]["valid_skills"] >= 1, report
+
+          print(json.dumps({
+              "health": health["ok"],
+              "state": report["state"],
+              "score": report["score"],
+              "blockers": report["summary"]["blockers"],
+              "valid_skills": report["summary"]["valid_skills"],
+          }, sort_keys=True))
+          PY
+      - name: Print Vercel logs on failure
+        if: failure()
+        run: cat /tmp/plugin-doctor-vercel.log || true
+      - name: Stop local Vercel Services
+        if: always()
+        run: |
+          if test -f /tmp/plugin-doctor-vercel.pid; then
+            kill "$(cat /tmp/plugin-doctor-vercel.pid)" || true
+          fi

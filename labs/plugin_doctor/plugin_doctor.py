@@ -43,6 +43,24 @@ class DoctorFinding:
         }
 
 
+def _score_findings(rows: list[dict[str, Any]]) -> tuple[int, int]:
+    """Score rule coverage, not raw repetition count.
+
+    Repeated instances of the same rule remain visible in findings/blockers but
+    deduct from the 100-point heuristic only once, avoiding plugin-size bias.
+    """
+    severities_by_code: dict[str, str] = {}
+    rank = {"low": 0, "medium": 1, "high": 2, "critical": 3}
+    for index, row in enumerate(rows):
+        code = str(row.get("code") or f"finding-{index}")
+        severity = str(row.get("severity") or "medium")
+        current = severities_by_code.get(code)
+        if current is None or rank.get(severity, 1) > rank.get(current, 1):
+            severities_by_code[code] = severity
+    score = max(0, 100 - sum(_DEDUCTIONS.get(severity, 6) for severity in severities_by_code.values()))
+    return score, len(severities_by_code)
+
+
 def _doctor_findings(inventory: dict[str, Any]) -> list[DoctorFinding]:
     findings: list[DoctorFinding] = []
     required_annotation_keys = ("readOnlyHint", "destructiveHint", "openWorldHint")
@@ -204,12 +222,22 @@ def audit_inventory_readiness(inventory: dict[str, Any]) -> dict[str, Any]:
             }
         )
 
+    ambiguous_capabilities = {
+        row.get("capability")
+        for row in kcc_rows
+        if row.get("code") == "KCC-A100"
+    }
+    doctor_rows = [
+        row
+        for row in doctor_rows
+        if not (
+            row.get("code") == "PD-S001"
+            and row.get("capability") in ambiguous_capabilities
+        )
+    ]
+
     findings = kcc_rows + doctor_rows
-    score = max(
-        0,
-        100
-        - sum(_DEDUCTIONS.get(row.get("severity", "medium"), 6) for row in findings),
-    )
+    score, unique_rule_codes = _score_findings(findings)
     blocked = any(bool(row.get("blocker")) for row in findings)
     state = "BLOCKED" if blocked else ("FIX" if findings else "SHIP")
 
@@ -220,6 +248,7 @@ def audit_inventory_readiness(inventory: dict[str, Any]) -> dict[str, Any]:
         "summary": {
             "capabilities": len(inventory.get("capabilities", [])),
             "findings": len(findings),
+            "unique_rule_codes": unique_rule_codes,
             "blockers": sum(1 for row in findings if row.get("blocker")),
         },
         "inventory_digest": inventory.get("digest"),

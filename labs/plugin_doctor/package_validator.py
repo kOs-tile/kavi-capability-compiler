@@ -15,7 +15,8 @@ OPENAI_SKILLS_DOCS = "https://developers.openai.com/plugins/build/skills"
 OPENAI_SUBMISSION_ERRORS = "https://developers.openai.com/plugins/deploy/submission-errors"
 OPENAI_SUBMISSION_DOCS = "https://developers.openai.com/plugins/deploy/submission"
 
-_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+_PORTABLE_NAME_RE = re.compile(r"^(?!.*(?:--|\\.\\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")
+_OPENAI_SUBMISSION_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 _SEMVER_RE = re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:[-+][0-9A-Za-z.-]+)?$")
 
 _DEDUCTIONS = {"critical": 35, "high": 15, "medium": 6, "low": 2}
@@ -43,6 +44,24 @@ class PackageFinding:
         }
 
 
+def _score_findings(rows: list[dict[str, Any]]) -> tuple[int, int]:
+    """Score rule coverage, not raw repetition count.
+
+    Repeated instances of the same rule remain visible in findings/blockers but
+    deduct from the 100-point heuristic only once, avoiding plugin-size bias.
+    """
+    severities_by_code: dict[str, str] = {}
+    rank = {"low": 0, "medium": 1, "high": 2, "critical": 3}
+    for index, row in enumerate(rows):
+        code = str(row.get("code") or f"finding-{index}")
+        severity = str(row.get("severity") or "medium")
+        current = severities_by_code.get(code)
+        if current is None or rank.get(severity, 1) > rank.get(current, 1):
+            severities_by_code[code] = severity
+    score = max(0, 100 - sum(_DEDUCTIONS.get(severity, 6) for severity in severities_by_code.values()))
+    return score, len(severities_by_code)
+
+
 def _parse_json_file(files: Mapping[str, str], path: str, findings: list[PackageFinding]) -> Any:
     raw = files.get(path)
     if raw is None:
@@ -65,6 +84,11 @@ def _parse_json_file(files: Mapping[str, str], path: str, findings: list[Package
 
 
 def _frontmatter(text: str) -> tuple[dict[str, str] | None, str | None]:
+    """Parse the two Agent Skills identity fields without pretending to be a full YAML loader.
+
+    Supports plain/quoted scalar values and YAML literal/folded block scalars for
+    top-level name/description. Nested metadata is ignored.
+    """
     lines = text.splitlines()
     if not lines or lines[0].strip() != "---":
         return None, "missing"
@@ -74,20 +98,34 @@ def _frontmatter(text: str) -> tuple[dict[str, str] | None, str | None]:
         return None, "unclosed"
 
     data: dict[str, str] = {}
-    for line in lines[1:end]:
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#"):
+    i = 1
+    while i < end:
+        raw = lines[i]
+        stripped = raw.strip()
+        i += 1
+        if not stripped or stripped.startswith("#") or raw[:1].isspace():
             continue
-        if ":" not in stripped:
+        if ":" not in raw:
             return None, "malformed"
-        key, value = stripped.split(":", 1)
+        key, value = raw.split(":", 1)
         key = key.strip()
-        value = value.strip().strip('"').strip("'")
+        value = value.strip()
         if not key:
             return None, "malformed"
-        data[key] = value
-    return data, None
 
+        if value in {"|", "|-", "|+", ">", ">-", ">+"}:
+            block: list[str] = []
+            while i < end:
+                candidate = lines[i]
+                if candidate and not candidate[:1].isspace():
+                    break
+                block.append(candidate.strip())
+                i += 1
+            sep = "\n" if value.startswith("|") else " "
+            data[key] = sep.join(part for part in block if part).strip()
+        else:
+            data[key] = value.strip('"').strip("'")
+    return data, None
 
 def _is_public_https(url: str) -> bool:
     try:
@@ -121,6 +159,7 @@ def validate_package(
     valid_skills = 0
     configured_mcp_servers = 0
     remote_mcp_servers = 0
+    embedded_listing_complete = False
 
     if "plugin.json" not in normalized:
         findings.append(
@@ -166,45 +205,85 @@ def validate_package(
                 )
 
             name = plugin.get("name")
-            if not isinstance(name, str) or not name or len(name) > 64 or not _NAME_RE.fullmatch(name):
+            if not isinstance(name, str) or not name or len(name) > 64 or not _PORTABLE_NAME_RE.fullmatch(name):
                 findings.append(
                     PackageFinding(
                         code="PD-PKG-004",
                         severity="high",
                         path="plugin.json",
                         blocker=True,
-                        message="Plugin name is missing or not submission-safe kebab-case.",
-                        remediation="Use <=64 lowercase letters/numbers separated by single hyphens.",
+                        message="Plugin name does not conform to the Agent Plugins 1.0 manifest schema.",
+                        remediation="Use 1-64 lowercase letters/numbers/dots/single hyphens; do not use consecutive '--' or '..'.",
+                        source_url=PLUGIN_SCHEMA,
+                    )
+                )
+            elif public_submission and not _OPENAI_SUBMISSION_NAME_RE.fullmatch(name):
+                findings.append(
+                    PackageFinding(
+                        code="PD-OAI-PKG-004",
+                        severity="high",
+                        path="plugin.json",
+                        blocker=True,
+                        message="Plugin name is portable but does not meet OpenAI directory submission naming rules.",
+                        remediation="For OpenAI directory submission, use lowercase letters/numbers separated by single hyphens.",
                         source_url=OPENAI_SUBMISSION_DOCS,
                     )
                 )
 
             description = plugin.get("description")
-            if not isinstance(description, str) or not description.strip():
+            if description is not None and not isinstance(description, str):
                 findings.append(
                     PackageFinding(
-                        code="PD-PKG-005",
+                        code="PD-PKG-005A",
                         severity="high",
                         path="plugin.json",
                         blocker=True,
-                        message="Plugin description is missing.",
-                        remediation="Add a concise, accurate root description.",
-                        source_url=OPENAI_PACKAGE_DOCS,
+                        message="Plugin description must be a string when present.",
+                        remediation="Use a string value for description.",
+                        source_url=PLUGIN_SCHEMA,
                     )
                 )
 
             version = plugin.get("version")
-            if public_submission and (not isinstance(version, str) or not _SEMVER_RE.fullmatch(version)):
+            if version is not None and not isinstance(version, str):
                 findings.append(
                     PackageFinding(
-                        code="PD-PKG-006",
-                        severity="medium",
+                        code="PD-PKG-006A",
+                        severity="high",
                         path="plugin.json",
-                        message="Public submission should use an explicit semantic version.",
-                        remediation="Add a semantic version such as 0.1.0.",
-                        source_url=OPENAI_SUBMISSION_DOCS,
+                        blocker=True,
+                        message="Plugin version must be a string when present.",
+                        remediation="Use a string version or omit it for portable-only packages.",
+                        source_url=PLUGIN_SCHEMA,
                     )
                 )
+            elif public_submission and (not isinstance(version, str) or not _SEMVER_RE.fullmatch(version)):
+                findings.append(
+                    PackageFinding(
+                        code="PD-OAI-PKG-006",
+                        severity="high",
+                        path="plugin.json",
+                        blocker=True,
+                        message="OpenAI directory submission requires an explicit semantic version.",
+                        remediation="Add a semantic version such as 0.1.0.",
+                        source_url=OPENAI_SUBMISSION_ERRORS,
+                    )
+                )
+
+            extensions = plugin.get("extensions")
+            openai_extension = extensions.get("com.openai") if isinstance(extensions, dict) else None
+            interface = openai_extension.get("interface") if isinstance(openai_extension, dict) else None
+            required_listing_fields = (
+                "displayName",
+                "shortDescription",
+                "longDescription",
+                "developerName",
+                "category",
+            )
+            embedded_listing_complete = isinstance(interface, dict) and all(
+                isinstance(interface.get(field), str) and bool(interface.get(field).strip())
+                for field in required_listing_fields
+            )
 
     if "mcp.json" in normalized:
         mcp = _parse_json_file(normalized, "mcp.json", findings)
@@ -366,22 +445,8 @@ def validate_package(
             continue
         valid_skills += 1
 
-    for path in skill_paths:
-        if path.endswith("/SKILL.md") and len(path.split("/")) != 3:
-            findings.append(
-                PackageFinding(
-                    code="PD-SKILL-005",
-                    severity="high",
-                    path=path,
-                    blocker=True,
-                    message="SKILL.md must be in an immediate child directory of skills/.",
-                    remediation="Move the skill manifest to skills/<skill-name>/SKILL.md.",
-                    source_url=OPENAI_SUBMISSION_ERRORS,
-                )
-            )
-
     usable_mcp_servers = remote_mcp_servers if public_submission else configured_mcp_servers
-    if valid_skills == 0 and usable_mcp_servers == 0:
+    if public_submission and valid_skills == 0 and usable_mcp_servers == 0:
         findings.append(
             PackageFinding(
                 code="PD-PKG-007",
@@ -394,7 +459,7 @@ def validate_package(
         )
 
     rows = [finding.as_dict() for finding in findings]
-    score = max(0, 100 - sum(_DEDUCTIONS.get(row["severity"], 6) for row in rows))
+    score, unique_rule_codes = _score_findings(rows)
     blocked = any(row["blocker"] for row in rows)
 
     return {
@@ -402,13 +467,17 @@ def validate_package(
         "state": "BLOCKED" if blocked else ("FIX" if rows else "SHIP"),
         "score": score,
         "summary": {
+            "validation_profile": "openai_directory" if public_submission else "agent_plugins_1_0",
             "files": len(normalized),
             "valid_skills": valid_skills,
             "configured_mcp_servers": configured_mcp_servers,
             "remote_mcp_servers": remote_mcp_servers,
+            "embedded_listing_complete": embedded_listing_complete,
+            "portal_checks_unverified": bool(public_submission),
             "findings": len(rows),
+            "unique_rule_codes": unique_rule_codes,
             "blockers": sum(1 for row in rows if row["blocker"]),
         },
         "findings": rows,
-        "disclaimer": "Package validation reflects published structure/review rules plus explicitly labeled KAVI checks; it does not guarantee approval.",
+        "disclaimer": "SHIP means no source-visible blockers were found. Portal-dependent requirements such as verified developer identity, listing completion, scans, domain verification, and reviewer setup are not verified by a repository audit and approval is not guaranteed.",
     }

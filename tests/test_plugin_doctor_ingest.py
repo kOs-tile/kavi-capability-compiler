@@ -23,6 +23,7 @@ def test_github_repo_loader_reads_only_plugin_surface_and_never_returns_token():
             "name": "github-fixture",
             "version": "0.1.0",
             "description": "Fixture plugin loaded through the GitHub ingestion boundary.",
+            "author": {"name": "KAVI Test"},
         }
     )
     skill = (
@@ -130,6 +131,7 @@ def test_local_loader_reads_only_relevant_plugin_files(tmp_path):
                 "name": "local-fixture",
                 "version": "0.1.0",
                 "description": "Local package ingestion fixture.",
+                "author": {"name": "KAVI Test"},
             }
         ),
         encoding="utf-8",
