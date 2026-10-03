@@ -96,7 +96,9 @@ def load_github_plugin_files(
         if path in {"plugin.json", "mcp.json", ".codex-plugin/plugin.json", ".mcp.json"}:
             candidate_paths.append(path)
         elif path.startswith("skills/") and path.endswith("/SKILL.md"):
-            candidate_paths.append(path)
+            parts = path.split("/")
+            if len(parts) == 3 and parts[0] == "skills" and parts[2] == "SKILL.md":
+                candidate_paths.append(path)
 
     candidate_paths = sorted(set(candidate_paths))
     if len(candidate_paths) > MAX_FILES:
@@ -150,9 +152,6 @@ def load_local_plugin_files(root: str | Path) -> dict[str, Any]:
                 manifest = child / "SKILL.md"
                 if manifest.is_file():
                     candidate_paths.append(manifest)
-                for nested in child.rglob("SKILL.md"):
-                    if nested != manifest and nested.is_file():
-                        candidate_paths.append(nested)
 
     candidate_paths = sorted(set(candidate_paths))
     if len(candidate_paths) > MAX_FILES:
