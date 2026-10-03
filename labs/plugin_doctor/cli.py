@@ -62,7 +62,8 @@ def main() -> None:
                     loaded["files"],
                     public_submission=not args.local_only,
                 ),
-            }
+            },
+            args.html_out,
         )
         return
 
