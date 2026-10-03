@@ -115,3 +115,31 @@ def test_plugin_doctor_high_impact_tool_is_fix_not_auto_block():
     )
     assert report["state"] == "FIX"
     assert any(f["code"] == "PD-R001" for f in report["findings"])
+
+
+def test_repeated_tool_rule_instances_do_not_size_bias_score():
+    tools = []
+    for index in range(3):
+        tools.append(
+            {
+                "name": f"read_record_{index}",
+                "description": "Read one bounded record using its stable identifier.",
+                "input_schema": {
+                    "type": "object",
+                    "properties": {"id": {"type": "string"}},
+                },
+                "annotations": {"readOnlyHint": True},
+            }
+        )
+
+    report = audit_source(
+        "generic",
+        {"tools": tools},
+        namespace="test",
+    )
+
+    assert report["state"] == "BLOCKED"
+    assert report["score"] == 85
+    assert report["summary"]["blockers"] == 3
+    assert report["summary"]["unique_rule_codes"] == 1
+    assert [f["code"] for f in report["findings"]].count("PD-OAI-A001") == 3
