@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - product/plugin-doctor-v0
     paths:
       - "apps/plugin-doctor-hosted/**"
       - ".github/workflows/plugin-doctor-web.yml"
