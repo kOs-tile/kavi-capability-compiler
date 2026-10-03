@@ -7,6 +7,7 @@ from labs.plugin_doctor.ingest import (
     audit_github_package,
     audit_remote_mcp,
     load_github_plugin_files,
+    load_local_plugin_files,
 )
 from labs.plugin_doctor.package_validator import PLUGIN_SCHEMA
 
@@ -118,3 +119,30 @@ def test_remote_mcp_ingestion_audits_discovered_inventory(monkeypatch):
     assert report["source"]["url"] == "https://example.com/mcp"
     assert "secret" not in json.dumps(report)
     assert report["readiness"]["state"] == "SHIP"
+
+
+
+def test_local_loader_reads_only_relevant_plugin_files(tmp_path):
+    (tmp_path / "plugin.json").write_text(
+        json.dumps(
+            {
+                "$schema": PLUGIN_SCHEMA,
+                "name": "local-fixture",
+                "version": "0.1.0",
+                "description": "Local package ingestion fixture.",
+            }
+        ),
+        encoding="utf-8",
+    )
+    skill_dir = tmp_path / "skills" / "hello"
+    skill_dir.mkdir(parents=True)
+    (skill_dir / "SKILL.md").write_text(
+        "---\nname: hello\ndescription: Greet the user when asked.\n---\nHello.",
+        encoding="utf-8",
+    )
+    (tmp_path / "README.md").write_text("ignored", encoding="utf-8")
+
+    loaded = load_local_plugin_files(tmp_path)
+
+    assert sorted(loaded["files"]) == ["plugin.json", "skills/hello/SKILL.md"]
+    assert loaded["source"]["kind"] == "local"
