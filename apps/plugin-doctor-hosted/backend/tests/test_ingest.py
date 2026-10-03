@@ -32,6 +32,8 @@ def test_github_non_root_or_non_github_urls_are_rejected(url):
         "https://10.0.0.1/mcp",
         "https://169.254.169.254/latest/meta-data",
         "https://user:pass@example.com/mcp",
+        "https://example.com/mcp?token=secret",
+        "https://example.com/mcp#fragment",
     ],
 )
 def test_hosted_mcp_rejects_unsafe_targets(url):
