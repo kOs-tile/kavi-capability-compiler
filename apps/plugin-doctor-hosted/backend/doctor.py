@@ -20,7 +20,8 @@ PLUGIN_SCHEMA = "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
 MCP_SCHEMA = "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json"
 
 _DEDUCTIONS = {"critical": 35, "high": 15, "medium": 6, "low": 2}
-_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+_PORTABLE_NAME_RE = re.compile(r"^(?!.*(?:--|\\.\\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")
+_OPENAI_SUBMISSION_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 _SEMVER_RE = re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:[-+][0-9A-Za-z.-]+)?$")
 
 
@@ -84,6 +85,11 @@ def _parse_json(files: Mapping[str, str], path: str, findings: list[Finding]) ->
 
 
 def _frontmatter(text: str) -> tuple[dict[str, str] | None, str | None]:
+    """Parse the two Agent Skills identity fields without pretending to be a full YAML loader.
+
+    Supports plain/quoted scalar values and YAML literal/folded block scalars for
+    top-level name/description. Nested metadata is ignored.
+    """
     lines = text.splitlines()
     if not lines or lines[0].strip() != "---":
         return None, "missing"
@@ -92,19 +98,35 @@ def _frontmatter(text: str) -> tuple[dict[str, str] | None, str | None]:
     except StopIteration:
         return None, "unclosed"
 
-    out: dict[str, str] = {}
-    for line in lines[1:end]:
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#"):
+    data: dict[str, str] = {}
+    i = 1
+    while i < end:
+        raw = lines[i]
+        stripped = raw.strip()
+        i += 1
+        if not stripped or stripped.startswith("#") or raw[:1].isspace():
             continue
-        if ":" not in stripped:
+        if ":" not in raw:
             return None, "malformed"
-        key, value = stripped.split(":", 1)
-        if not key.strip():
+        key, value = raw.split(":", 1)
+        key = key.strip()
+        value = value.strip()
+        if not key:
             return None, "malformed"
-        out[key.strip()] = value.strip().strip('"').strip("'")
-    return out, None
 
+        if value in {"|", "|-", "|+", ">", ">-", ">+"}:
+            block: list[str] = []
+            while i < end:
+                candidate = lines[i]
+                if candidate and not candidate[:1].isspace():
+                    break
+                block.append(candidate.strip())
+                i += 1
+            sep = "\n" if value.startswith("|") else " "
+            data[key] = sep.join(part for part in block if part).strip()
+        else:
+            data[key] = value.strip('"').strip("'")
+    return data, None
 
 def validate_package(files: Mapping[str, str]) -> dict[str, Any]:
     normalized = {str(path).replace("\\", "/"): str(content) for path, content in files.items()}
@@ -119,14 +141,27 @@ def validate_package(files: Mapping[str, str]) -> dict[str, Any]:
         if plugin.get("$schema") != PLUGIN_SCHEMA:
             findings.append(Finding("PD-PKG-003", "high", "plugin.json does not declare the Agent Plugins schema.", True, f'Set "$schema" to "{PLUGIN_SCHEMA}".', OPENAI_PACKAGE_DOCS, path="plugin.json"))
         name = plugin.get("name")
-        if not isinstance(name, str) or not name or len(name) > 64 or not _NAME_RE.fullmatch(name):
-            findings.append(Finding("PD-PKG-004", "high", "Plugin name is missing or not submission-safe kebab-case.", True, "Use <=64 lowercase letters/numbers separated by single hyphens.", OPENAI_SUBMISSION_DOCS, path="plugin.json"))
+        if not isinstance(name, str) or not name or len(name) > 64 or not _PORTABLE_NAME_RE.fullmatch(name):
+            findings.append(Finding("PD-PKG-004", "high", "Plugin name does not conform to the Agent Plugins 1.0 manifest schema.", True, "Use 1-64 lowercase letters/numbers/dots/single hyphens; do not use consecutive '--' or '..'.", PLUGIN_SCHEMA, path="plugin.json"))
+        elif not _OPENAI_SUBMISSION_NAME_RE.fullmatch(name):
+            findings.append(Finding("PD-OAI-PKG-004", "high", "Plugin name is portable but does not meet OpenAI directory submission naming rules.", True, "For OpenAI directory submission, use lowercase letters/numbers separated by single hyphens.", OPENAI_SUBMISSION_DOCS, path="plugin.json"))
+
         description = plugin.get("description")
-        if not isinstance(description, str) or not description.strip():
-            findings.append(Finding("PD-PKG-005", "high", "Plugin description is missing.", True, "Add a concise, accurate root description.", OPENAI_PACKAGE_DOCS, path="plugin.json"))
+        if description is not None and not isinstance(description, str):
+            findings.append(Finding("PD-PKG-005A", "high", "Plugin description must be a string when present.", True, "Use a string value for description.", PLUGIN_SCHEMA, path="plugin.json"))
+        elif not isinstance(description, str) or not description.strip():
+            findings.append(Finding("PD-PKG-005", "high", "OpenAI directory submission requires a nonempty plugin description.", True, "Add a concise, accurate root description.", OPENAI_SUBMISSION_ERRORS, path="plugin.json"))
+
         version = plugin.get("version")
-        if not isinstance(version, str) or not _SEMVER_RE.fullmatch(version):
-            findings.append(Finding("PD-PKG-006", "medium", "Public submission should use an explicit semantic version.", False, "Add a semantic version such as 0.1.0.", OPENAI_SUBMISSION_DOCS, path="plugin.json"))
+        if version is not None and not isinstance(version, str):
+            findings.append(Finding("PD-PKG-006A", "high", "Plugin version must be a string when present.", True, "Use a string version or omit it for portable-only packages.", PLUGIN_SCHEMA, path="plugin.json"))
+        elif not isinstance(version, str) or not _SEMVER_RE.fullmatch(version):
+            findings.append(Finding("PD-OAI-PKG-006", "high", "OpenAI directory submission requires an explicit semantic version.", True, "Add a semantic version such as 0.1.0.", OPENAI_SUBMISSION_ERRORS, path="plugin.json"))
+
+        author = plugin.get("author")
+        author_name = author.get("name") if isinstance(author, dict) else None
+        if not isinstance(author_name, str) or not author_name.strip():
+            findings.append(Finding("PD-OAI-PKG-008", "high", "OpenAI directory submission requires author.name.", True, "Add a nonempty author.name to plugin.json.", OPENAI_SUBMISSION_ERRORS, path="plugin.json"))
 
     if "mcp.json" in normalized:
         mcp = _parse_json(normalized, "mcp.json", findings)
@@ -178,7 +213,7 @@ def validate_package(files: Mapping[str, str]) -> dict[str, Any]:
     if valid_skills == 0 and remote_mcp_servers == 0:
         findings.append(Finding("PD-PKG-007", "high", "Plugin package has no usable public runtime surface.", True, "Add at least one valid skill or public HTTPS MCP server.", OPENAI_SUBMISSION_ERRORS))
 
-    return _finalize(findings, {"files": len(normalized), "valid_skills": valid_skills, "remote_mcp_servers": remote_mcp_servers})
+    return _finalize(findings, {"validation_profile": "openai_directory", "files": len(normalized), "valid_skills": valid_skills, "remote_mcp_servers": remote_mcp_servers})
 
 
 def audit_inventory_readiness(inventory: Mapping[str, Any]) -> dict[str, Any]:
