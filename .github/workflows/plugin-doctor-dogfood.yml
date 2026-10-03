@@ -60,3 +60,57 @@ jobs:
               "blockers": package["summary"]["blockers"],
           }, sort_keys=True))
           PY
+
+      - name: Prove malformed package fails closed
+        run: |
+          python -m labs.plugin_doctor.cli package             labs/plugin_doctor/fixtures/broken-plugin             > /tmp/plugin-doctor-broken-package.json
+
+          python - <<'PY'
+          import json
+          report=json.load(open("/tmp/plugin-doctor-broken-package.json"))
+          package=report["package"]
+          assert package["state"]=="BLOCKED", package
+          assert package["summary"]["blockers"] >= 1, package
+          assert any(f["code"]=="PD-SKILL-003" for f in package["findings"]), package
+          print(json.dumps({
+              "state": package["state"],
+              "score": package["score"],
+              "blockers": package["summary"]["blockers"],
+          }, sort_keys=True))
+          PY
+
+      - name: Prove ambiguous and destructive tools are surfaced
+        run: |
+          python -m labs.plugin_doctor.cli source             labs/plugin_doctor/fixtures/unsafe-tools.json             --format generic             --namespace dogfood             > /tmp/plugin-doctor-unsafe-tools.json
+
+          python - <<'PY'
+          import json
+          report=json.load(open("/tmp/plugin-doctor-unsafe-tools.json"))
+          codes={finding["code"] for finding in report["findings"]}
+          assert report["state"]=="BLOCKED", report
+          assert "PD-S001" in codes, report
+          assert "PD-R001" in codes, report
+          print(json.dumps({
+              "state": report["state"],
+              "score": report["score"],
+              "codes": sorted(codes),
+          }, sort_keys=True))
+          PY
+
+      - name: Prove invocation positive and negative controls
+        run: |
+          python -m labs.plugin_doctor.cli evals             labs/plugin_doctor/fixtures/invocation-evals.json             > /tmp/plugin-doctor-invocation-evals.json
+
+          python - <<'PY'
+          import json
+          report=json.load(open("/tmp/plugin-doctor-invocation-evals.json"))
+          assert report["total"]==2, report
+          assert report["failed"]==0, report
+          assert report["pass_rate"]==1.0, report
+          print(json.dumps({
+              "runner": report["runner"],
+              "total": report["total"],
+              "passed": report["passed"],
+              "failed": report["failed"],
+          }, sort_keys=True))
+          PY
