@@ -92,7 +92,9 @@ def test_unknown_authority_is_blocked():
     )
     report = audit_inventory_readiness(inventory)
     assert report["state"] == "BLOCKED"
-    assert any(row["code"] == "PD-S001" for row in report["findings"])
+    codes = {row["code"] for row in report["findings"]}
+    assert "KCC-A100" in codes
+    assert "PD-S001" not in codes
 
 
 def test_hosted_directory_profile_accepts_multiline_skill_description():
