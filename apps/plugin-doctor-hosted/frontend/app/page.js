@@ -153,6 +153,7 @@ export default function Home() {
             <span>READ-ONLY DISCOVERY</span>
             <span>NO TOOL EXECUTION</span>
             <span>NO CREDENTIAL STORAGE</span>
+            {kind === "mcp" && <span>HOSTED MCP MAY BE DISABLED UNTIL EGRESS HARDENING</span>}
           </div>
         </div>
       </section>
@@ -192,6 +193,9 @@ export default function Home() {
             <button type="button" className="secondary" disabled={!shareAllowed} onClick={copyShare}>
               {copied ? "LINK COPIED" : "COPY LIVE REPORT LINK"}
             </button>
+            {report?.report_fingerprint && (
+              <span className="action-note">fingerprint {report.report_fingerprint}</span>
+            )}
             {!shareAllowed && (
               <span className="action-note">
                 Share links are disabled for URLs containing query strings or fragments.
