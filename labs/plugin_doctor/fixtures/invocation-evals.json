@@ -1,0 +1,26 @@
+{
+  "tools": [
+    {
+      "name": "search_docs",
+      "description": "Search product documentation for setup, API, and integration guidance."
+    },
+    {
+      "name": "delete_document",
+      "description": "Delete one stored document permanently by document identifier."
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "search-positive",
+      "prompt": "Search the docs for OAuth setup guidance",
+      "expected_tools": ["search_docs"],
+      "forbidden_tools": ["delete_document"]
+    },
+    {
+      "case_id": "unrelated-negative",
+      "prompt": "Tell me a short joke about databases",
+      "expected_tools": [],
+      "forbidden_tools": ["search_docs", "delete_document"]
+    }
+  ]
+}

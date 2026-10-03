@@ -1,0 +1,116 @@
+name: plugin-doctor-dogfood
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "labs/plugin_doctor/**"
+      - "tests/test_plugin_doctor_*.py"
+      - ".github/workflows/plugin-doctor-dogfood.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-plugin-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+      - name: Install dependency-free KCC core
+        run: python -m pip install -e .
+      - name: Audit real public Agent Plugin package
+        env:
+          GITHUB_TOKEN: ""
+        run: |
+          python -m labs.plugin_doctor.cli github \
+            https://github.com/AvdLee/Swift-Concurrency-Agent-Skill \
+            --html-out /tmp/plugin-doctor-scorecard.html \
+            > /tmp/plugin-doctor-dogfood.json
+
+          python - <<'PY'
+          import json
+
+          report=json.load(open("/tmp/plugin-doctor-dogfood.json"))
+          package=report["package"]
+
+          assert report["source"]["kind"]=="github", report
+          assert package["state"]=="SHIP", package
+          assert package["summary"]["valid_skills"] >= 1, package
+          assert package["summary"]["blockers"] == 0, package
+
+          scorecard=open("/tmp/plugin-doctor-scorecard.html").read()
+          assert "SHIP" in scorecard
+          assert "100" in scorecard
+          assert "KAVI Plugin Doctor" in scorecard
+
+          print(json.dumps({
+              "repository": report["source"]["repository"],
+              "ref": report["source"]["ref"],
+              "state": package["state"],
+              "score": package["score"],
+              "valid_skills": package["summary"]["valid_skills"],
+              "blockers": package["summary"]["blockers"],
+          }, sort_keys=True))
+          PY
+
+      - name: Prove malformed package fails closed
+        run: |
+          python -m labs.plugin_doctor.cli package             labs/plugin_doctor/fixtures/broken-plugin             > /tmp/plugin-doctor-broken-package.json
+
+          python - <<'PY'
+          import json
+          report=json.load(open("/tmp/plugin-doctor-broken-package.json"))
+          package=report["package"]
+          assert package["state"]=="BLOCKED", package
+          assert package["summary"]["blockers"] >= 1, package
+          assert any(f["code"]=="PD-SKILL-003" for f in package["findings"]), package
+          print(json.dumps({
+              "state": package["state"],
+              "score": package["score"],
+              "blockers": package["summary"]["blockers"],
+          }, sort_keys=True))
+          PY
+
+      - name: Prove ambiguous and destructive tools are surfaced
+        run: |
+          python -m labs.plugin_doctor.cli source             labs/plugin_doctor/fixtures/unsafe-tools.json             --format generic             --namespace dogfood             > /tmp/plugin-doctor-unsafe-tools.json
+
+          python - <<'PY'
+          import json
+          report=json.load(open("/tmp/plugin-doctor-unsafe-tools.json"))
+          codes={finding["code"] for finding in report["findings"]}
+          assert report["state"]=="BLOCKED", report
+          assert "PD-S001" in codes, report
+          assert "PD-R001" in codes, report
+          print(json.dumps({
+              "state": report["state"],
+              "score": report["score"],
+              "codes": sorted(codes),
+          }, sort_keys=True))
+          PY
+
+      - name: Prove invocation positive and negative controls
+        run: |
+          python -m labs.plugin_doctor.cli evals             labs/plugin_doctor/fixtures/invocation-evals.json             > /tmp/plugin-doctor-invocation-evals.json
+
+          python - <<'PY'
+          import json
+          report=json.load(open("/tmp/plugin-doctor-invocation-evals.json"))
+          assert report["total"]==2, report
+          assert report["failed"]==0, report
+          assert report["pass_rate"]==1.0, report
+          print(json.dumps({
+              "runner": report["runner"],
+              "total": report["total"],
+              "passed": report["passed"],
+              "failed": report["failed"],
+          }, sort_keys=True))
+          PY
