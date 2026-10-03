@@ -160,7 +160,7 @@ def test_portable_profile_allows_dot_name_and_optional_submission_metadata():
     assert report["summary"]["valid_skills"] == 1
 
 
-def test_openai_directory_profile_blocks_portable_dot_name_and_missing_metadata():
+def test_openai_directory_profile_blocks_source_visible_submission_rules_only():
     report = validate_package(
         {
             "plugin.json": json.dumps(
@@ -179,9 +179,11 @@ def test_openai_directory_profile_blocks_portable_dot_name_and_missing_metadata(
     assert report["state"] == "BLOCKED"
     assert report["summary"]["validation_profile"] == "openai_directory"
     assert "PD-OAI-PKG-004" in codes
-    assert "PD-PKG-005" in codes
     assert "PD-OAI-PKG-006" in codes
-    assert "PD-OAI-PKG-008" in codes
+    assert "PD-PKG-005" not in codes
+    assert "PD-OAI-PKG-008" not in codes
+    assert report["summary"]["embedded_listing_complete"] is False
+    assert report["summary"]["portal_checks_unverified"] is True
 
 
 def test_repeated_rule_instances_do_not_size_bias_score():
@@ -210,3 +212,36 @@ def test_repeated_rule_instances_do_not_size_bias_score():
     assert report["summary"]["blockers"] == 3
     assert report["summary"]["unique_rule_codes"] == 1
     assert [f["code"] for f in report["findings"]].count("PD-MCP-007") == 3
+
+
+def test_embedded_openai_listing_metadata_is_detected():
+    report = validate_package(
+        {
+            "plugin.json": json.dumps(
+                {
+                    "$schema": PLUGIN_SCHEMA,
+                    "name": "listing-ready",
+                    "version": "1.0.0",
+                    "extensions": {
+                        "com.openai": {
+                            "interface": {
+                                "displayName": "Listing Ready",
+                                "shortDescription": "A short listing subtitle",
+                                "longDescription": "A longer description of what this plugin does and its limits.",
+                                "developerName": "KAVI Test",
+                                "category": "Developer Tools",
+                            }
+                        }
+                    },
+                }
+            ),
+            "skills/hello/SKILL.md": (
+                "---\nname: hello\ndescription: Say hello.\n---\nHello."
+            ),
+        },
+        public_submission=True,
+    )
+
+    assert report["state"] == "SHIP"
+    assert report["summary"]["embedded_listing_complete"] is True
+    assert report["summary"]["portal_checks_unverified"] is True
