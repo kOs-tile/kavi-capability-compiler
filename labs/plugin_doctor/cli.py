@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 from typing import Any
 
+from .evals import InvocationCase, run_invocation_evals
 from .ingest import (
     audit_github_package,
     audit_remote_mcp,
@@ -51,6 +52,9 @@ def main() -> None:
     source.add_argument("--server")
     source.add_argument("--html-out")
 
+    evals = sub.add_parser("evals", help="Run deterministic tool-selection eval cases")
+    evals.add_argument("path")
+
     args = parser.parse_args()
 
     if args.command == "package":
@@ -86,6 +90,25 @@ def main() -> None:
             )
         )
         _emit(report, args.html_out)
+        return
+
+    if args.command == "evals":
+        payload = json.loads(Path(args.path).read_text(encoding="utf-8"))
+        tools = payload.get("tools")
+        raw_cases = payload.get("cases")
+        if not isinstance(tools, list) or not isinstance(raw_cases, list):
+            raise SystemExit("evals input requires tools[] and cases[]")
+        cases = [
+            InvocationCase(
+                case_id=str(row["case_id"]),
+                prompt=str(row["prompt"]),
+                expected_tools=tuple(row.get("expected_tools") or ()),
+                forbidden_tools=tuple(row.get("forbidden_tools") or ()),
+            )
+            for row in raw_cases
+        ]
+        _print = lambda value: print(json.dumps(value, indent=2, sort_keys=True))
+        _print(run_invocation_evals(tools, cases))
         return
 
     payload = json.loads(Path(args.path).read_text(encoding="utf-8"))
