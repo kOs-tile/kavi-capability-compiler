@@ -361,7 +361,7 @@ footer {
   .hero { padding-top: 62px; }
   .audit-form { grid-template-columns: 1fr; }
   .primary { min-height: 48px; }
-  .result-head { align-items: flex-start; }
+  .result-head { align-items: flex-start; flex-wrap: wrap; gap: 20px; }
   .score strong { font-size: 58px; }
   .result-actions { align-items: flex-start; flex-direction: column; }
   footer { flex-direction: column; }
