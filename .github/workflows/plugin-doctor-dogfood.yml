@@ -32,6 +32,7 @@ jobs:
         run: |
           python -m labs.plugin_doctor.cli github \
             https://github.com/AvdLee/Swift-Concurrency-Agent-Skill \
+            --html-out /tmp/plugin-doctor-scorecard.html \
             > /tmp/plugin-doctor-dogfood.json
 
           python - <<'PY'
@@ -44,6 +45,11 @@ jobs:
           assert package["state"]=="SHIP", package
           assert package["summary"]["valid_skills"] >= 1, package
           assert package["summary"]["blockers"] == 0, package
+
+          scorecard=open("/tmp/plugin-doctor-scorecard.html").read()
+          assert "SHIP" in scorecard
+          assert "100" in scorecard
+          assert "KAVI Plugin Doctor" in scorecard
 
           print(json.dumps({
               "repository": report["source"]["repository"],
