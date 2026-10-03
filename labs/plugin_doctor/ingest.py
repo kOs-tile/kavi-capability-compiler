@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import json
+from pathlib import Path
 from typing import Any, Callable, Mapping
 from urllib.parse import quote, urlsplit
 from urllib.request import Request, urlopen
@@ -121,6 +122,57 @@ def load_github_plugin_files(
             "repository": f"https://github.com/{owner}/{repo}",
             "ref": ref,
         },
+        "files": files,
+    }
+
+
+def load_local_plugin_files(root: str | Path) -> dict[str, Any]:
+    """Read only Plugin Doctor-relevant files from a local plugin directory."""
+
+    base = Path(root).expanduser().resolve()
+    if not base.is_dir():
+        raise ValueError("Local plugin root must be an existing directory")
+
+    candidate_paths: list[Path] = []
+    fixed = [
+        base / "plugin.json",
+        base / "mcp.json",
+        base / ".codex-plugin" / "plugin.json",
+        base / ".mcp.json",
+    ]
+    candidate_paths.extend(path for path in fixed if path.is_file())
+
+    skills = base / "skills"
+    if skills.is_dir():
+        for child in sorted(skills.iterdir()):
+            if child.is_dir():
+                manifest = child / "SKILL.md"
+                if manifest.is_file():
+                    candidate_paths.append(manifest)
+                for nested in child.rglob("SKILL.md"):
+                    if nested != manifest and nested.is_file():
+                        candidate_paths.append(nested)
+
+    candidate_paths = sorted(set(candidate_paths))
+    if len(candidate_paths) > MAX_FILES:
+        raise ValueError("Plugin audit file count exceeds safety limit")
+
+    files: dict[str, str] = {}
+    total = 0
+    for path in candidate_paths:
+        if path.is_symlink():
+            raise ValueError(f"Refuse symlinked plugin audit file: {path.name}")
+        raw = path.read_bytes()
+        if len(raw) > MAX_FILE_BYTES:
+            raise ValueError(f"Plugin file exceeds safety limit: {path.name}")
+        total += len(raw)
+        if total > MAX_TOTAL_BYTES:
+            raise ValueError("Plugin audit input exceeds total safety limit")
+        relative = path.relative_to(base).as_posix()
+        files[relative] = raw.decode("utf-8")
+
+    return {
+        "source": {"kind": "local", "root": str(base)},
         "files": files,
     }
 
