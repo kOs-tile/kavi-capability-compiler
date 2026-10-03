@@ -119,6 +119,7 @@ def validate_package(
         normalized[normalized_path] = str(content)
     findings: list[PackageFinding] = []
     valid_skills = 0
+    configured_mcp_servers = 0
     remote_mcp_servers = 0
 
     if "plugin.json" not in normalized:
@@ -260,6 +261,7 @@ def validate_package(
                                 )
                             )
                             continue
+                        configured_mcp_servers += 1
                         transport = server.get("type")
                         url = server.get("url")
                         if not isinstance(transport, str) or not transport:
@@ -272,6 +274,18 @@ def validate_package(
                                     message=f"MCP server {server_name!r} is missing its portable transport type.",
                                     remediation="Declare the server transport type in portable mcp.json.",
                                     source_url=OPENAI_PACKAGE_DOCS,
+                                )
+                            )
+                        if public_submission and url is None:
+                            findings.append(
+                                PackageFinding(
+                                    code="PD-MCP-007",
+                                    severity="high",
+                                    path="mcp.json",
+                                    blocker=True,
+                                    message=f"MCP server {server_name!r} has no remote URL for public submission.",
+                                    remediation="Expose the MCP server through a publicly accessible HTTPS endpoint for review.",
+                                    source_url=OPENAI_SUBMISSION_DOCS,
                                 )
                             )
                         if url is not None:
@@ -366,7 +380,8 @@ def validate_package(
                 )
             )
 
-    if valid_skills == 0 and remote_mcp_servers == 0:
+    usable_mcp_servers = remote_mcp_servers if public_submission else configured_mcp_servers
+    if valid_skills == 0 and usable_mcp_servers == 0:
         findings.append(
             PackageFinding(
                 code="PD-PKG-007",
@@ -389,6 +404,7 @@ def validate_package(
         "summary": {
             "files": len(normalized),
             "valid_skills": valid_skills,
+            "configured_mcp_servers": configured_mcp_servers,
             "remote_mcp_servers": remote_mcp_servers,
             "findings": len(rows),
             "blockers": sum(1 for row in rows if row["blocker"]),
