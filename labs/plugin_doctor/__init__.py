@@ -1,5 +1,5 @@
 from .evals import InvocationCase, lexical_selector, run_invocation_evals
-from .ingest import audit_github_package, audit_remote_mcp, load_github_plugin_files
+from .ingest import audit_github_package, audit_remote_mcp, load_github_plugin_files, load_local_plugin_files
 from .package_validator import validate_package
 from .plugin_doctor import REPORT_VERSION, audit_inventory_readiness, audit_source
 
@@ -12,6 +12,7 @@ __all__ = [
     "audit_source",
     "lexical_selector",
     "load_github_plugin_files",
+    "load_local_plugin_files",
     "run_invocation_evals",
     "validate_package",
 ]
