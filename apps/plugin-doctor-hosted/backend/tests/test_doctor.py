@@ -28,6 +28,8 @@ def test_clean_skill_package_ships():
     assert report["state"] == "SHIP"
     assert report["score"] == 100
     assert report["summary"]["blockers"] == 0
+    assert report["summary"]["embedded_listing_complete"] is False
+    assert report["summary"]["portal_checks_unverified"] is True
 
 
 def test_malformed_package_fails_closed():
@@ -171,3 +173,35 @@ def test_hosted_score_counts_repeated_rule_once():
     assert report["summary"]["blockers"] == 3
     assert report["summary"]["unique_rule_codes"] == 1
     assert [row["code"] for row in report["findings"]].count("PD-OAI-A001") == 3
+
+
+def test_hosted_detects_complete_embedded_listing_metadata():
+    report = validate_package(
+        {
+            "plugin.json": json.dumps(
+                {
+                    "$schema": PLUGIN_SCHEMA,
+                    "name": "listing-ready",
+                    "version": "1.0.0",
+                    "extensions": {
+                        "com.openai": {
+                            "interface": {
+                                "displayName": "Listing Ready",
+                                "shortDescription": "A short listing subtitle",
+                                "longDescription": "A longer description of what this plugin does and its limits.",
+                                "developerName": "KAVI Test",
+                                "category": "Developer Tools",
+                            }
+                        }
+                    },
+                }
+            ),
+            "skills/hello/SKILL.md": (
+                "---\nname: hello\ndescription: Say hello.\n---\nHello."
+            ),
+        }
+    )
+
+    assert report["state"] == "SHIP"
+    assert report["summary"]["embedded_listing_complete"] is True
+    assert report["summary"]["portal_checks_unverified"] is True
