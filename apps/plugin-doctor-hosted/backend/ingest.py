@@ -82,7 +82,9 @@ async def audit_github(raw_url: str) -> dict[str, Any]:
             if path in {"plugin.json", "mcp.json"}:
                 paths.append(path)
             elif path.startswith("skills/") and path.endswith("/SKILL.md"):
-                paths.append(path)
+                parts = path.split("/")
+                if len(parts) == 3 and parts[0] == "skills" and parts[2] == "SKILL.md":
+                    paths.append(path)
 
         paths = sorted(set(paths))
         if len(paths) > MAX_FILES:
