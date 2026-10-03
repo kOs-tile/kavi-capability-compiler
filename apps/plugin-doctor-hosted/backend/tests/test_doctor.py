@@ -144,3 +144,30 @@ def test_hosted_directory_profile_blocks_portable_dot_name():
     )
     assert report["state"] == "BLOCKED"
     assert any(row["code"] == "PD-OAI-PKG-004" for row in report["findings"])
+
+
+def test_hosted_score_counts_repeated_rule_once():
+    inventory = scan_mcp_snapshot(
+        {
+            "server": {"name": "fixture"},
+            "tools": [
+                {
+                    "name": f"read_record_{index}",
+                    "description": "Read one bounded record using its stable identifier.",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {"id": {"type": "string"}},
+                    },
+                    "annotations": {"readOnlyHint": True},
+                }
+                for index in range(3)
+            ],
+        }
+    )
+
+    report = audit_inventory_readiness(inventory)
+    assert report["state"] == "BLOCKED"
+    assert report["score"] == 85
+    assert report["summary"]["blockers"] == 3
+    assert report["summary"]["unique_rule_codes"] == 1
+    assert [row["code"] for row in report["findings"]].count("PD-OAI-A001") == 3
