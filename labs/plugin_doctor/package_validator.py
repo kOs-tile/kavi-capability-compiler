@@ -111,7 +111,12 @@ def validate_package(
 ) -> dict[str, Any]:
     """Validate the portable plugin package surface without executing package code."""
 
-    normalized = {str(path).replace("\\", "/").lstrip("./"): str(content) for path, content in files.items()}
+    normalized = {}
+    for path, content in files.items():
+        normalized_path = str(path).replace("\\", "/")
+        if normalized_path.startswith("./"):
+            normalized_path = normalized_path[2:]
+        normalized[normalized_path] = str(content)
     findings: list[PackageFinding] = []
     valid_skills = 0
     remote_mcp_servers = 0
