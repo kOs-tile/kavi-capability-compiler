@@ -19,6 +19,11 @@ MAX_TREE_BYTES = 8 * 1024 * 1024
 MAX_MCP_CAPABILITIES = 250
 
 
+def _is_top_level_skill_manifest(path: str) -> bool:
+    parts = str(path).split("/")
+    return len(parts) == 3 and parts[0] == "skills" and parts[2] == "SKILL.md"
+
+
 def _github_parts(raw_url: str) -> tuple[str, str]:
     parsed = urlsplit(str(raw_url).strip())
     if parsed.scheme != "https" or parsed.hostname not in {"github.com", "www.github.com"}:
@@ -81,10 +86,8 @@ async def audit_github(raw_url: str) -> dict[str, Any]:
             path = str(entry.get("path") or "")
             if path in {"plugin.json", "mcp.json"}:
                 paths.append(path)
-            elif path.startswith("skills/") and path.endswith("/SKILL.md"):
-                parts = path.split("/")
-                if len(parts) == 3 and parts[0] == "skills" and parts[2] == "SKILL.md":
-                    paths.append(path)
+            elif _is_top_level_skill_manifest(path):
+                paths.append(path)
 
         paths = sorted(set(paths))
         if len(paths) > MAX_FILES:
