@@ -69,18 +69,21 @@ def test_missing_plugin_manifest_is_blocked():
     assert any(f["code"] == "PD-PKG-001" for f in report["findings"])
 
 
-def test_nested_skill_manifest_is_blocked():
-    report = validate_package(
-        {
-            "plugin.json": _plugin(),
-            "skills/hello/nested/SKILL.md": (
-                "---\nname: hello\ndescription: Say hello.\n---\nHello."
-            ),
-        }
-    )
-    codes = {f["code"] for f in report["findings"]}
-    assert report["state"] == "BLOCKED"
-    assert "PD-SKILL-005" in codes
+def test_nested_skill_manifest_is_not_discovered_as_a_skill():
+    files = {
+        "plugin.json": _plugin(),
+        "skills/hello/nested/SKILL.md": (
+            "---\nname: hello\ndescription: Say hello.\n---\nHello."
+        ),
+    }
+
+    portable = validate_package(files, public_submission=False)
+    directory = validate_package(files, public_submission=True)
+
+    assert portable["state"] == "SHIP"
+    assert portable["summary"]["valid_skills"] == 0
+    assert directory["state"] == "BLOCKED"
+    assert any(f["code"] == "PD-PKG-007" for f in directory["findings"])
 
 
 def test_public_submission_requires_public_https_mcp():
