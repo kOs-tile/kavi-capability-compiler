@@ -13,6 +13,7 @@ from .plugin_doctor import audit_inventory_readiness
 MAX_FILES = 100
 MAX_FILE_BYTES = 256 * 1024
 MAX_TOTAL_BYTES = 2 * 1024 * 1024
+MAX_API_RESPONSE_BYTES = 8 * 1024 * 1024
 
 FetchJSON = Callable[[str, Mapping[str, str]], Mapping[str, Any]]
 
@@ -35,8 +36,8 @@ def _github_repo_parts(repo_url: str) -> tuple[str, str]:
 def _default_fetch_json(url: str, headers: Mapping[str, str]) -> Mapping[str, Any]:
     request = Request(url, headers=dict(headers))
     with urlopen(request, timeout=20) as response:
-        data = response.read(MAX_FILE_BYTES + 1)
-    if len(data) > MAX_FILE_BYTES:
+        data = response.read(MAX_API_RESPONSE_BYTES + 1)
+    if len(data) > MAX_API_RESPONSE_BYTES:
         raise ValueError("GitHub API response exceeded safety limit")
     value = json.loads(data.decode("utf-8"))
     if not isinstance(value, Mapping):
