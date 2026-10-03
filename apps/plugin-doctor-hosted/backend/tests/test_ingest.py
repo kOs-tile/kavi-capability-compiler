@@ -2,7 +2,7 @@ import asyncio
 
 import pytest
 
-from ingest import _github_parts, _validate_public_mcp_url
+from ingest import _github_parts, _is_top_level_skill_manifest, _validate_public_mcp_url
 
 
 def test_github_root_url_is_normalized():
@@ -39,3 +39,10 @@ def test_github_non_root_or_non_github_urls_are_rejected(url):
 def test_hosted_mcp_rejects_unsafe_targets(url):
     with pytest.raises(ValueError):
         asyncio.run(_validate_public_mcp_url(url))
+
+
+def test_only_immediate_skill_manifests_are_discovered():
+    assert _is_top_level_skill_manifest("skills/hello/SKILL.md") is True
+    assert _is_top_level_skill_manifest("skills/hello/examples/SKILL.md") is False
+    assert _is_top_level_skill_manifest("plugins/demo/skills/hello/SKILL.md") is False
+    assert _is_top_level_skill_manifest("SKILL.md") is False
