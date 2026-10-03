@@ -13,6 +13,7 @@ def test_clean_skill_package_ships():
                     "name": "clean-plugin",
                     "version": "0.1.0",
                     "description": "A clean portable plugin fixture for hosted Plugin Doctor.",
+                    "author": {"name": "KAVI Test"},
                 }
             ),
             "skills/hello/SKILL.md": (
@@ -92,3 +93,52 @@ def test_unknown_authority_is_blocked():
     report = audit_inventory_readiness(inventory)
     assert report["state"] == "BLOCKED"
     assert any(row["code"] == "PD-S001" for row in report["findings"])
+
+
+def test_hosted_directory_profile_accepts_multiline_skill_description():
+    report = validate_package(
+        {
+            "plugin.json": json.dumps(
+                {
+                    "$schema": PLUGIN_SCHEMA,
+                    "name": "multiline-plugin",
+                    "version": "1.0.0",
+                    "description": "Directory-ready fixture.",
+                    "author": {"name": "KAVI Test"},
+                }
+            ),
+            "skills/hello/SKILL.md": (
+                "---\n"
+                "name: hello\n"
+                "description: >-\n"
+                "  Greet a user when they explicitly ask\n"
+                "  for a greeting.\n"
+                "---\n"
+                "Say hello."
+            ),
+        }
+    )
+    assert report["state"] == "SHIP"
+    assert report["summary"]["validation_profile"] == "openai_directory"
+    assert report["summary"]["valid_skills"] == 1
+
+
+def test_hosted_directory_profile_blocks_portable_dot_name():
+    report = validate_package(
+        {
+            "plugin.json": json.dumps(
+                {
+                    "$schema": PLUGIN_SCHEMA,
+                    "name": "acme.tools",
+                    "version": "1.0.0",
+                    "description": "Portable but not OpenAI-directory-safe naming fixture.",
+                    "author": {"name": "KAVI Test"},
+                }
+            ),
+            "skills/hello/SKILL.md": (
+                "---\nname: hello\ndescription: Say hello.\n---\nHello."
+            ),
+        }
+    )
+    assert report["state"] == "BLOCKED"
+    assert any(row["code"] == "PD-OAI-PKG-004" for row in report["findings"])
