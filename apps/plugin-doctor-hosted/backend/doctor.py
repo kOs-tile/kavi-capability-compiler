@@ -206,10 +206,6 @@ def validate_package(files: Mapping[str, str]) -> dict[str, Any]:
             continue
         valid_skills += 1
 
-    for path in skill_paths:
-        if path.endswith("/SKILL.md") and len(path.split("/")) != 3:
-            findings.append(Finding("PD-SKILL-005", "high", "SKILL.md must be in an immediate child directory of skills/.", True, "Move it to skills/<skill-name>/SKILL.md.", OPENAI_SUBMISSION_ERRORS, path=path))
-
     if valid_skills == 0 and remote_mcp_servers == 0:
         findings.append(Finding("PD-PKG-007", "high", "Plugin package has no usable public runtime surface.", True, "Add at least one valid skill or public HTTPS MCP server.", OPENAI_SUBMISSION_ERRORS))
 
