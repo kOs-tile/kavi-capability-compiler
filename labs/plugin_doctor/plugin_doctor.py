@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Any
 
 import kavi_capability_compiler as kcc
-from kavi_capability_compiler.core import audit_inventory
+from kavi_capability_compiler.core import audit_inventory as kcc_audit_inventory
 
 REPORT_VERSION = "plugin-doctor.report.v0"
 
@@ -180,27 +180,11 @@ def _doctor_findings(inventory: dict[str, Any]) -> list[DoctorFinding]:
     return findings
 
 
-def audit_source(
-    source_format: str,
-    payload: dict[str, Any],
-    *,
-    namespace: str,
-    server: str | None = None,
-) -> dict[str, Any]:
-    """Produce a deterministic Plugin Doctor V0 static-readiness report."""
+def audit_inventory_readiness(inventory: dict[str, Any]) -> dict[str, Any]:
+    """Audit an already discovered KCC inventory."""
 
-    manifest = kcc.adapt_capabilities(
-        source_format,
-        payload,
-        namespace=namespace,
-        source_metadata={"product": "kavi-plugin-doctor"},
-        server=server,
-    )
-    inventory = kcc.scan_manifest(manifest)
-    kcc_audit = audit_inventory(inventory)
-
-    doctor = _doctor_findings(inventory)
-    doctor_rows = [finding.as_dict() for finding in doctor]
+    kcc_audit = kcc_audit_inventory(inventory)
+    doctor_rows = [finding.as_dict() for finding in _doctor_findings(inventory)]
 
     kcc_rows = []
     for finding in kcc_audit.get("findings", []):
@@ -246,3 +230,23 @@ def audit_source(
         ],
         "disclaimer": "V0 is a deterministic static-readiness heuristic. Source-linked checks reflect published rules, but the score does not guarantee OpenAI approval, placement, or distribution.",
     }
+
+
+def audit_source(
+    source_format: str,
+    payload: dict[str, Any],
+    *,
+    namespace: str,
+    server: str | None = None,
+) -> dict[str, Any]:
+    """Produce a deterministic Plugin Doctor V0 static-readiness report."""
+
+    manifest = kcc.adapt_capabilities(
+        source_format,
+        payload,
+        namespace=namespace,
+        source_metadata={"product": "kavi-plugin-doctor"},
+        server=server,
+    )
+    inventory = kcc.scan_manifest(manifest)
+    return audit_inventory_readiness(inventory)
