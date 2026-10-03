@@ -151,6 +151,7 @@ def validate_package(files: Mapping[str, str]) -> dict[str, Any]:
     findings: list[Finding] = []
     valid_skills = 0
     remote_mcp_servers = 0
+    embedded_listing_complete = False
 
     plugin = _parse_json(normalized, "plugin.json", findings)
     if "plugin.json" not in normalized:
@@ -167,8 +168,6 @@ def validate_package(files: Mapping[str, str]) -> dict[str, Any]:
         description = plugin.get("description")
         if description is not None and not isinstance(description, str):
             findings.append(Finding("PD-PKG-005A", "high", "Plugin description must be a string when present.", True, "Use a string value for description.", PLUGIN_SCHEMA, path="plugin.json"))
-        elif not isinstance(description, str) or not description.strip():
-            findings.append(Finding("PD-PKG-005", "high", "OpenAI directory submission requires a nonempty plugin description.", True, "Add a concise, accurate root description.", OPENAI_SUBMISSION_ERRORS, path="plugin.json"))
 
         version = plugin.get("version")
         if version is not None and not isinstance(version, str):
@@ -176,10 +175,20 @@ def validate_package(files: Mapping[str, str]) -> dict[str, Any]:
         elif not isinstance(version, str) or not _SEMVER_RE.fullmatch(version):
             findings.append(Finding("PD-OAI-PKG-006", "high", "OpenAI directory submission requires an explicit semantic version.", True, "Add a semantic version such as 0.1.0.", OPENAI_SUBMISSION_ERRORS, path="plugin.json"))
 
-        author = plugin.get("author")
-        author_name = author.get("name") if isinstance(author, dict) else None
-        if not isinstance(author_name, str) or not author_name.strip():
-            findings.append(Finding("PD-OAI-PKG-008", "high", "OpenAI directory submission requires author.name.", True, "Add a nonempty author.name to plugin.json.", OPENAI_SUBMISSION_ERRORS, path="plugin.json"))
+        extensions = plugin.get("extensions")
+        openai_extension = extensions.get("com.openai") if isinstance(extensions, dict) else None
+        interface = openai_extension.get("interface") if isinstance(openai_extension, dict) else None
+        required_listing_fields = (
+            "displayName",
+            "shortDescription",
+            "longDescription",
+            "developerName",
+            "category",
+        )
+        embedded_listing_complete = isinstance(interface, dict) and all(
+            isinstance(interface.get(field), str) and bool(interface.get(field).strip())
+            for field in required_listing_fields
+        )
 
     if "mcp.json" in normalized:
         mcp = _parse_json(normalized, "mcp.json", findings)
@@ -227,7 +236,7 @@ def validate_package(files: Mapping[str, str]) -> dict[str, Any]:
     if valid_skills == 0 and remote_mcp_servers == 0:
         findings.append(Finding("PD-PKG-007", "high", "Plugin package has no usable public runtime surface.", True, "Add at least one valid skill or public HTTPS MCP server.", OPENAI_SUBMISSION_ERRORS))
 
-    return _finalize(findings, {"validation_profile": "openai_directory", "files": len(normalized), "valid_skills": valid_skills, "remote_mcp_servers": remote_mcp_servers})
+    return _finalize(findings, {"validation_profile": "openai_directory", "files": len(normalized), "valid_skills": valid_skills, "remote_mcp_servers": remote_mcp_servers, "embedded_listing_complete": embedded_listing_complete, "portal_checks_unverified": True})
 
 
 def audit_inventory_readiness(inventory: Mapping[str, Any]) -> dict[str, Any]:
