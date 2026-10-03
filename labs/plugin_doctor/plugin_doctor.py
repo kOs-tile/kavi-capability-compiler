@@ -8,6 +8,9 @@ from kavi_capability_compiler.core import audit_inventory
 
 REPORT_VERSION = "plugin-doctor.report.v0"
 
+OPENAI_PLUGIN_GUIDELINES = "https://developers.openai.com/plugins/plugin-guidelines"
+OPENAI_PLUGIN_REVIEW = "https://developers.openai.com/plugins/deploy/app-review"
+
 _DEDUCTIONS = {
     "critical": 35,
     "high": 15,
@@ -25,6 +28,7 @@ class DoctorFinding:
     capability: str | None = None
     blocker: bool = False
     remediation: str | None = None
+    source_url: str | None = None
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -35,11 +39,13 @@ class DoctorFinding:
             "capability": self.capability,
             "blocker": self.blocker,
             "remediation": self.remediation,
+            "source_url": self.source_url,
         }
 
 
 def _doctor_findings(inventory: dict[str, Any]) -> list[DoctorFinding]:
     findings: list[DoctorFinding] = []
+    required_annotation_keys = ("readOnlyHint", "destructiveHint", "openWorldHint")
 
     for capability in inventory.get("capabilities", []):
         cid = capability.get("id")
@@ -48,17 +54,19 @@ def _doctor_findings(inventory: dict[str, Any]) -> list[DoctorFinding]:
         effect = capability.get("effect")
         analysis = capability.get("analysis") or {}
         risk_flags = set(analysis.get("risk_flags") or [])
+        annotations = capability.get("annotations") or {}
 
         if not description:
             findings.append(
                 DoctorFinding(
-                    code="PD-D001",
+                    code="PD-OAI-D001",
                     severity="high",
-                    category="discovery",
+                    category="openai_review",
                     capability=cid,
                     blocker=True,
-                    message="Capability has no model-facing description.",
-                    remediation="Add a concrete description covering the action, object, important constraints, and expected result.",
+                    message="Tool has no model-facing description.",
+                    remediation="Add a nonempty description that accurately explains purpose, behavior, relevant limitations, and side effects.",
+                    source_url=OPENAI_PLUGIN_GUIDELINES,
                 )
             )
         elif len(description) < 24:
@@ -68,8 +76,28 @@ def _doctor_findings(inventory: dict[str, Any]) -> list[DoctorFinding]:
                     severity="medium",
                     category="discovery",
                     capability=cid,
-                    message="Capability description is too thin to communicate intent reliably.",
+                    message="Tool description is unusually thin for reliable model selection.",
                     remediation="Describe when the tool should be used, what it changes or returns, and its important boundaries.",
+                )
+            )
+
+        missing_annotations = [
+            key
+            for key in required_annotation_keys
+            if key not in annotations or not isinstance(annotations.get(key), bool)
+        ]
+        if missing_annotations:
+            findings.append(
+                DoctorFinding(
+                    code="PD-OAI-A001",
+                    severity="high",
+                    category="openai_review",
+                    capability=cid,
+                    blocker=True,
+                    message="Tool is missing explicit boolean OpenAI review annotations: "
+                    + ", ".join(missing_annotations),
+                    remediation="Set readOnlyHint, destructiveHint, and openWorldHint explicitly to true or false.",
+                    source_url=OPENAI_PLUGIN_GUIDELINES,
                 )
             )
 
@@ -81,7 +109,7 @@ def _doctor_findings(inventory: dict[str, Any]) -> list[DoctorFinding]:
                     category="schema",
                     capability=cid,
                     blocker=True,
-                    message="Capability has no bounded input schema.",
+                    message="Tool has no bounded input schema.",
                     remediation="Provide an explicit JSON Schema for all accepted arguments.",
                 )
             )
@@ -106,7 +134,7 @@ def _doctor_findings(inventory: dict[str, Any]) -> list[DoctorFinding]:
                     capability=cid,
                     blocker=True,
                     message="Capability authority/effect is unknown.",
-                    remediation="Clarify the action semantics or add source metadata so authority can be classified without guessing.",
+                    remediation="Clarify the action semantics or source metadata so authority can be classified without guessing.",
                 )
             )
 
@@ -120,6 +148,7 @@ def _doctor_findings(inventory: dict[str, Any]) -> list[DoctorFinding]:
                     blocker=True,
                     message="Declared annotations conflict with observed tool semantics.",
                     remediation="Correct the annotations or rename/rewrite the tool so declared and observed semantics agree.",
+                    source_url=OPENAI_PLUGIN_GUIDELINES,
                 )
             )
 
@@ -132,6 +161,7 @@ def _doctor_findings(inventory: dict[str, Any]) -> list[DoctorFinding]:
                     capability=cid,
                     message=f"High-impact capability detected: {effect}.",
                     remediation="Require narrow schemas, explicit user intent, and an appropriate confirmation/approval boundary before execution.",
+                    source_url=OPENAI_PLUGIN_GUIDELINES,
                 )
             )
         elif effect in {"write", "external_message"}:
@@ -143,6 +173,7 @@ def _doctor_findings(inventory: dict[str, Any]) -> list[DoctorFinding]:
                     capability=cid,
                     message=f"Mutating capability detected: {effect}.",
                     remediation="Verify that the write boundary is explicit, minimally scoped, and testable.",
+                    source_url=OPENAI_PLUGIN_GUIDELINES,
                 )
             )
 
@@ -185,6 +216,7 @@ def audit_source(
                 "remediation": "Resolve the underlying authority ambiguity before shipping."
                 if finding.get("code") == "KCC-A100"
                 else None,
+                "source_url": None,
             }
         )
 
@@ -208,5 +240,9 @@ def audit_source(
         },
         "inventory_digest": inventory.get("digest"),
         "findings": findings,
-        "disclaimer": "V0 is a deterministic static-readiness heuristic, not a guarantee of OpenAI approval or distribution.",
+        "rule_sources": [
+            OPENAI_PLUGIN_GUIDELINES,
+            OPENAI_PLUGIN_REVIEW,
+        ],
+        "disclaimer": "V0 is a deterministic static-readiness heuristic. Source-linked checks reflect published rules, but the score does not guarantee OpenAI approval, placement, or distribution.",
     }
