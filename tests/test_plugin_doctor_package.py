@@ -102,3 +102,29 @@ def test_public_submission_requires_public_https_mcp():
     )
     assert report["state"] == "BLOCKED"
     assert any(f["code"] == "PD-MCP-006" for f in report["findings"])
+
+
+
+def test_local_only_package_accepts_configured_stdio_mcp():
+    files = {
+        "plugin.json": _plugin(),
+        "mcp.json": json.dumps(
+            {
+                "$schema": MCP_SCHEMA,
+                "mcpServers": {
+                    "local": {
+                        "type": "stdio",
+                        "command": "python",
+                    }
+                },
+            }
+        ),
+    }
+
+    local_report = validate_package(files, public_submission=False)
+    public_report = validate_package(files, public_submission=True)
+
+    assert local_report["state"] == "SHIP"
+    assert local_report["summary"]["configured_mcp_servers"] == 1
+    assert public_report["state"] == "BLOCKED"
+    assert any(f["code"] == "PD-MCP-007" for f in public_report["findings"])
