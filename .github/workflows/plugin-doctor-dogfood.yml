@@ -149,7 +149,8 @@ jobs:
           report=json.load(open("/tmp/plugin-doctor-unsafe-tools.json"))
           codes={finding["code"] for finding in report["findings"]}
           assert report["state"]=="BLOCKED", report
-          assert "PD-S001" in codes, report
+          assert "KCC-A100" in codes, report
+          assert "PD-S001" not in codes, report
           assert "PD-R001" in codes, report
           print(json.dumps({
               "state": report["state"],
