@@ -98,7 +98,7 @@ export default function Home() {
           <span className="mark">K</span>
           <span>KAVI / PLUGIN DOCTOR</span>
         </a>
-        <span className="status-pill">V0 · PUBLIC AUDIT</span>
+        <span className="status-pill">V0 · OPENAI DIRECTORY READINESS</span>
       </header>
 
       <section className="hero">
@@ -106,7 +106,7 @@ export default function Home() {
         <h1>Know what breaks <span>before</span> review.</h1>
         <p className="lede">
           Audit a public Agent Plugin repository or a remote MCP capability surface.
-          Plugin Doctor checks structure, authority, metadata, and review-readiness without invoking tools.
+          Plugin Doctor checks portable package structure, authority, metadata, and OpenAI directory readiness without invoking tools.
         </p>
 
         <div className="audit-panel">
@@ -172,9 +172,12 @@ export default function Home() {
               <p className="kicker">READINESS RESULT</p>
               <div className={"state " + stateClass(result.state)}>{result.state}</div>
             </div>
-            <div className="score">
-              <strong>{result.score ?? "—"}</strong>
-              <span>/100</span>
+            <div className="score-wrap">
+              <span className="score-label">RULE COVERAGE</span>
+              <div className="score">
+                <strong>{result.score ?? "—"}</strong>
+                <span>/100</span>
+              </div>
             </div>
           </div>
 
