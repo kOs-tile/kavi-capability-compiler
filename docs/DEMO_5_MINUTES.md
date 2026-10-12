@@ -4,6 +4,12 @@
 
 **Goal:** show an actual dispatch boundary, not screenshots, badges, or an AI-generated explanation. This demonstration exercises the public KCC SDK using **synthetic, local-only customer records**. No credentials, API calls, models, network operations, or external writes are used while running the demo.
 
+## Motion explainer — authority before dispatch
+
+![Animated KCC task-scoped authority and host dispatch](media/KCC_Authority_Explainer_Animated.svg)
+
+**Watch it alongside the executable demo.** An agent may discover or request a tool, but execution requires a matching task-scoped capsule; denied calls must never reach the host dispatcher. See the [public engineering portfolio](https://kavi-engineering-evidence.vercel.app/).
+
 ## Run it (Python 3.11+)
 
 From the [KCC repository](https://github.com/kOs-tile/kavi-capability-compiler), in a new terminal:
