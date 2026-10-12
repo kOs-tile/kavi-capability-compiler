@@ -6,6 +6,10 @@
 
 KCC is a framework-agnostic **least-authority compiler for AI agents**.
 
+**Five-minute engineering proof:** [Executable guard + blocked dispatch demo](docs/DEMO_5_MINUTES.md) · [KAVI Engineering motion portfolio](https://kavi-engineering-evidence.vercel.app/) · [Agentic systems reference architecture](https://github.com/kOs-tile/spectraflow/blob/main/research/ANATOMY_OF_PRODUCTION_AGENTIC_SYSTEMS_2026.md).
+
+![KCC — task-scoped execution authority before dispatcher](docs/media/KCC_Authority_Explainer_Animated.svg)
+
 ```
 discover/scan -> audit -> compile -> execution capsule -> verify/authorize
                                                    \
