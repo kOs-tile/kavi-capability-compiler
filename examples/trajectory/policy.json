@@ -1,0 +1,30 @@
+{
+  "version": "kcc.trajectory-policy.v0",
+  "nodes": [
+    {
+      "id": "read",
+      "kind": "dispatch",
+      "capability_id": "mcp:crm:read",
+      "operation": "read",
+      "after": []
+    },
+    {
+      "id": "approve",
+      "kind": "approval",
+      "capability_id": "mcp:crm:send",
+      "operation": "send",
+      "after": [
+        "read"
+      ]
+    },
+    {
+      "id": "send",
+      "kind": "dispatch",
+      "capability_id": "mcp:crm:send",
+      "operation": "send",
+      "after": [
+        "approve"
+      ]
+    }
+  ]
+}
