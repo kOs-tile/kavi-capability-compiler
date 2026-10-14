@@ -68,6 +68,26 @@ class HostTraceRecorder:
         self.__faulted = False
         self.__closed = False
 
+    @property
+    def faulted(self) -> bool:
+        return self.__faulted
+
+    def record_signed_approval(self, *, node_id: str, step_id: str,
+                               capability_id: str, operation: str,
+                               receipt: dict[str, Any], verifier_key: bytes,
+                               actor_id: str, now: int) -> None:
+        """Record an approval only after verifying an independent host receipt."""
+        if self.__closed or self.__faulted:
+            raise InvalidArtifact("trace session closed or failed")
+        from scripts.approval_and_journal import verify_receipt
+        verify_receipt(receipt, key=verifier_key,
+                       execution_id=self.execution_id, capsule_id=self.capsule_id,
+                       step_id=step_id, capability_id=capability_id,
+                       operation=operation, actor_id=actor_id, now=now)
+        self.__events.append({"node_id": _identity(node_id, "node_id"),
+                              "kind": "approval", "capability_id": capability_id,
+                              "operation": operation, "outcome": "approved"})
+
     def guarded_call(self, *, node_id: str, guard: Any, capability_id: str,
                      operation: str, parameters: Mapping[str, Any],
                      dispatcher: Callable[[dict[str, Any]], Any],
