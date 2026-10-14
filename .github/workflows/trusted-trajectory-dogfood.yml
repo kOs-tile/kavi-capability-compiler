@@ -1,0 +1,68 @@
+name: trusted-trajectory-dogfood
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  trusted-host-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      # Public fixture key, NOT a production attestation key or human approval.
+      KCC_TRACE_ATTEST_KEY_HEX: "1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b"
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+      - name: Install KCC development core and pytest
+        run: python -m pip install -e . pytest
+      - name: Verify standalone and host-integrated tests
+        run: python -m pytest -q tests/test_trajectory_ci.py tests/test_trusted_trajectory.py
+      - name: Generate proof from real KCC Guard + synthetic host dispatcher
+        run: |
+          python -m examples.trajectory.trusted_host_dogfood \
+            --output /tmp/host-bundle.json \
+            --policy-output /tmp/host-policy.json \
+            --evidence-output /tmp/host-evidence.json
+      - name: Verify signed host provenance against independent run identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          capsule="$(python -c 'import json; print(json.load(open("/tmp/host-evidence.json"))["summary"]["capsule_id"])')"
+          python -m scripts.trusted_trajectory \
+            --policy /tmp/host-policy.json \
+            --bundle /tmp/host-bundle.json \
+            --execution-id synthetic-run-001 \
+            --capsule-id "$capsule" \
+            --emitter-id kcc-synthetic-host
+      - name: Tampered host trace MUST fail
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          b=json.loads(Path("/tmp/host-bundle.json").read_text())
+          b["trace"]["events"][0]["operation"]="delete"
+          Path("/tmp/tampered-host-bundle.json").write_text(json.dumps(b))
+          PY
+          capsule="$(python -c 'import json; print(json.load(open("/tmp/host-evidence.json"))["summary"]["capsule_id"])')"
+          set +e
+          python -m scripts.trusted_trajectory \
+            --policy /tmp/host-policy.json \
+            --bundle /tmp/tampered-host-bundle.json \
+            --execution-id synthetic-run-001 \
+            --capsule-id "$capsule" \
+            --emitter-id kcc-synthetic-host
+          status=$?
+          set -e
+          test "$status" -eq 2
