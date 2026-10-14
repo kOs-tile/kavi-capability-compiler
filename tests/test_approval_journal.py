@@ -169,3 +169,51 @@ def test_forged_approval_does_not_reach_dispatcher(tmp_path):
             recorder=record(), approval_receipt=bad,
             approval_key=KEY, expected_approver="founder",
             approval_node_id="approve")
+
+
+def test_process_crash_after_dispatch_is_not_blindly_retried(tmp_path):
+    """Child exits without recording completion; parent must reconcile first."""
+    import os
+    import subprocess
+    import sys
+
+    db_path = tmp_path / "crashed-run.sqlite3"
+    child = r'''
+import os
+from scripts.approval_and_journal import DurableDispatchJournal
+class Guard:
+    capsule_id = "a" * 64
+    def dispatch_sync(self, cid, fn, *, operation, parameters, now=None):
+        return {"executed": True, "result": fn(parameters)}
+journal = DurableDispatchJournal(os.environ["KCC_CRASH_DB"])
+journal.run_once(
+    execution_id="run-001", capsule_id="a"*64, step_id="send",
+    capability_id="message", operation="send", parameters={"synthetic": True},
+    guard=Guard(), now=101, dispatcher=lambda p: os._exit(14))
+'''
+    env = dict(os.environ, KCC_CRASH_DB=str(db_path))
+    proc = subprocess.run([sys.executable, "-c", child],
+                          env=env, capture_output=True, text=True, timeout=15)
+    assert proc.returncode == 14, proc.stderr + proc.stdout
+    journal = DurableDispatchJournal(db_path)
+    with pytest.raises(AmbiguousOutcome, match="reconcile"):
+        journal.run_once(
+            execution_id=RUN, capsule_id=CAPSULE, step_id="send",
+            capability_id="message", operation="send", parameters={"synthetic": True},
+            guard=FakeGuard(), now=101,
+            dispatcher=lambda _: pytest.fail("replayed crashed side effect"))
+
+
+def test_two_host_connections_cannot_reserve_same_step_twice(tmp_path):
+    """Second connection observes STARTED and cannot dispatch concurrently."""
+    path = tmp_path / "two-connections.sqlite3"
+    first = DurableDispatchJournal(path)
+    second = DurableDispatchJournal(path)
+    fingerprint = "d" * 64
+    assert first._reserve("concurrent-run", "send", fingerprint) is None
+    with pytest.raises(AmbiguousOutcome):
+        second._reserve("concurrent-run", "send", fingerprint)
+    with pytest.raises(JournalConflict):
+        second._reserve("concurrent-run", "send", "e" * 64)
+    first.close()
+    second.close()
