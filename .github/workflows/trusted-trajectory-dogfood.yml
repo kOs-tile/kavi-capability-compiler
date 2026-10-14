@@ -26,7 +26,7 @@ jobs:
       - name: Install KCC development core and pytest
         run: python -m pip install -e . pytest
       - name: Verify standalone and host-integrated tests
-        run: python -m pytest -q tests/test_trajectory_ci.py tests/test_trusted_trajectory.py
+        run: python -m pytest -q tests/test_trajectory_ci.py tests/test_trusted_trajectory.py tests/test_approval_journal.py
       - name: Generate proof from real KCC Guard + synthetic host dispatcher
         run: |
           python -m examples.trajectory.trusted_host_dogfood \
@@ -63,6 +63,40 @@ jobs:
             --execution-id synthetic-run-001 \
             --capsule-id "$capsule" \
             --emitter-id kcc-synthetic-host
+          status=$?
+          set -e
+          test "$status" -eq 2
+      - name: Actual KCC Guard approved synthetic dispatch and durable restart
+        run: |
+          python -m examples.trajectory.approved_host_dogfood \
+            --output-dir /tmp/kcc-approved-host
+      - name: Verify run-scoped approved host trace (CI fixture key only)
+        shell: bash
+        env:
+          KCC_TRACE_ATTEST_KEY_HEX: "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+        run: |
+          set -euo pipefail
+          capsule="$(python -c 'import json; print(json.load(open("/tmp/kcc-approved-host/report.json"))["capsule_id"])')"
+          python -m scripts.trusted_trajectory \
+            --policy /tmp/kcc-approved-host/policy.json \
+            --bundle /tmp/kcc-approved-host/bundle.json \
+            --execution-id synthetic-approved-run-001 \
+            --capsule-id "$capsule" \
+            --emitter-id kcc-synthetic-approved-host
+      - name: Cross-run replay of approved evidence MUST fail
+        shell: bash
+        env:
+          KCC_TRACE_ATTEST_KEY_HEX: "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+        run: |
+          set -euo pipefail
+          capsule="$(python -c 'import json; print(json.load(open("/tmp/kcc-approved-host/report.json"))["capsule_id"])')"
+          set +e
+          python -m scripts.trusted_trajectory \
+            --policy /tmp/kcc-approved-host/policy.json \
+            --bundle /tmp/kcc-approved-host/bundle.json \
+            --execution-id a-different-run \
+            --capsule-id "$capsule" \
+            --emitter-id kcc-synthetic-approved-host
           status=$?
           set -e
           test "$status" -eq 2
