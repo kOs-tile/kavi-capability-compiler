@@ -1,0 +1,26 @@
+{
+  "version": "kcc.trajectory-trace.v0",
+  "events": [
+    {
+      "node_id": "read",
+      "kind": "dispatch",
+      "capability_id": "mcp:crm:read",
+      "operation": "read",
+      "outcome": "executed"
+    },
+    {
+      "node_id": "approve",
+      "kind": "approval",
+      "capability_id": "mcp:crm:send",
+      "operation": "send",
+      "outcome": "approved"
+    },
+    {
+      "node_id": "send",
+      "kind": "dispatch",
+      "capability_id": "mcp:crm:send",
+      "operation": "send",
+      "outcome": "executed"
+    }
+  ]
+}
