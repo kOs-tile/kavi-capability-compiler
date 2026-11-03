@@ -49,7 +49,7 @@ jobs:
           PY
       - name: Validate guarded dispatch without accidental src-path override
         run: |
-          python -m pytest -o pythonpath=. -q tests/test_kcc_safety_cases.py
+          python -m pytest -o pythonpath=. -q tests/test_kcc_safety_cases.py tests/test_kcc_provenance_limits.py
           python -m examples.trajectory.kcc_safety_cases --repeat 10 --output /tmp/kcc-safety-report.json >/dev/null
           python - <<'PY'
           import json
@@ -63,4 +63,19 @@ jobs:
           assert x['actual_openai_testing'] is False
           print('Verified isolated host: 10 allowed; 60 denied; 10 HMAC attestations.')
           print('KCC version:', x['kcc_version'])
+          PY
+          python -m examples.trajectory.cross_version_revocation_drill > /tmp/revocation-report.json
+          python - <<'PY'
+          import json, subprocess, os
+          x=json.load(open('/tmp/revocation-report.json', encoding='utf-8'))
+          assert x['authorized_dispatches']==1
+          assert x['host_attestation_valid'] is True
+          if x['kcc_version']=='0.1.1':
+              assert x['current_authority_contract']=='host_required_not_tested_on_stable'
+              assert x['pre_dispatch_denials']==0
+          else:
+              assert x['kcc_version']=='0.2.0'
+              assert x['current_authority_contract']=='verified_local_v0.2'
+              assert x['pre_dispatch_denials']==3
+          print('Revocation version boundary explicitly checked:', x['current_authority_contract'])
           PY
