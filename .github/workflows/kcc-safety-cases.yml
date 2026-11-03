@@ -117,3 +117,31 @@ jobs:
           assert len(p['dataset_sha256'])==64
           print('120 request plan only; 0 model calls. A second model would be an independent run.')
           PY
+
+      - name: Verify two-model 240-request cost plan without network
+        run: |
+          python -m evals.openai_responses_probe \
+            --model gpt-6-luna --repeat 3 --max-requests 120 \
+            --max-input-tokens 4096 --max-output-tokens 1024 \
+            --max-cost-usd 10 --input-usd-per-million 0.10 \
+            --output-usd-per-million 0.50 > /tmp/plan-luna.json
+          python -m evals.openai_responses_probe \
+            --model gpt-6.1-sol --repeat 3 --max-requests 120 \
+            --max-input-tokens 4096 --max-output-tokens 1024 \
+            --max-cost-usd 10 --input-usd-per-million 2.00 \
+            --output-usd-per-million 10.00 > /tmp/plan-sol.json
+          python - <<'PY'
+          from decimal import Decimal
+          import json
+          a=json.load(open('/tmp/plan-luna.json'))
+          b=json.load(open('/tmp/plan-sol.json'))
+          assert a['request_count']==b['request_count']==120
+          assert a['dataset_sha256']==b['dataset_sha256']
+          assert a['network_called'] is b['network_called'] is False
+          assert a['api_cost_charged_by_runner']==b['api_cost_charged_by_runner']=='0'
+          assert Decimal(a['whole_plan_estimated_ceiling_usd'])==Decimal('0.1105920')
+          assert Decimal(b['whole_plan_estimated_ceiling_usd'])==Decimal('2.211840')
+          print('Frozen reviewed dataset SHA-256:', a['dataset_sha256'])
+          print('Calculated two-model token-envelope cost USD: 2.322432')
+          print('ACTUAL model calls: 0, ACTUAL initiated spend: 0')
+          PY
