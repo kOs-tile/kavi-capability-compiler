@@ -7,6 +7,7 @@ from __future__ import annotations
 import kavi_capability_compiler as kcc
 from examples.trajectory.cross_version_revocation_drill import run_drill
 from scripts.trusted_trajectory import HostTraceRecorder, verify_host_bundle
+from scripts.host_effect_reconcile import compare_trace_to_effects
 
 PUBLIC_KEY = bytes.fromhex("91" * 32)
 
@@ -57,7 +58,9 @@ def test_signed_guard_trace_does_not_prove_absence_of_unguarded_host_path():
     # This is the independently held synthetic *effect* ledger, not model text.
     effects = []
     def host_dispatch(capability, params):
-        effects.append({"capability": capability, "params": dict(params)})
+        effects.append({"capability": capability, "params": dict(params),
+                        "capability_id": names[capability],
+                        "operation": "read" if capability == "read_record" else "delete"})
         return {"synthetic": True}
 
     result = recorder.guarded_call(
@@ -91,3 +94,15 @@ def test_signed_guard_trace_does_not_prove_absence_of_unguarded_host_path():
     assert len(effects) == 2
     unobserved_effects = len(effects) - recorded_dispatches
     assert unobserved_effects == 1  # Independent ledger reveals coverage gap.
+
+    # HMAC validation still succeeds; independently captured local effects
+    # contradict the incomplete signed trajectory.
+    missing = compare_trace_to_effects(bundle, None)
+    assert missing["status"] == "UNVERIFIED"
+    reconciled = compare_trace_to_effects(bundle, effects)
+    assert reconciled["status"] == "COVERAGE_GAP"
+    assert reconciled["unobserved_effect_count"] == 1
+    assert reconciled["phantom_trace_count"] == 0
+    assert reconciled["unobserved_effect_kinds"] == [
+        {"capability_id": names["delete_record"], "operation": "delete", "count": 1}
+    ]
