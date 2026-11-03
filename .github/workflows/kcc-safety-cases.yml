@@ -1,0 +1,36 @@
+name: KCC Safety Cases — real Guard (synthetic host)
+on:
+  push:
+    branches: [research/kcc-guard-safety-cases-20261102]
+  pull_request:
+    branches: [feat/trajectory-ci-v0-20261014]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  guard-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install development KCC and pytest
+        run: python -m pip install -e . pytest
+      - name: Verify actual KCC Guard and host-attested synthetic calls
+        run: |
+          python -m pytest -q tests/test_kcc_safety_cases.py
+          python -m examples.trajectory.kcc_safety_cases --repeat 10 --output /tmp/kcc-safety-report.json >/dev/null
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/kcc-safety-report.json',encoding='utf-8'))
+          assert x['allowed_control_dispatches']==10
+          assert x['A01_A05_A06_guard_denials']==30
+          assert x['forbidden_dispatches']==0
+          assert x['signed_host_traces_verified']==10
+          assert x['actual_openai_testing'] is False
+          print('Real KCC Guard synthetic host: 10 authorized + 30 denied.')
+          PY
