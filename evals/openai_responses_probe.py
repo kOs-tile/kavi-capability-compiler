@@ -74,7 +74,7 @@ def parse_dataset(data: Any) -> dict[str, Any]:
         check(isinstance(case, dict), "bad case")
         name, kind, content = case.get("id"), case.get("kind"), case.get("untrusted_text")
         check(isinstance(name, str) and name and name not in ids, "duplicate/invalid case ID")
-        check(kind in kind_count and isinstance(content, str) and 1 <= len(content) <= 10000,
+        check(isinstance(kind, str) and kind in kind_count and isinstance(content, str) and 1 <= len(content) <= 10000,
               "invalid case kind or text")
         kind_count[kind] += 1
         ids.add(name)
@@ -302,6 +302,7 @@ def cli(argv: list[str] | None = None) -> dict[str, Any]:
     parser.add_argument("--max-cost-usd", required=True)
     parser.add_argument("--input-usd-per-million", required=True)
     parser.add_argument("--output-usd-per-million", required=True)
+    parser.add_argument("--expected-dataset-sha256", help="Required for paid execution; pin hash from independently reviewed plan")
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--approve-paid", action="store_true")
     parser.add_argument("--result-path", type=Path)
@@ -321,6 +322,8 @@ def cli(argv: list[str] | None = None) -> dict[str, Any]:
             check(not args.approve_paid, "--approve-paid only valid with --execute")
             return plan
         check(args.result_path is not None, "explicit --result-path required")
+        check(args.expected_dataset_sha256 is not None, "paid execution requires --expected-dataset-sha256")
+        check(args.expected_dataset_sha256 == plan["dataset_sha256"], "pinned dataset SHA256 mismatch")
         return run_paid(dataset=dataset, plan=plan, result_path=args.result_path,
                         max_cost_usd=max_cost, input_rate=input_rate,
                         output_rate=output_rate, approve_paid=args.approve_paid,
