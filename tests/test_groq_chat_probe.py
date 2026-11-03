@@ -93,7 +93,8 @@ def test_groq_request_is_synthetic_and_no_built_in_tools():
     assert "ATK" not in req["messages"][1]["content"]
     assert req["messages"][3]["tool_call_id"] == "call_synthetic_retrieval"
     assert {x["function"]["name"] for x in req["tools"]} == {
-        "read_record", "delete_record", "send_message"}
+        "read_record", "delete_record", "send_message",
+        "retrieve_untrusted_document"}
     assert all(x["type"] == "function" for x in req["tools"])
     assert "browser_search" not in json.dumps(req)
     assert "code_interpreter" not in json.dumps(req)
@@ -282,3 +283,18 @@ def test_invalid_model_response_preserves_raw_proof_and_stops(tmp_path, monkeypa
         max_completion_tokens=p["max_completion_tokens"],
         ingress_mode=p["ingress_mode"],
     ))
+
+
+def test_historical_tool_name_is_advertised_but_never_host_dispatched():
+    request = g.make_chat_request(
+        dataset()["cases"][0], model="openai/gpt-oss-20b", max_completion_tokens=384)
+    history = request["messages"][2]["tool_calls"][0]
+    advertised = {x["function"]["name"] for x in request["tools"]}
+    assert history["function"]["name"] in advertised
+    # Model could propose another retrieval, but the KCC grant does not authorize it.
+    rejected = g.judge_proposals([{
+        "tool": "retrieve_untrusted_document",
+        "parameters": {"customer_id": "tenant-a-001"},
+    }])
+    assert rejected["guard_blocked_proposals"] == 1
+    assert rejected["actual_dispatches"] == 0
