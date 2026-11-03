@@ -1,0 +1,108 @@
+name: KCC Groq Free — 8-call manual pilot
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: 'Type ISOLATED_FREE_ORG after verifying the new Groq organization is on Free and separate from production'
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: kcc-groq-free-manual-only
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    if: ${{ github.repository == 'kOs-tile/kavi-capability-compiler' && github.ref == 'refs/heads/main' && github.actor == 'kOs-tile' && inputs.confirmation == 'ISOLATED_FREE_ORG' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: kcc-groq-free-eval
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout immutable reviewed experiment, not the run ref
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 853e4bafb6824be066a28a4122f86c189cfd9d7b
+          persist-credentials: false
+      - name: Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.11'
+      - name: Install only the published KCC stable wheel
+        run: |
+          python -m pip install --no-deps https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.1/kavi_capability_compiler-0.1.1-py3-none-any.whl
+          python - <<'PY'
+          import pathlib, kavi_capability_compiler as kcc
+          loc = pathlib.Path(kcc.__file__).resolve()
+          assert kcc.__version__ == '0.1.1'
+          assert 'site-packages' in loc.parts, loc
+          print('KCC stable v0.1.1 verified from site-packages.')
+          PY
+      - name: Preflight frozen dataset — NO key or network
+        run: |
+          umask 077
+          mkdir -p pilot-evidence
+          python -m evals.groq_chat_probe \
+            --model openai/gpt-oss-20b --ingress-mode tool_result \
+            --case-limit 8 --repeat 1 --max-requests 8 \
+            --max-completion-tokens 384 --min-interval-seconds 8 \
+            > pilot-evidence/preflight.json
+          python - <<'PY'
+          import json
+          p=json.load(open('pilot-evidence/preflight.json'))
+          assert p['dataset_sha256']=='bf2897b9f34ad3c885ee75453a0839ca4e5c7cedeb72a2d4be81a16e1ae11497'
+          assert p['request_count']==8 and p['network_called'] is False
+          assert p['ingress_mode']=='tool_result'
+          assert p['production_key_used'] is False and p['free_tier_required'] is True
+          assert p['case_ids']==['ATK01','BEN01','ATK02','BEN02','ATK03','BEN03','ATK04','BEN04']
+          print('Frozen 8-call Free-tier experiment preflight: PASS. Network: 0.')
+          PY
+      - name: Execute exactly 8 synthetic model proposals using isolated Free organization
+        env:
+          GROQ_KCC_API_KEY: ${{ secrets.GROQ_KCC_API_KEY }}
+        run: |
+          umask 077
+          if [[ -z "$GROQ_KCC_API_KEY" ]]; then
+            echo "::error::Missing environment secret GROQ_KCC_API_KEY. Nothing was sent."
+            exit 2
+          fi
+          python -m evals.groq_chat_probe \
+            --model openai/gpt-oss-20b --ingress-mode tool_result \
+            --case-limit 8 --repeat 1 --max-requests 8 \
+            --max-completion-tokens 384 --min-interval-seconds 8 \
+            --timeout 45 \
+            --execute-free --confirm-org-free-tier \
+            --expected-dataset-sha256 bf2897b9f34ad3c885ee75453a0839ca4e5c7cedeb72a2d4be81a16e1ae11497 \
+            --result-path pilot-evidence/groq-8.jsonl
+          unset GROQ_KCC_API_KEY
+      - name: Independently reconstruct scored calls from raw JSON
+        run: |
+          python -m evals.verify_groq_raw \
+            --raw pilot-evidence/groq-8.jsonl.raw-responses.jsonl \
+            --scored pilot-evidence/groq-8.jsonl \
+            --output pilot-evidence/reconciliation.json
+          python -m evals.summarize_groq_run \
+            --expected-repetitions 1 pilot-evidence/groq-8.jsonl \
+            --output pilot-evidence/summary.json
+          python - <<'PY'
+          import json
+          s=json.load(open('pilot-evidence/summary.json'))
+          r=json.load(open('pilot-evidence/reconciliation.json'))
+          assert len(s['models'])==1 and s['models'][0]['recorded_trials']==8
+          assert r['raw_records']==8 and r['reconstructed_scored_records']==8
+          assert r['unscorable_raw_records']==0
+          assert s['models'][0]['actual_tool_dispatches']==0
+          print('Completed 8/8 client-captured proposals; no real tools dispatched.')
+          print('Attack vs benign decisions are in the attached evidence files.')
+          PY
+      - name: Upload strictly synthetic evidence, even for partial run
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: kcc-groq-free-8-${{ github.run_id }}
+          path: pilot-evidence/
+          retention-days: 1
+          if-no-files-found: ignore
