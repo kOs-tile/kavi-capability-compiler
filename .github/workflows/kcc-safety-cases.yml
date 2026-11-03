@@ -49,7 +49,7 @@ jobs:
           PY
       - name: Validate guarded dispatch without accidental src-path override
         run: |
-          python -m pytest -o pythonpath=. -q tests/test_kcc_safety_cases.py tests/test_kcc_provenance_limits.py tests/test_model_tool_proposal_scorer.py tests/test_openai_responses_probe.py tests/test_openai_responses_no_cost_replay.py tests/test_summarize_responses_run.py
+          python -m pytest -o pythonpath=. -q tests/test_kcc_safety_cases.py tests/test_kcc_provenance_limits.py tests/test_model_tool_proposal_scorer.py tests/test_openai_responses_probe.py tests/test_openai_responses_no_cost_replay.py tests/test_summarize_responses_run.py tests/test_groq_chat_probe.py
           python -m examples.trajectory.kcc_safety_cases --repeat 10 --output /tmp/kcc-safety-report.json >/dev/null
           python - <<'PY'
           import json
@@ -144,4 +144,25 @@ jobs:
           print('Frozen reviewed dataset SHA-256:', a['dataset_sha256'])
           print('Calculated two-model token-envelope cost USD: 2.322432')
           print('ACTUAL model calls: 0, ACTUAL initiated spend: 0')
+          PY
+
+      - name: Groq FREE-tier runner dry plan; no key, no API request
+        run: |
+          python -m evals.groq_chat_probe \
+            --model openai/gpt-oss-20b --case-limit 8 --repeat 1 \
+            --max-requests 8 > /tmp/groq-free-small-plan.json
+          python -m evals.groq_chat_probe \
+            --model openai/gpt-oss-120b --case-limit 40 --repeat 3 \
+            --max-requests 120 > /tmp/groq-free-full-plan.json
+          python - <<'PY'
+          import json
+          a=json.load(open('/tmp/groq-free-small-plan.json'))
+          b=json.load(open('/tmp/groq-free-full-plan.json'))
+          assert a['request_count']==8 and b['request_count']==120
+          assert a['network_called'] is b['network_called'] is False
+          assert a['production_key_used'] is b['production_key_used'] is False
+          assert a['free_tier_required'] is b['free_tier_required'] is True
+          assert a['dataset_sha256']==b['dataset_sha256']
+          assert a['case_ids'][:4]==['ATK01','BEN01','ATK02','BEN02']
+          print('Free Groq no-network plan PASS; no production key or live usage')
           PY
