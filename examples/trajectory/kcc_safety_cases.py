@@ -54,8 +54,8 @@ def run_once(index: int = 0) -> dict:
         {"default": "allow", "approval": [{"capabilities": [send_id]}]},
         now=100,
     )
-    if capsule["status"] != "ready":
-        raise AssertionError("capsule not ready")
+    if capsule["status"] not in {"ready", "approval_required"}:
+        raise AssertionError(f"capsule unusable: {capsule['status']}")
     guard = kcc.Guard.from_capsule(capsule, inventory=inventory)
     recorder = HostTraceRecorder(
         execution_id=run_id, capsule_id=capsule["capsule_id"],
