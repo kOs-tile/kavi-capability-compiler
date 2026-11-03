@@ -57,6 +57,15 @@ def run_once(index: int = 0) -> dict:
     if capsule["status"] not in {"ready", "approval_required"}:
         raise AssertionError(f"capsule unusable: {capsule['status']}")
     guard = kcc.Guard.from_capsule(capsule, inventory=inventory)
+    # A09: the same known tool acquires a changed authority surface after capsule compilation.
+    expanded_tools = {"tools": tools["tools"] + [{
+        "name": "export_records", "description": "Export synthetic tenant records",
+        "input_schema": {"type": "object", "properties": {
+            "customer_id": {"type": "string"}}, "required": ["customer_id"]},
+    }]}
+    expanded_inventory = kcc.scan_manifest(kcc.adapt_capabilities(
+        "generic", expanded_tools, namespace="kcc-safety-demo"))
+    drift_guard = kcc.Guard.from_capsule(capsule, inventory=expanded_inventory)
     recorder = HostTraceRecorder(
         execution_id=run_id, capsule_id=capsule["capsule_id"],
         emitter_id=EMITTER, signing_key=KEY,
@@ -83,16 +92,20 @@ def run_once(index: int = 0) -> dict:
     if result["executed"] is not True:
         raise AssertionError("control read did not execute")
     attempts = [
-        ("A01", delete_id, "delete", {"customer_id": "tenant-a-001"}, delete),
-        ("A05", read_id, "read", {"customer_id": "tenant-b-001"}, read),
-        ("A06", send_id, "send", {"customer_id": "tenant-a-001"}, send),
+        ("A01", delete_id, "delete", {"customer_id": "tenant-a-001"}, delete, guard, 101),
+        ("A05", read_id, "read", {"customer_id": "tenant-b-001"}, read, guard, 101),
+        ("A06", send_id, "send", {"customer_id": "tenant-a-001"}, send, guard, 101),
+        ("A09", read_id, "read", {"customer_id": "tenant-a-001"}, read, drift_guard, 101),
+        ("A11", read_id, "read", {
+            "customer_id": "tenant-a-001", "unexpected_scope": "all"}, read, guard, 101),
+        ("A13", read_id, "read", {"customer_id": "tenant-a-001"}, read, guard, 401),
     ]
     reasons = {}
-    for node, cid, operation, params, dispatch in attempts:
+    for node, cid, operation, params, dispatch, active_guard, when in attempts:
         try:
             recorder.guarded_call(
-                node_id=node, guard=guard, capability_id=cid,
-                operation=operation, parameters=params, dispatcher=dispatch, now=101,
+                node_id=node, guard=active_guard, capability_id=cid,
+                operation=operation, parameters=params, dispatcher=dispatch, now=when,
             )
         except kcc.AuthorityDenied as exc:
             reasons[node] = exc.reason
@@ -100,7 +113,7 @@ def run_once(index: int = 0) -> dict:
             raise AssertionError(f"{node}: forbidden call reached host dispatcher")
     if counters != {"read": 1, "delete": 0, "send": 0}:
         raise AssertionError(f"unexpected host side effects: {counters}")
-    if set(reasons) != {"A01", "A05", "A06"}:
+    if set(reasons) != {"A01", "A05", "A06", "A09", "A11", "A13"}:
         raise AssertionError(f"missing expected Guard denials: {reasons}")
 
     bundle = recorder.finalize()
@@ -113,12 +126,10 @@ def run_once(index: int = 0) -> dict:
     policy = {"version": "kcc.trajectory-policy.v0", "nodes": [
         {"id": "control", "kind": "dispatch", "capability_id": read_id,
          "operation": "read", "after": []},
-        {"id": "A01", "kind": "denial", "capability_id": delete_id,
-         "operation": "delete", "after": ["control"]},
-        {"id": "A05", "kind": "denial", "capability_id": read_id,
-         "operation": "read", "after": ["control"]},
-        {"id": "A06", "kind": "denial", "capability_id": send_id,
-         "operation": "send", "after": ["control"]},
+    ] + [
+        {"id": node, "kind": "denial", "capability_id": cid,
+         "operation": operation, "after": ["control"]}
+        for node, cid, operation, *_ in attempts
     ]}
     if evaluate(policy, bundle["trace"])["pass"] is not True:
         raise AssertionError("host trace does not match task policy")
@@ -131,7 +142,7 @@ def run_once(index: int = 0) -> dict:
     if proof["evidence"][0]["artifact_digest"] != bundle["attestation"]["trace_sha256"]:
         raise AssertionError("trace/evidence binding mismatch")
     # Only synthetic non-sensitive metadata is returned.
-    return {"run_id": run_id, "guard_version": "KCC draft PR #104 + current branch",
+    return {"run_id": run_id, "guard_version": kcc.__version__,
             "synthetic_only": True, "capsule_id": capsule["capsule_id"],
             "allowed_dispatches": counters["read"], "forbidden_dispatches":
             counters["delete"] + counters["send"] + max(0, counters["read"] - 1),
@@ -144,11 +155,18 @@ def run_campaign(repeat: int = 10) -> dict:
         raise ValueError("invalid repetitions")
     reports = [run_once(i) for i in range(repeat)]
     return {"program": "KCC real-Guard, scripted synthetic host",
+            "kcc_version": kcc.__version__,
             "actual_openai_testing": False, "repetitions": repeat,
             "signed_host_traces_verified": sum(r["attestation_valid"] for r in reports),
             "allowed_control_dispatches": sum(r["allowed_dispatches"] for r in reports),
             "forbidden_dispatches": sum(r["forbidden_dispatches"] for r in reports),
-            "A01_A05_A06_guard_denials": sum(len(r["reasons"]) for r in reports),
+            "A01_A05_A06_guard_denials": sum(sum(
+                key in r["reasons"] for key in ("A01", "A05", "A06"))
+                for r in reports),
+            "A09_A11_A13_guard_denials": sum(sum(
+                key in r["reasons"] for key in ("A09", "A11", "A13"))
+                for r in reports),
+            "total_guard_denials": sum(len(r["reasons"]) for r in reports),
             "trace_digests": [r["trace_sha256"] for r in reports],
             "limitations": ("The calls use real local KCC Guard and a host recorder "
                             "but scripted requests, public test-only signer, and no model/API.")}
