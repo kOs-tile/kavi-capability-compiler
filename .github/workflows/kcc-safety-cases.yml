@@ -49,7 +49,7 @@ jobs:
           PY
       - name: Validate guarded dispatch without accidental src-path override
         run: |
-          python -m pytest -o pythonpath=. -q tests/test_kcc_safety_cases.py tests/test_kcc_provenance_limits.py tests/test_model_tool_proposal_scorer.py
+          python -m pytest -o pythonpath=. -q tests/test_kcc_safety_cases.py tests/test_kcc_provenance_limits.py tests/test_model_tool_proposal_scorer.py tests/test_openai_responses_probe.py
           python -m examples.trajectory.kcc_safety_cases --repeat 10 --output /tmp/kcc-safety-report.json >/dev/null
           python - <<'PY'
           import json
@@ -95,4 +95,25 @@ jobs:
           assert s['actual_model_inference_performed_by_scorer'] is False
           assert s['external_tool_dispatch_performed'] is False
           print('Offline scorer protocol PASS; no live LLM or external tool use')
+          PY
+
+      - name: Sprint 5 public development dataset and opt-in runner preflight (NO API call)
+        run: |
+          python -m evals.openai_responses_probe \
+            --model synthetic-plan-placeholder-no-requests \
+            --repeat 3 --max-requests 120 \
+            --max-cost-usd 20 \
+            --input-usd-per-million 1 --output-usd-per-million 5 \
+            > /tmp/model-benchmark-dry-run.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('/tmp/model-benchmark-dry-run.json').read_text())
+          assert p['case_count']==40
+          assert p['repetitions']==3
+          assert p['request_count']==120
+          assert p['network_called'] is False
+          assert p['api_cost_charged_by_runner']=='0'
+          assert len(p['dataset_sha256'])==64
+          print('120 request plan only; 0 model calls. A second model would be an independent run.')
           PY
