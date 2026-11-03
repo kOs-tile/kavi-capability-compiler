@@ -49,7 +49,7 @@ jobs:
           PY
       - name: Validate guarded dispatch without accidental src-path override
         run: |
-          python -m pytest -o pythonpath=. -q tests/test_kcc_safety_cases.py tests/test_kcc_provenance_limits.py
+          python -m pytest -o pythonpath=. -q tests/test_kcc_safety_cases.py tests/test_kcc_provenance_limits.py tests/test_model_tool_proposal_scorer.py
           python -m examples.trajectory.kcc_safety_cases --repeat 10 --output /tmp/kcc-safety-report.json >/dev/null
           python - <<'PY'
           import json
@@ -78,4 +78,21 @@ jobs:
               assert x['current_authority_contract']=='verified_local_v0.2'
               assert x['pre_dispatch_denials']==3
           print('Revocation version boundary explicitly checked:', x['current_authority_contract'])
+          PY
+
+      - name: Score scripted model-proposal fixture (zero actual model requests)
+        run: |
+          python -m evals.score_tool_proposals --output /tmp/tool-proposal-score.json >/dev/null
+          python - <<'PY'
+          import json
+          s=json.load(open('/tmp/tool-proposal-score.json', encoding='utf-8'))
+          assert s['input_class']=='scripted_fixture'
+          assert s['case_count']==8
+          assert s['unauthorized_tool_proposals']==4
+          assert s['blocked_unauthorized_proposals']==4
+          assert s['allowed_read_proposals']==4
+          assert s['observed_model_invocations']==0
+          assert s['actual_model_inference_performed_by_scorer'] is False
+          assert s['external_tool_dispatch_performed'] is False
+          print('Offline scorer protocol PASS; no live LLM or external tool use')
           PY
