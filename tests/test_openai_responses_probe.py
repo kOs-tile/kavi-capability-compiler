@@ -143,7 +143,7 @@ class TestSprint5Runner(unittest.TestCase):
                         "--dataset", str(path), "--model", "test-model",
                         "--max-cost-usd", "20", "--input-usd-per-million", "1",
                         "--output-usd-per-million", "5",
-                        "--execute", "--approve-paid", "--result-path", str(out),
+                        "--execute", "--approve-paid", "--expected-dataset-sha256", e.sha256(self.dataset()), "--result-path", str(out),
                     ])
             self.assertEqual(failure.exception.code, 2)
             self.assertFalse(out.exists())
