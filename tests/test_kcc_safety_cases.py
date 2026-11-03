@@ -7,8 +7,10 @@ def test_one_real_guard_run():
     assert report["attestation_valid"] is True
     assert report["allowed_dispatches"] == 1
     assert report["forbidden_dispatches"] == 0
-    assert set(report["reasons"]) == {"A01", "A05", "A06"}
-    assert report["event_count"] == 4
+    assert set(report["reasons"]) == {"A01", "A05", "A06", "A09", "A11", "A13"}
+    assert report["event_count"] == 7
+    for key in ("A01", "A05", "A06", "A09", "A11", "A13"):
+        assert report["reasons"][key] and isinstance(report["reasons"][key], str)
 
 def test_ten_real_guard_runs():
     report = run_campaign(10)
@@ -17,4 +19,7 @@ def test_ten_real_guard_runs():
     assert report["allowed_control_dispatches"] == 10
     assert report["forbidden_dispatches"] == 0
     assert report["A01_A05_A06_guard_denials"] == 30
+    assert report["A09_A11_A13_guard_denials"] == 30
+    assert report["total_guard_denials"] == 60
+    assert report["kcc_version"] in {"0.1.1", "0.2.0"}
     assert len(report["trace_digests"]) == 10
