@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from evals.groq_chat_probe import (
-    ALLOWED_MODELS, OUTPUT_VERSION, SOURCE,
+    ALLOWED_MODELS, INGRESS_MODES, OUTPUT_VERSION, SOURCE,
     make_chat_request, parse_dataset, sha256, judge_proposals,
 )
 from evals.openai_responses_probe import EvidenceError, check
@@ -28,7 +28,7 @@ def audit(dataset: dict[str, Any], logfiles: list[Path],
     digest = sha256(dataset)
     seen_trial = set()
     seen_id = set()
-    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for file in logfiles:
         check(file.is_file(), f"no capture file: {file}")
         for n, line in enumerate(file.read_text(encoding="utf-8").splitlines(), 1):
@@ -43,6 +43,8 @@ def audit(dataset: dict[str, Any], logfiles: list[Path],
             case_id, model, rep = record.get("case_id"), record.get("model"), record.get("repetition")
             check(isinstance(case_id, str) and case_id in cases, "unknown case")
             check(model in ALLOWED_MODELS, "unknown model")
+            ingress_mode = record.get("ingress_mode")
+            check(ingress_mode in INGRESS_MODES, "unrecognized ingress mode")
             check(type(rep) is int and 0 <= rep < expected_repetitions, "invalid repetition")
             check(record.get("kind") == cases[case_id]["kind"], "case kind mismatch")
             check(record.get("dataset_sha256") == digest, "dataset SHA mismatch")
@@ -56,14 +58,15 @@ def audit(dataset: dict[str, Any], logfiles: list[Path],
             check(isinstance(pid, str) and bool(pid) and pid not in seen_id,
                   "missing/duplicate provider response ID")
             seen_id.add(pid)
-            trial_key = (model, case_id, rep)
+            trial_key = (model, ingress_mode, case_id, rep)
             check(trial_key not in seen_trial, "duplicate model case/repetition")
             seen_trial.add(trial_key)
             max_completion = record.get("max_completion_tokens")
             check(type(max_completion) is int and 32 <= max_completion <= 1024,
                   "invalid completion token cap")
             expected_req_sha = sha256(make_chat_request(
-                cases[case_id], model=model, max_completion_tokens=max_completion))
+                cases[case_id], model=model, max_completion_tokens=max_completion,
+                ingress_mode=ingress_mode))
             check(record.get("request_sha256") == expected_req_sha,
                   "recorded request digest differs from frozen case")
             usage = record.get("usage")
@@ -86,10 +89,10 @@ def audit(dataset: dict[str, Any], logfiles: list[Path],
             else:
                 check(record.get("guard") is None,
                       "incomplete trial must not be scored")
-            grouped[model].append(record)
+            grouped[(model, ingress_mode)].append(record)
     results = []
-    for model in sorted(grouped):
-        records = grouped[model]
+    for model, ingress_mode in sorted(grouped):
+        records = grouped[(model, ingress_mode)]
         expected = {(cid, n) for cid in cases for n in range(expected_repetitions)}
         actual = {(row["case_id"], row["repetition"]) for row in records}
         absent = sorted(expected - actual)
@@ -103,6 +106,8 @@ def audit(dataset: dict[str, Any], logfiles: list[Path],
                 row["guard"]["guard_blocked_proposals"] == 0) for row in benign)
         results.append({
             "model": model,
+            "ingress_mode": ingress_mode,
+            "synthetic_retrieval_history": ingress_mode == "tool_result",
             "planned_trials": 40 * expected_repetitions,
             "recorded_trials": len(records),
             "completed_trials": len(completed),
