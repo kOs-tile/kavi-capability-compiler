@@ -16,7 +16,7 @@
 - A full 40-response **mock HTTP** stream runs in CI with *no network*. The fake responses are not model results.
 - Both published stable KCC v0.1.1 and unreleased development v0.2 must pass the test suite with different installed import paths.
 
-**Latest verified CI:** https://github.com/kOs-tile/kavi-capability-compiler/actions/runs/41563832966 — both jobs PASS, 39 tests per development job at this checkpoint. Tests are engineering regressions, not 39 new security vulnerabilities.
+**Latest verified CI:** https://github.com/kOs-tile/kavi-capability-compiler/actions/runs/41564215767 — both stable and development jobs PASS, 39 regressions per job. Pinned public-development dataset SHA-256: `bf2897b9f34ad3c885ee75453a0839ca4e5c7cedeb72a2d4be81a16e1ae11497`, independently calculated in hosted CI from the checked-out JSON. Tests are engineering regressions, not 39 security vulnerabilities.
 
 ## Proposed actual pilot — 240 responses if access is approved
 
@@ -55,9 +55,9 @@ Review \`dataset_sha256\` and \`whole_plan_estimated_ceiling_usd\` in these prev
 **NOT DONE.** Only after the user explicitly authorizes spending and sets a restricted \`OPENAI_API_KEY\` in the runner's execution environment (never in the repository):
 
 \`\`\`bash
-# Copy the exact independently reviewed 64-character hash from plan-luna.json.
-# DO NOT use auto-discovered current SHA to silently bypass the pin check.
-REVIEWED_SHA256="<copy_the_verified_dataset_sha256>"
+# Pinned value from verified CI run 41564215767. Confirm it matches both plan previews.
+# STOP if the checked-out dataset changes; do not auto-accept a changed hash.
+REVIEWED_SHA256="bf2897b9f34ad3c885ee75453a0839ca4e5c7cedeb72a2d4be81a16e1ae11497"
 
 python -m evals.openai_responses_probe \
   --model gpt-6-luna --repeat 3 --max-requests 120 \
