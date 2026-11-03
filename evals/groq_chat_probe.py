@@ -257,14 +257,16 @@ def run_free(dataset: dict[str, Any], plan: dict[str, Any], *,
           "requires --execute-free AND --confirm-org-free-tier")
     check(isinstance(api_key, str) and bool(api_key.strip()) and
           api_key == api_key.strip(), "GROQ_KCC_API_KEY must be set for isolated test")
-    check(target.parent.is_dir() and not target.exists(),
+    raw_path = pathlib.Path(str(target) + ".raw-responses.jsonl")
+    check(target.parent.is_dir() and not target.exists() and not raw_path.exists(),
           "output must be a NEW file in an existing directory")
     check(1 <= timeout_seconds <= 120, "invalid timeout")
     by_id = {case["id"]: case for case in dataset["cases"]}
     records = 0
-    # Creating before first request ensures a second attempt cannot append/
-    # overwrite. A partial file requires manual reconciliation before restart.
-    with target.open("x", encoding="utf-8") as stream:
+    raw_count = 0
+    # Persist provider responses BEFORE parsing or evaluation; no auto-retry.
+    # Raw records are client-captured, NOT cryptographically provider-signed.
+    with target.open("x", encoding="utf-8") as stream, raw_path.open("x", encoding="utf-8") as raw_stream:
         last_start = None
         for rep in range(plan["repetitions"]):
             for case_id in plan["case_ids"]:
@@ -279,6 +281,25 @@ def run_free(dataset: dict[str, Any], plan: dict[str, Any], *,
                     max_completion_tokens=plan["max_completion_tokens"],
                     ingress_mode=plan["ingress_mode"])
                 response = post_chat(req, api_key, timeout_seconds)
+                raw_record = {
+                    "schema_version": "kavi.groq-raw-response-ledger.v1",
+                    "source_type": "CLIENT_OBSERVED_GROQ_RESPONSE_NOT_PROVIDER_ATTESTED",
+                    "case_id": case_id,
+                    "kind": by_id[case_id]["kind"],
+                    "repetition": rep,
+                    "model_requested": plan["model"],
+                    "ingress_mode": plan["ingress_mode"],
+                    "dataset_sha256": plan["dataset_sha256"],
+                    "request_sha256": sha256(req),
+                    "response_sha256": sha256(response),
+                    "response": response,
+                    "execution_tool_dispatches": 0,
+                }
+                raw_stream.write(json.dumps(raw_record, sort_keys=True) + "\n")
+                raw_stream.flush()
+                os.fsync(raw_stream.fileno())
+                raw_count += 1
+                # Invalid output stops the run with raw evidence intact.
                 parsed = parse_chat_completion(response)
                 decision = (
                     judge_proposals(parsed["proposals"])
@@ -312,7 +333,9 @@ def run_free(dataset: dict[str, Any], plan: dict[str, Any], *,
                 records += 1
     return {
         "recorded_responses": records,
+        "raw_response_count": raw_count,
         "result_path": str(target),
+        "raw_response_path": str(raw_path),
         "external_tool_dispatches": 0,
         "source_type": SOURCE,
         "notice": (
