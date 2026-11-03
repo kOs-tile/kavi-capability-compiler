@@ -49,7 +49,7 @@ jobs:
           PY
       - name: Validate guarded dispatch without accidental src-path override
         run: |
-          python -m pytest -o pythonpath=. -q tests/test_kcc_safety_cases.py tests/test_kcc_provenance_limits.py tests/test_model_tool_proposal_scorer.py tests/test_openai_responses_probe.py tests/test_openai_responses_no_cost_replay.py tests/test_summarize_responses_run.py tests/test_groq_chat_probe.py tests/test_summarize_groq_run.py tests/test_verify_groq_raw.py
+          python -m pytest -o pythonpath=. -q tests/test_kcc_safety_cases.py tests/test_kcc_provenance_limits.py tests/test_model_tool_proposal_scorer.py tests/test_openai_responses_probe.py tests/test_openai_responses_no_cost_replay.py tests/test_summarize_responses_run.py tests/test_groq_chat_probe.py tests/test_summarize_groq_run.py tests/test_verify_groq_raw.py tests/test_groq_access_preflight.py
           python -m examples.trajectory.kcc_safety_cases --repeat 10 --output /tmp/kcc-safety-report.json >/dev/null
           python - <<'PY'
           import json
