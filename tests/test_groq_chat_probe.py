@@ -252,7 +252,7 @@ def test_http_429_stops_without_automatic_retry_or_paid_fallback(monkeypatch):
     monkeypatch.setattr(g.urllib.request, "urlopen", rate_limit)
     req = g.make_chat_request(dataset()["cases"][0],
                               model="openai/gpt-oss-20b", max_completion_tokens=384)
-    with pytest.raises(g.EvidenceError, match="Groq HTTP 429; STOP"):
+    with pytest.raises(g.EvidenceError, match="Groq HTTP 429; error_type=unclassified; error_code=unclassified; STOP"):
         g.post_chat(req, "FAKE_NOT_A_REAL_SECRET", 3)
 
 
@@ -298,3 +298,44 @@ def test_historical_tool_name_is_advertised_but_never_host_dispatched():
     }])
     assert rejected["guard_blocked_proposals"] == 1
     assert rejected["actual_dispatches"] == 0
+
+
+
+def test_groq_403_org_error_code_is_safe_and_actionable():
+    raw = b'{"error":{"type":"permissions_error","code":"model_permission_blocked_org","message":"PRIVATE_SECRET_NEVER_PRINT"}}'
+    error = urllib.error.HTTPError(g.GROQ_ENDPOINT, 403, "Forbidden", {},
+                                 io.BytesIO(raw))
+    safe = g.safe_http_error(error)
+    assert "Groq HTTP 403" in safe
+    assert "model_permission_blocked_org" in safe
+    assert "error_type=permissions_error" in safe
+    assert "PRIVATE_SECRET_NEVER_PRINT" not in safe
+
+
+def test_groq_403_project_error_code_is_safe_and_actionable():
+    raw = b'{"error":{"type":"permissions_error","code":"model_permission_blocked_project","message":"secret-fake-content"}}'
+    error = urllib.error.HTTPError(g.GROQ_ENDPOINT, 403, "Forbidden", {},
+                                 io.BytesIO(raw))
+    safe = g.safe_http_error(error)
+    assert "model_permission_blocked_project" in safe
+    assert "secret-fake-content" not in safe
+
+
+def test_groq_unknown_provider_error_code_does_not_leak():
+    raw = b'{"error":{"type":"custom-secret-must-not-log","code":"confidential-org-token-123","message":"LEAK_THIS_KEY_IF_UNSAFE"}}'
+    error = urllib.error.HTTPError(g.GROQ_ENDPOINT, 403, "Forbidden", {},
+                                 io.BytesIO(raw))
+    safe = g.safe_http_error(error)
+    assert "unclassified" in safe
+    assert "LEAK_THIS_KEY_IF_UNSAFE" not in safe
+    assert "confidential-org-token" not in safe
+    assert "custom-secret" not in safe
+
+
+def test_groq_403_invalid_provider_body_never_leaks():
+    raw = b'Authorization: Bearer this_is_a_fake_key\n429 ERROR\n'
+    error = urllib.error.HTTPError(g.GROQ_ENDPOINT, 403, "Forbidden", {},
+                                 io.BytesIO(raw))
+    safe = g.safe_http_error(error)
+    assert "Groq HTTP 403" in safe
+    assert "Bearer" not in safe and "fake_key" not in safe
