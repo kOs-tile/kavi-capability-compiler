@@ -1,4 +1,4 @@
-name: KCC Safety Cases — real Guard (synthetic host)
+name: KCC Safety Cases — stable vs dev (synthetic host)
 on:
   push:
     branches: [research/kcc-guard-safety-cases-20261102]
@@ -11,6 +11,10 @@ jobs:
   guard-safety:
     runs-on: ubuntu-latest
     timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        channel: [stable-v0.1.1, development-v0.2]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,19 +22,45 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install development KCC and pytest
-        run: python -m pip install -e . pytest
-      - name: Verify actual KCC Guard and host-attested synthetic calls
+      - name: Install test runner
+        run: python -m pip install pytest
+      - name: Install published stable wheel
+        if: matrix.channel == 'stable-v0.1.1'
         run: |
-          python -m pytest -q tests/test_kcc_safety_cases.py
+          python -m pip install --no-deps https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.1/kavi_capability_compiler-0.1.1-py3-none-any.whl
+      - name: Install unreleased development package
+        if: matrix.channel == 'development-v0.2'
+        run: python -m pip install -e . --no-deps
+      - name: Verify actual loaded version and import path
+        env:
+          EXPECTED_TRACK: ${{ matrix.channel }}
+        run: |
+          python - <<'PY'
+          import importlib.util, os, pathlib
+          import kavi_capability_compiler as kcc
+          version = '0.1.1' if os.environ['EXPECTED_TRACK'] == 'stable-v0.1.1' else '0.2.0'
+          location = pathlib.Path(importlib.util.find_spec('kavi_capability_compiler').origin).resolve()
+          assert kcc.__version__ == version, (kcc.__version__, version, str(location))
+          if version == '0.1.1':
+              assert 'site-packages' in location.parts, f'stable run imported checkout: {location}'
+          else:
+              assert 'src' in location.parts, f'dev run did not import checkout: {location}'
+          print(f'Version verified: {version}; from {location}')
+          PY
+      - name: Validate guarded dispatch without accidental src-path override
+        run: |
+          python -m pytest -o pythonpath=. -q tests/test_kcc_safety_cases.py
           python -m examples.trajectory.kcc_safety_cases --repeat 10 --output /tmp/kcc-safety-report.json >/dev/null
           python - <<'PY'
           import json
-          x=json.load(open('/tmp/kcc-safety-report.json',encoding='utf-8'))
-          assert x['allowed_control_dispatches']==10
-          assert x['A01_A05_A06_guard_denials']==30
-          assert x['forbidden_dispatches']==0
-          assert x['signed_host_traces_verified']==10
+          x = json.load(open('/tmp/kcc-safety-report.json', encoding='utf-8'))
+          assert x['allowed_control_dispatches'] == 10
+          assert x['A01_A05_A06_guard_denials'] == 30
+          assert x['A09_A11_A13_guard_denials'] == 30
+          assert x['total_guard_denials'] == 60
+          assert x['forbidden_dispatches'] == 0
+          assert x['signed_host_traces_verified'] == 10
           assert x['actual_openai_testing'] is False
-          print('Real KCC Guard synthetic host: 10 authorized + 30 denied.')
+          print('Verified isolated host: 10 allowed; 60 denied; 10 HMAC attestations.')
+          print('KCC version:', x['kcc_version'])
           PY
