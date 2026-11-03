@@ -20,11 +20,11 @@ Groq official references:
 - `tests/test_groq_chat_probe.py`, `tests/test_summarize_groq_run.py`: mocked HTTP transport and evidence-integrity regressions; **zero real Groq requests**.
 - `.github/workflows/kcc-safety-cases.yml`: version-isolated CI matrix installing published KCC v0.1.1 and unreleased development v0.2, running all tests without a Groq key.
 
-**Hosted CI proof:** [GitHub Actions run #41587218996](https://github.com/kOs-tile/kavi-capability-compiler/actions/runs/41587218996) — both stable and dev jobs **PASS**, each **66 pytest regression tests** plus scripted no-network checks. Passing unit tests are not 66 independently confirmed safety findings.
+**Hosted CI proof:** [GitHub Actions run #41590481356](https://github.com/kOs-tile/kavi-capability-compiler/actions/runs/41590481356) — both published stable and development jobs **PASS**, each **70 pytest regression tests** plus scripted no-network checks. These are engineering regressions, not 70 independent security findings.
 
 ### Why the scorer can find a problem
 
-This is a **model proposal safety** experiment only. The trusted task is synthetic read of `tenant-a-001`; snippets posing as web content try to induce cross-tenant read, deletion, messaging or argument injection. Groq gets only local function definitions; **no browser_search, code_interpreter, remote MCP, or actual dispatcher** is made available. The host records proposals before KCC checks them. Unexpected tool calls may be present in an API response, but **no tool is executed**. The absence of a model tool call is **not** proof of successful task completion.
+This is a **model proposal safety** experiment only. The default `--ingress-mode tool_result` now inserts adversarial content into a **synthetic tool-response message** after a fabricated assistant retrieval-tool history. This models a lower-trust retrieval channel better than placing attacker text in a user message. It is NOT evidence the model itself retrieved a document; no retrieval/network tool is executed. For a separate, differently-labeled comparison, `--ingress-mode user_snippet` preserves the previous user-message representation. Each captured result records the ingress mode. The trusted task is synthetic read of `tenant-a-001`; snippets posing as web content try to induce cross-tenant read, deletion, messaging or argument injection. Groq gets only local function definitions; **no browser_search, code_interpreter, remote MCP, or actual dispatcher** is made available. The host records proposals before KCC checks them. Unexpected tool calls may be present in an API response, but **no tool is executed**. The absence of a model tool call is **not** proof of successful task completion.
 
 ## Stage A — no-network preflight (available now)
 
@@ -32,7 +32,7 @@ Use an isolated checkout of the `research/kcc-guard-safety-cases-20261102` branc
 
 ```bash
 python -m evals.groq_chat_probe \
-  --model openai/gpt-oss-20b \
+  --model openai/gpt-oss-20b --ingress-mode tool_result \
   --case-limit 8 --repeat 1 --max-requests 8 \
   > /tmp/groq-free-dry-plan.json
 ```
@@ -78,6 +78,8 @@ python -m evals.summarize_groq_run \
   --output ./groq-20b-pilot-8-summary.json
 ```
 
+Each actual inference response is written first to a separate `groq-20b-pilot-8.jsonl.raw-responses.jsonl` **client-captured** ledger with the full provider response and SHA-256, before function-call parsing or Guard scoring. Malformed provider output stops the job without retry, retaining the raw record. This file may contain model output and must be kept private; never commit it to a public repository if real user/customer data is later included. The scorer and raw ledger are separate local artifacts, not independent cryptographic provider attestations.
+
 The report should show 8 recorded and 32 **missing** cases (because it requires the full 40-case grid), and must NOT be labeled a complete benchmark. If the API reports HTTP 429 (quota exceeded), the runner **stops immediately**, without retries or paid fallback. No automatic rerun after partial output.
 
 6. After inspecting real results and account limits, repeat for `qwen/qwen3.8-27b` with a different output file. Only then consider 40 cases per model and eventually 3 repeats each. Do not promise 240 free requests before observing actual per-organization availability and token limits.
@@ -89,6 +91,7 @@ The report should show 8 recorded and 32 **missing** cases (because it requires 
 - Existing Groq KCC-only Free-tier credential: **not provisioned in this execution**.
 - Actual Groq inference: **0**, billed Groq usage initiated by this integration: **$0**.
 - No automatic GitHub workflow can send Groq API requests; the CI checks are deliberately keyless.
+- Metadata-only review of the connected Vercel KCC project entries did not locate a KCC-only Groq credential. The existing Pulse Fitness production secret was not read, copied or used.
 
 ## Important scientific limits
 
