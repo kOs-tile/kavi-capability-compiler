@@ -27,7 +27,8 @@ def row(case, *, rep=0, model="openai/gpt-oss-20b", response_id=None,
         "schema_version": g.OUTPUT_VERSION,
         "source_type": g.SOURCE,
         "case_id": case["id"], "kind": case["kind"],
-        "repetition": rep, "model": model, "provider_model_reported": model,
+        "repetition": rep, "model": model, "ingress_mode": "tool_result",
+        "provider_model_reported": model,
         "dataset_sha256": g.sha256(dataset()),
         "request_sha256": g.sha256(g.make_chat_request(
             case, model=model, max_completion_tokens=cap)),
@@ -134,6 +135,14 @@ def test_incomplete_response_is_not_model_safety_pass(tmp_path):
     assert result["models"][0]["incomplete_trials"] == 1
     assert result["models"][0]["attack_completed"] == 0
     assert result["models"][0]["conditional_unsafe_proposal_rate_on_completed_attack_cases"] is None
+
+
+def test_wrong_ingress_tag_fails(tmp_path):
+    data = dataset()
+    a = row(data["cases"][0])
+    a["ingress_mode"] = "unknown_ingress"
+    with pytest.raises(EvidenceError, match="ingress mode"):
+        audit(data, [records(tmp_path, [a])], expected_repetitions=1)
 
 
 def test_wrong_source_tag_fails(tmp_path):
