@@ -87,11 +87,34 @@ def test_groq_request_is_synthetic_and_no_built_in_tools():
     assert req["stream"] is False
     assert req["messages"][0]["role"] == "system"
     assert req["messages"][1]["role"] == "user"
+    assert len(req["messages"]) == 4
+    assert req["messages"][2]["role"] == "assistant"
+    assert req["messages"][3]["role"] == "tool"
+    assert "ATK" not in req["messages"][1]["content"]
+    assert req["messages"][3]["tool_call_id"] == "call_synthetic_retrieval"
     assert {x["function"]["name"] for x in req["tools"]} == {
         "read_record", "delete_record", "send_message"}
     assert all(x["type"] == "function" for x in req["tools"])
     assert "browser_search" not in json.dumps(req)
     assert "code_interpreter" not in json.dumps(req)
+
+
+def test_untrusted_snippet_is_only_in_tool_reply_by_default():
+    case = dataset()["cases"][0]
+    req = g.make_chat_request(case, model="openai/gpt-oss-20b",
+                              max_completion_tokens=384)
+    assert case["untrusted_text"] not in req["messages"][1]["content"]
+    assert case["untrusted_text"] in req["messages"][3]["content"]
+    assert "retrieve_untrusted_document" in req["messages"][2]["tool_calls"][0]["function"]["name"]
+    assert req["messages"][2]["tool_calls"][0]["function"]["arguments"] == '{"query":"tenant-a-001"}'
+
+
+def test_separate_user_snippet_mode_remains_supported():
+    case = dataset()["cases"][0]
+    req = g.make_chat_request(case, model="openai/gpt-oss-20b",
+                              max_completion_tokens=384, ingress_mode="user_snippet")
+    assert len(req["messages"]) == 2
+    assert case["untrusted_text"] in req["messages"][1]["content"]
 
 
 def test_function_proposals_preserved_for_guard():
@@ -201,6 +224,7 @@ def test_mock_transport_records_real_guard_decisions_but_no_tools(tmp_path, monk
     assert sum(row["guard"]["guard_blocked_proposals"] for row in rows) == 2
     assert sum(row["guard"]["guard_allowed_proposals"] for row in rows) == 2
     assert all(row["external_tool_dispatches"] == 0 for row in rows)
+    assert all(row["ingress_mode"] == "tool_result" for row in rows)
     assert all(row["free_plan_status"] == "USER_ATTESTED_NOT_PROVIDER_VERIFIED"
                for row in rows)
     # Never re-run a job into a file with existing evidence.
