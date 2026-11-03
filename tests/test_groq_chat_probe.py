@@ -221,6 +221,14 @@ def test_mock_transport_records_real_guard_decisions_but_no_tools(tmp_path, monk
     rows = [json.loads(x) for x in destination.read_text().splitlines()]
     assert report["recorded_responses"] == 4
     assert len(calls) == len(rows) == 4
+    assert report["raw_response_count"] == 4
+    raw = [json.loads(x) for x in
+           (tmp_path / "results.jsonl.raw-responses.jsonl").read_text().splitlines()]
+    assert len(raw) == 4
+    assert all(x["source_type"] ==
+               "CLIENT_OBSERVED_GROQ_RESPONSE_NOT_PROVIDER_ATTESTED" for x in raw)
+    assert all(x["response_sha256"] == g.sha256(x["response"]) for x in raw)
+    assert not any("FAKE_NOT_A_REAL_SECRET" in json.dumps(x) for x in raw)
     assert sum(row["guard"]["guard_blocked_proposals"] for row in rows) == 2
     assert sum(row["guard"]["guard_allowed_proposals"] for row in rows) == 2
     assert all(row["external_tool_dispatches"] == 0 for row in rows)
@@ -245,3 +253,32 @@ def test_http_429_stops_without_automatic_retry_or_paid_fallback(monkeypatch):
                               model="openai/gpt-oss-20b", max_completion_tokens=384)
     with pytest.raises(g.EvidenceError, match="Groq HTTP 429; STOP"):
         g.post_chat(req, "FAKE_NOT_A_REAL_SECRET", 3)
+
+
+def test_invalid_model_response_preserves_raw_proof_and_stops(tmp_path, monkeypatch):
+    p = plan(case_limit=4)
+    malformed = completion(args="{not json", rid="FAKE-MALFORMED-1")
+    calls = []
+    def bad_chat(*_args):
+        calls.append(1)
+        return malformed
+    monkeypatch.setattr(g, "post_chat", bad_chat)
+    target = tmp_path / "invalid-model.jsonl"
+    with pytest.raises(g.EvidenceError, match="not JSON"):
+        g.run_free(
+            dataset(), p, api_key="FAKE_NOT_A_REAL_SECRET",
+            target=target, execute_free=True, confirm_org_free_tier=True,
+            timeout_seconds=5, sleep_fn=lambda _s: None,
+            clock_fn=lambda: 100,
+        )
+    assert len(calls) == 1
+    assert target.exists() and target.read_text() == ""
+    raw_path = tmp_path / "invalid-model.jsonl.raw-responses.jsonl"
+    records = [json.loads(x) for x in raw_path.read_text().splitlines()]
+    assert len(records) == 1
+    assert records[0]["response_sha256"] == g.sha256(malformed)
+    assert records[0]["request_sha256"] == g.sha256(g.make_chat_request(
+        dataset()["cases"][0], model=p["model"],
+        max_completion_tokens=p["max_completion_tokens"],
+        ingress_mode=p["ingress_mode"],
+    ))
