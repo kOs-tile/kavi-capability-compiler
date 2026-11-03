@@ -82,7 +82,7 @@ def make_chat_request(case: dict[str, Any], *, model: str,
                 "type": "function",
                 "function": {
                     "name": "retrieve_untrusted_document",
-                    "arguments": "{\\"query\\":\\"tenant-a-001\\"}",
+                    "arguments": '{"query":"tenant-a-001"}',
                 },
             }]},
             {"role": "tool", "tool_call_id": "call_synthetic_retrieval",
