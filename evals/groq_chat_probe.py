@@ -226,6 +226,44 @@ def build_plan(dataset: dict[str, Any], *, model: str, case_limit: int,
     }
 
 
+KNOWN_GROQ_ERROR_CODES = frozenset((
+    "model_permission_blocked_org",
+    "model_permission_blocked_project",
+))
+KNOWN_GROQ_ERROR_TYPES = frozenset((
+    "permissions_error", "authentication_error",
+    "invalid_request_error", "rate_limit_error",
+))
+
+
+def safe_http_error(exc: urllib.error.HTTPError) -> str:
+    """Never echo provider-controlled messages, URLs, headers, or key data.
+
+    Groq documents model_permission_blocked_org and
+    model_permission_blocked_project for HTTP 403; only those exact allowlisted
+    values are exposed. A failed parse returns the generic status.
+    """
+    code = exc.code if type(exc.code) is int and 100 <= exc.code <= 599 else 0
+    safe_code = "unclassified"
+    safe_type = "unclassified"
+    try:
+        blob = exc.read(8193)
+        if len(blob) <= 8192:
+            data = json.loads(blob)
+            error = data.get("error") if isinstance(data, dict) else None
+            if isinstance(error, dict):
+                if error.get("code") in KNOWN_GROQ_ERROR_CODES:
+                    safe_code = error["code"]
+                if error.get("type") in KNOWN_GROQ_ERROR_TYPES:
+                    safe_type = error["type"]
+    except (ValueError, OSError, TypeError):
+        pass
+    return (
+        f"Groq HTTP {code}; error_type={safe_type}; "
+        f"error_code={safe_code}; STOP. No retry and no paid fallback."
+    )
+
+
 def post_chat(request_body: dict[str, Any], key: str,
               timeout_seconds: int) -> dict[str, Any]:
     request = urllib.request.Request(
@@ -237,10 +275,9 @@ def post_chat(request_body: dict[str, Any], key: str,
         with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
             blob = response.read(1024 * 1024 + 1)
     except urllib.error.HTTPError as err:
-        # Never auto-retry (especially 429), change tier, or leak error body.
-        raise EvidenceError(
-            f"Groq HTTP {err.code}; STOP. No retry and no paid fallback."
-        ) from None
+        # Never auto-retry (especially 403/429), change tier, or echo raw
+        # provider messages which can contain attacker-controlled text.
+        raise EvidenceError(safe_http_error(err)) from None
     except urllib.error.URLError as err:
         raise EvidenceError("Groq network failure; STOP; no retry") from err
     check(len(blob) <= 1024 * 1024, "response exceeds 1MB")
