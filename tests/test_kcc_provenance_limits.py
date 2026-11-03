@@ -35,8 +35,8 @@ def test_revocation_contract_is_never_misreported_as_stable_feature():
 def test_signed_guard_trace_does_not_prove_absence_of_unguarded_host_path():
     """Intentionally bypass the recorder to falsify an overbroad coverage claim."""
     tools = {"tools": [
-        {"name": "read_record", "description": "Read synthetic record"},
-        {"name": "delete_record", "description": "Delete synthetic record"},
+        {"name": "read_record", "description": "Read synthetic record", "input_schema": {"type": "object", "properties": {}}},
+        {"name": "delete_record", "description": "Delete synthetic record", "input_schema": {"type": "object", "properties": {}}},
     ]}
     inventory = kcc.scan_manifest(kcc.adapt_capabilities(
         "generic", tools, namespace="provenance-negative-demo"))
