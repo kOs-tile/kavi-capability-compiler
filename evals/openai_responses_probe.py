@@ -270,6 +270,7 @@ def run_paid(*, dataset: dict[str, Any], plan: dict[str, Any], result_path: Path
                     "provider_response_id": reply.get("id"), "provider_status": status,
                     "dataset_sha256": plan["dataset_sha256"],
                     "request_sha256": sha256(request),
+                    "max_output_tokens": plan["max_output_tokens_per_request"],
                     "usage": {"input_tokens": usage[0], "output_tokens": usage[1]},
                     "estimated_cost_usd": str(cost),
                     "judge": result,
