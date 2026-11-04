@@ -48,7 +48,42 @@ jobs:
           import kavi_capability_compiler as kcc
           assert kcc.__version__ == "0.1.2"
           assert "site-packages" in kcc.__file__
-          print("Isolated installed stable v0.1.2 wheel import: PASS")
+          manifest=kcc.adapt_capabilities("generic", {"tools":[{
+              "name":"read_record",
+              "description":"Read one synthetic tenant-scoped record",
+              "input_schema":{
+                  "type":"object",
+                  "properties":{"customer_id":{"type":"string"}},
+                  "required":["customer_id"]},
+          }]}, namespace="stable-wheel-smoke")
+          inventory=kcc.scan_manifest(manifest)
+          cid=inventory["capabilities"][0]["id"]
+          cap=kcc.compile_capsule(inventory, {
+              "task":"Read only synthetic tenant-a-001",
+              "capabilities":[cid],
+              "ttl_seconds":300,
+              "capability_constraints":{cid:{
+                  "operations":["read"],
+                  "parameters":{"customer_id":"tenant-a-001"}}}},
+              {"default":"allow"}, now=100)
+          guard=kcc.Guard.from_capsule(cap,inventory=inventory)
+          assert guard.authorize(cid,operation="read",parameters={},now=101) == {
+              "allowed":False,"reason":"required_parameter_missing:customer_id"}
+          calls=[]
+          try:
+              guard.dispatch_sync(cid,lambda p:calls.append(p),operation="read",
+                                  parameters={},now=101)
+          except kcc.AuthorityDenied:
+              pass
+          else:
+              raise AssertionError("unsafe dispatch reached host from installed wheel")
+          assert not calls
+          ok=guard.dispatch_sync(cid,lambda p:calls.append(dict(p)),
+                                 operation="read",
+                                 parameters={"customer_id":"tenant-a-001"},now=101)
+          assert ok["executed"] is True
+          assert calls == [{"customer_id":"tenant-a-001"}]
+          print("Installed stable 0.1.2 wheel: missing literal DENIED; valid read ALLOWED")
           PY
       - name: Upload pre-release candidate wheel (NOT a published release)
         if: ${{ matrix.python-version == '3.11' }}
