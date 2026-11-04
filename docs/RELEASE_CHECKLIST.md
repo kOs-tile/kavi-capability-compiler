@@ -79,3 +79,15 @@
 - [ ] rerun external consumer, diagnostics, and optional-extras evidence against v0.1.1
 - [ ] update current public install/status docs to v0.1.1 after publication
 - [ ] do not rebuild v0.1.1 for a later PyPI mirror
+
+## v0.1.2 security patch
+
+- [x] backport exact-value parameter presence check to v0.1.1 maintenance baseline
+- [x] create explicit regression tests for denied omitted/mismatched arguments and permitted reads
+- [ ] maintenance-branch CI and wheel clean-install green
+- [ ] reproducible wheel/source distribution checks verified
+- [ ] approved release publication from verified stable maintenance commit
+- [ ] published v0.1.2 release assets, SHA256SUMS and install index verified
+- [ ] update stable install guidance after successful publication
+- [ ] coordinate vulnerability disclosure through GitHub draft private advisory
+- [ ] do not treat experimental v0.2 evidence as an installed v0.1.2 release test

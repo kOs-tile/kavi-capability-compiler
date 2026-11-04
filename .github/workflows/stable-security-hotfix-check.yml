@@ -1,0 +1,60 @@
+name: KCC 0.1.2 maintenance security test (NO publish)
+on:
+  push:
+    branches:
+      - hotfix/v0.1.2-literal-guard-20261103
+      - stable/0.1
+  pull_request:
+    branches:
+      - stable/0.1
+permissions:
+  contents: read
+jobs:
+  stable-patch-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - name: Checkout maintenance candidate
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install offline test and build tooling
+        run: python -m pip install "pytest==8.4.2" "build==1.6.1" "wheel==0.48.0" "setuptools==84.0.0"
+      - name: Verify release metadata (NO publication)
+        run: |
+          python scripts/verify_release_metadata.py
+          python scripts/release_version.py tag | grep -Fx 'v0.1.2'
+      - name: Run strict authorization regressions against patched source
+        run: |
+          python -m pip install --no-deps -e .
+          python -m pytest -q \
+            tests/test_guard_literal_parameter_presence.py \
+            tests/test_runtime_guard.py
+      - name: Build patch wheel and clean-install to isolated environment
+        run: |
+          python -m build --wheel --no-isolation
+          python -m venv /tmp/kcc-stable-patch-clean
+          /tmp/kcc-stable-patch-clean/bin/python -m pip install --no-deps dist/kavi_capability_compiler-0.1.2-py3-none-any.whl
+          cd /tmp
+          /tmp/kcc-stable-patch-clean/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          assert kcc.__version__ == "0.1.2"
+          assert "site-packages" in kcc.__file__
+          print("Isolated installed stable v0.1.2 wheel import: PASS")
+          PY
+      - name: Upload pre-release candidate wheel (NOT a published release)
+        if: ${{ matrix.python-version == '3.11' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: kcc-v0.1.2-candidate-wheel-${{ github.sha }}
+          path: dist/kavi_capability_compiler-0.1.2-py3-none-any.whl
+          retention-days: 3
+          if-no-files-found: error

@@ -2,6 +2,18 @@
 
 All notable changes to KAVI Capability Compiler are documented here.
 
+## 0.1.2 — stable security patch candidate
+
+### Security
+- enforce presence of exact-value constrained parameters before dispatch
+- reject omitted tenant-scoped literal values rather than silently widening a read grant
+- preserve explicit optional structured parameter semantics
+
+### Compatibility
+- public SDK and capsule contract versions unchanged
+- no new core runtime dependencies
+- published v0.1.1 wheel remains unpatched; v0.1.2 requires separate release
+
 ## 0.1.1 — security patch
 
 ### Security
