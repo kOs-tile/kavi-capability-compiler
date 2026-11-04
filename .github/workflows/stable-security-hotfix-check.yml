@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - hotfix/v0.1.2-literal-guard-20261103
+      - stable/0.1
+  pull_request:
+    branches:
+      - stable/0.1
 permissions:
   contents: read
 jobs:
