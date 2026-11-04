@@ -304,3 +304,85 @@ jobs:
           (cd published-assets && sha256sum --check SHA256SUMS)
           diff -q published-assets/SHA256SUMS payload/dist/SHA256SUMS
           echo "Published wheel/sdist checksums match the approved build."
+
+  deploy-verified-simple-index:
+    # Only after successful immutable GitHub Release; no scheduled publishing.
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish && github.repository == 'kOs-tile/kavi-capability-compiler' && github.actor == 'kOs-tile' }}
+    needs: [verified-build, publish-verified-release]
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout exact stable source used in immutable release
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ inputs.target_sha }}
+          persist-credentials: false
+
+      - name: Use pinned release Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+
+      - name: Confirm immutable v0.1.2 release references exact stable SHA
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ inputs.target_sha }}
+          KCC_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_ACTOR" = "kOs-tile"
+          test "$GITHUB_REF" = "refs/heads/main"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(python scripts/release_version.py tag)" = "v0.1.2"
+          gh api "repos/$KCC_REPOSITORY/releases/tags/v0.1.2" > /tmp/stable-pages-release.json
+          EXPECTED_SHA="$TARGET_SHA" python - <<'PY'
+          import os,json
+          release=json.load(open("/tmp/stable-pages-release.json"))
+          assert release.get("tag_name")=="v0.1.2"
+          assert release.get("draft") is False
+          assert release.get("immutable") is True, "Cannot deploy mutable release"
+          assert release.get("target_commitish")==os.environ["EXPECTED_SHA"], "Wrong source SHA"
+          print("Authenticated immutable release and source SHA verified.")
+          PY
+
+      - name: Download immutable, released assets only
+        env:
+          GH_TOKEN: ${{ github.token }}
+          KCC_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          gh release download v0.1.2 --repo "$KCC_REPOSITORY" \
+            --pattern "kavi_capability_compiler-0.1.2-*.whl" \
+            --pattern "kavi_capability_compiler-0.1.2.tar.gz" \
+            --pattern "SHA256SUMS" \
+            --dir dist
+          test "$(ls dist/*.whl | wc -l)" -eq 1
+          test "$(ls dist/*.tar.gz | wc -l)" -eq 1
+          test -f dist/SHA256SUMS
+          (cd dist && sha256sum --check SHA256SUMS)
+
+      - name: Regenerate and validate immutable Simple Repository links
+        run: |
+          set -euo pipefail
+          python scripts/build_simple_index.py dist site
+          python scripts/verify_simple_index.py site
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+
+      - name: Upload verified index
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with:
+          path: site
+
+      - name: Publish verified Python index
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+        id: deployment
