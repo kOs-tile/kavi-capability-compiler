@@ -80,8 +80,7 @@ def test_metadata_request_cannot_use_arbitrary_url(monkeypatch):
 def test_missing_metadata_key_never_contacts_network(monkeypatch):
     def forbidden(*args, **kwargs):
         raise AssertionError("unexpected network")
-    monkeypatch.setattr(p.urllib.request, "urlopen", forbidden)
-    with pytest.raises(EvidenceError, match="missing KCC-only"):
+    with pytest.raises(EvidenceError, match="invalid or missing isolated"):
         p.get_json(p.MODELS_URL, "")
 
 
@@ -107,10 +106,10 @@ def test_explicit_live_mode_requires_confirmation(monkeypatch):
 
 def test_403_code_extracted_from_http_error_not_body_message(monkeypatch):
     sensitive = b'{"error":{"message":"Authorization Bearer FAKE_SECRET","type":"permissions_error","code":"model_permission_blocked_project"}}'
-    def forbidden(_request, *, timeout):
-        raise urllib.error.HTTPError(
-            p.MODELS_URL, 403, "Forbidden", {}, io.BytesIO(sensitive))
-    monkeypatch.setattr(p.urllib.request, "urlopen", forbidden)
+    from evals.groq_curl_transport import classify_error
+    def forbidden(**kwargs):
+        raise EvidenceError(classify_error(403, sensitive))
+    monkeypatch.setattr(p, "curl_request_json", forbidden)
     with pytest.raises(EvidenceError, match="model_permission_blocked_project") as exc:
         p.get_json(p.MODELS_URL, "FAKE_TEST_KEY")
     assert "FAKE_SECRET" not in str(exc.value)
