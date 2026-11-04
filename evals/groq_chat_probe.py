@@ -22,6 +22,7 @@ from typing import Any
 from evals.openai_responses_probe import (
     EvidenceError, SYSTEM_RULE, check, parse_dataset, sha256, canonical, judge_proposals
 )
+from evals.groq_curl_transport import request_json as curl_request_json
 
 GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
 ALLOWED_MODELS = (
@@ -266,27 +267,15 @@ def safe_http_error(exc: urllib.error.HTTPError) -> str:
 
 def post_chat(request_body: dict[str, Any], key: str,
               timeout_seconds: int) -> dict[str, Any]:
-    request = urllib.request.Request(
-        GROQ_ENDPOINT, data=canonical(request_body), method="POST",
-        headers={"Authorization": "Bearer " + key,
-                 "Content-Type": "application/json"},
+    # Compare GitHub runner keyless evidence: Python urllib returned HTTP 403,
+    # whereas curl returned the normal unauthenticated HTTP 401. This single
+    # reviewed transport is shared with the model metadata preflight.
+    # The authorization token travels only through curl's private stdin pipe,
+    # never a command-line argument, temporary file or logging statement.
+    return curl_request_json(
+        method="POST", url=GROQ_ENDPOINT, key=key,
+        payload=request_body, timeout_seconds=timeout_seconds,
     )
-    try:
-        with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
-            blob = response.read(1024 * 1024 + 1)
-    except urllib.error.HTTPError as err:
-        # Never auto-retry (especially 403/429), change tier, or echo raw
-        # provider messages which can contain attacker-controlled text.
-        raise EvidenceError(safe_http_error(err)) from None
-    except urllib.error.URLError as err:
-        raise EvidenceError("Groq network failure; STOP; no retry") from err
-    check(len(blob) <= 1024 * 1024, "response exceeds 1MB")
-    try:
-        data = json.loads(blob)
-    except json.JSONDecodeError as err:
-        raise EvidenceError("invalid Groq response JSON") from err
-    check(isinstance(data, dict), "nonobject Groq response")
-    return data
 
 
 def run_free(dataset: dict[str, Any], plan: dict[str, Any], *,
