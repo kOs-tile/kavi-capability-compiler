@@ -245,15 +245,18 @@ def test_mock_transport_records_real_guard_decisions_but_no_tools(tmp_path, monk
 
 
 def test_http_429_stops_without_automatic_retry_or_paid_fallback(monkeypatch):
-    def rate_limit(*_args, **_kwargs):
-        raise urllib.error.HTTPError(
-            g.GROQ_ENDPOINT, 429, "Too Many Requests", {}, io.BytesIO(b"never log")
-        )
-    monkeypatch.setattr(g.urllib.request, "urlopen", rate_limit)
+    calls = []
+    def rate_limit(**kwargs):
+        calls.append(kwargs)
+        raise g.EvidenceError("Groq HTTP 429; error_type=unclassified; error_code=unclassified; STOP.")
+    monkeypatch.setattr(g, "curl_request_json", rate_limit)
     req = g.make_chat_request(dataset()["cases"][0],
                               model="openai/gpt-oss-20b", max_completion_tokens=384)
     with pytest.raises(g.EvidenceError, match="Groq HTTP 429; error_type=unclassified; error_code=unclassified; STOP"):
         g.post_chat(req, "FAKE_NOT_A_REAL_SECRET", 3)
+    assert len(calls) == 1
+    assert calls[0]["method"] == "POST"
+    assert calls[0]["url"] == g.GROQ_ENDPOINT
 
 
 def test_invalid_model_response_preserves_raw_proof_and_stops(tmp_path, monkeypatch):
