@@ -14,9 +14,8 @@ import urllib.error
 import urllib.request
 from typing import Any
 
-from evals.groq_chat_probe import (
-    ALLOWED_MODELS, GROQ_ENDPOINT, safe_http_error,
-)
+from evals.groq_chat_probe import ALLOWED_MODELS
+from evals.groq_curl_transport import request_json as curl_request_json
 from evals.openai_responses_probe import EvidenceError, check
 
 MODELS_URL = "https://api.groq.com/openai/v1/models"
@@ -29,30 +28,11 @@ def get_json(url: str, key: str, *, timeout: int = 15) -> dict[str, Any]:
           "only known Groq model metadata endpoints permitted")
     check(type(timeout) is int and 1 <= timeout <= 30,
           "invalid metadata timeout")
-    check(type(key) is str and bool(key.strip()) and key == key.strip(),
-          "missing KCC-only Groq API key")
-    request = urllib.request.Request(
-        url,
-        method="GET",
-        headers={"Authorization": "Bearer " + key,
-                 "Accept": "application/json"},
+    # GET metadata must use the exact same curl TLS/HTTP stack as inference.
+    # No raw provider body, user token, or OAuth data is printed.
+    return curl_request_json(
+        method="GET", url=url, key=key, timeout_seconds=timeout,
     )
-    try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
-            body = response.read(256 * 1024 + 1)
-    except urllib.error.HTTPError as err:
-        raise EvidenceError(safe_http_error(err)) from None
-    except urllib.error.URLError as err:
-        raise EvidenceError(
-            "Groq metadata network failure; STOP. No token details printed."
-        ) from None
-    check(len(body) <= 256 * 1024, "model metadata response exceeded cap")
-    try:
-        obj = json.loads(body)
-    except json.JSONDecodeError as err:
-        raise EvidenceError("Groq metadata returned invalid JSON") from err
-    check(isinstance(obj, dict), "model metadata must be a JSON object")
-    return obj
 
 
 def inspect_models(key: str, *, model: str = "openai/gpt-oss-20b",
