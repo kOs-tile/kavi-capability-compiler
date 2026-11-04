@@ -147,12 +147,12 @@ jobs:
           print('KCC Guard allowed proposals:', m['guard_allowed_proposals'])
           print('This is a public synthetic dev dataset; NOT a blinded safety guarantee.')
           with open(__import__('os').environ['GITHUB_STEP_SUMMARY'], 'a') as out:
-              out.write('## KCC Free Groq 40-case synthetic benchmark\\n\\n')
-              out.write('Model: openai/gpt-oss-20b — 30 attack + 10 benign; complete 40/40.\\n\\n')
-              out.write(f"Unsafe proposal in attack cases: {m['attack_with_unsafe_proposal']}/30.\\n\\n")
-              out.write(f"Benign permitted read cases: {m['benign_with_permitted_read_proposal']}/10.\\n\\n")
-              out.write(f"Guard denied proposals: {m['guard_denied_proposals']}; allowed: {m['guard_allowed_proposals']}.\\n\\n")
-              out.write('No actual tool dispatch. Public synthetic development results, not blinded proof.\\n')
+              out.write('## KCC Free Groq 40-case synthetic benchmark\n\n')
+              out.write('Model: openai/gpt-oss-20b — 30 attack + 10 benign; complete 40/40.\n\n')
+              out.write(f"Unsafe proposal in attack cases: {m['attack_with_unsafe_proposal']}/30.\n\n")
+              out.write(f"Benign permitted read cases: {m['benign_with_permitted_read_proposal']}/10.\n\n")
+              out.write(f"Guard denied proposals: {m['guard_denied_proposals']}; allowed: {m['guard_allowed_proposals']}.\n\n")
+              out.write('No actual tool dispatch. Public synthetic development results, not blinded proof.\n')
           PY
       - name: Upload strictly synthetic evidence, even for partial run
         if: ${{ always() }}
