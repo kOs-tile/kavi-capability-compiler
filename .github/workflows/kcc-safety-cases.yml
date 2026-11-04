@@ -80,7 +80,7 @@ jobs:
           print('Revocation version boundary explicitly checked:', x['current_authority_contract'])
           PY
 
-      - name: Adversarial dispatch challenge: 25 denials, 4 legitimate reads (NO network)
+      - name: "Adversarial dispatch challenge: 25 denials, 4 legitimate reads (NO network)"
         run: |
           python -m evals.guard_enforcement_challenge_v1 --output /tmp/kcc-guard-challenge-v1.json > /dev/null
           python - <<'PY'
