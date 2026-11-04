@@ -1,0 +1,306 @@
+name: KCC stable 0.1.2 verified release
+
+on:
+  pull_request:
+    branches: [main]
+    paths: [.github/workflows/stable-0.1.2-release.yml]
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: "Exact stable/0.1 commit SHA, 40 lowercase hexadecimal characters"
+        type: string
+        required: true
+      publish:
+        description: "After all checks, create immutable v0.1.2 GitHub Release"
+        type: boolean
+        default: false
+        required: true
+      confirm_version:
+        description: "Type v0.1.2"
+        type: string
+        required: true
+      confirm_immutability:
+        description: "Type IMMUTABILITY_ENABLED after verifying GitHub Settings > General > Releases"
+        type: string
+        required: true
+
+permissions:
+  contents: read
+concurrency:
+  group: kcc-stable-v012-release-gate
+  cancel-in-progress: false
+
+jobs:
+  verified-build:
+    if: github.repository == 'kOs-tile/kavi-capability-compiler'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout exact stable candidate, not main development
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.target_sha || 'stable/0.1' }}
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Install release Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+
+      - name: Authenticate exact stable/0.1 branch source and manual inputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          KCC_REPOSITORY: ${{ github.repository }}
+          REQUESTED_SHA: ${{ inputs.target_sha }}
+          IS_PUBLISH: ${{ inputs.publish }}
+          CONFIRM_VERSION: ${{ inputs.confirm_version }}
+          CONFIRM_IMMUTABILITY: ${{ inputs.confirm_immutability }}
+        run: |
+          set -euo pipefail
+          test "$KCC_REPOSITORY" = "kOs-tile/kavi-capability-compiler"
+          HEAD_SHA="$(git rev-parse HEAD)"
+          LIVE_SHA="$(gh api "repos/$KCC_REPOSITORY/branches/stable/0.1" --jq .commit.sha)"
+          test "$HEAD_SHA" = "$LIVE_SHA"
+          [[ "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
+          echo "KCC_STABLE_RELEASE_SHA=$HEAD_SHA" >> "$GITHUB_ENV"
+
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            test "$GITHUB_REF" = "refs/heads/main"
+            test "$GITHUB_ACTOR" = "kOs-tile"
+            [[ "$REQUESTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+            test "$REQUESTED_SHA" = "$HEAD_SHA"
+            test "$CONFIRM_VERSION" = "v0.1.2"
+            test "$CONFIRM_IMMUTABILITY" = "IMMUTABILITY_ENABLED"
+          else
+            test "$IS_PUBLISH" != "true"
+          fi
+
+          test "$(python scripts/release_version.py version)" = "0.1.2"
+          test "$(python scripts/release_version.py tag)" = "v0.1.2"
+          echo "Verified stable source and exact release metadata."
+
+      - name: Check reviewed stable CI status and release uniqueness
+        env:
+          GH_TOKEN: ${{ github.token }}
+          KCC_REPOSITORY: ${{ github.repository }}
+          MANUAL_PUBLISH: ${{ inputs.publish }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$KCC_REPOSITORY/actions/runs?head_sha=$KCC_STABLE_RELEASE_SHA&status=success&per_page=100" > /tmp/stable-success.json
+          python - <<'PY'
+          import json,os
+          rows=json.load(open("/tmp/stable-success.json"))["workflow_runs"]
+          sha=os.environ["KCC_STABLE_RELEASE_SHA"]
+          valid=any(
+              r.get("head_sha")==sha and
+              r.get("head_branch")=="stable/0.1" and
+              r.get("name")=="KCC 0.1.2 maintenance security test (NO publish)" and
+              r.get("event")=="push" and r.get("conclusion")=="success"
+              for r in rows)
+          if not valid:
+              raise SystemExit("Exact stable SHA lacks successful four-Python push CI")
+          print("Exact stable SHA has successful maintenance push CI.")
+          PY
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" && "$MANUAL_PUBLISH" == "true" ]]; then
+            if gh api "repos/$KCC_REPOSITORY/git/ref/tags/v0.1.2" >/dev/null 2>&1; then
+              echo "Tag v0.1.2 already exists. Aborting, never overwrite." >&2
+              exit 1
+            fi
+            if gh release view "v0.1.2" --repo "$KCC_REPOSITORY" >/dev/null 2>&1; then
+              echo "Release v0.1.2 already exists. Aborting, never overwrite." >&2
+              exit 1
+            fi
+          fi
+
+      - name: Validate unchanged original release workflow and version metadata
+        run: |
+          set -euo pipefail
+          python scripts/verify_workflow_action_pins.py .github/workflows
+          python scripts/verify_release_workflow.py .github/workflows/release.yml
+          python scripts/verify_pages_workflow.py .github/workflows/pages.yml
+          python scripts/verify_release_metadata.py
+
+      - name: Install pinned packaging and regression-test tooling
+        run: python -m pip install "build==1.6.1" "twine==7.0.0" "wheel==0.48.0" "setuptools==84.0.0" "pytest==8.4.2"
+
+      - name: Run stable Guard regression tests
+        run: |
+          python -m pip install --no-deps -e .
+          python -m pytest -q tests/test_guard_literal_parameter_presence.py tests/test_runtime_guard.py
+
+      - name: Build wheel and sdist twice from the same stable commit epoch
+        run: |
+          set -euo pipefail
+          export SOURCE_DATE_EPOCH="$(git log -1 --format=%ct)"
+          echo "$SOURCE_DATE_EPOCH" > /tmp/kcc-release-epoch
+          rm -rf build dist /tmp/kcc-stable-build-a /tmp/kcc-stable-build-b
+          find src -maxdepth 1 -name '*.egg-info' -type d -exec rm -rf {} +
+          python -m build --no-isolation --outdir /tmp/kcc-stable-build-a
+          rm -rf build
+          find src -maxdepth 1 -name '*.egg-info' -type d -exec rm -rf {} +
+          python -m build --no-isolation --outdir /tmp/kcc-stable-build-b
+          python scripts/normalize_sdist.py /tmp/kcc-stable-build-a/*.tar.gz "$SOURCE_DATE_EPOCH"
+          python scripts/normalize_sdist.py /tmp/kcc-stable-build-b/*.tar.gz "$SOURCE_DATE_EPOCH"
+          python scripts/verify_reproducible_builds.py /tmp/kcc-stable-build-a /tmp/kcc-stable-build-b
+          python -m twine check /tmp/kcc-stable-build-a/*
+
+      - name: Stage exact verified wheel, source and checksums
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          cp /tmp/kcc-stable-build-a/*.whl /tmp/kcc-stable-build-a/*.tar.gz dist/
+          python scripts/release_checksums.py
+          test -f dist/kavi_capability_compiler-0.1.2-py3-none-any.whl
+          test -f dist/kavi_capability_compiler-0.1.2.tar.gz
+          test -f dist/SHA256SUMS
+          (cd dist && sha256sum --check SHA256SUMS)
+
+      - name: Clean installed wheel must deny the missing tenant field
+        run: |
+          set -euo pipefail
+          python -m venv /tmp/kcc-release-clean
+          /tmp/kcc-release-clean/bin/pip install --no-deps dist/*.whl
+          cd /tmp
+          /tmp/kcc-release-clean/bin/python - <<'PY'
+          import kavi_capability_compiler as kcc
+          assert kcc.__version__=="0.1.2"
+          assert "site-packages" in kcc.__file__
+          inv=kcc.scan_manifest(kcc.adapt_capabilities("generic", {"tools":[{
+              "name":"read_record","description":"Synthetic read",
+              "input_schema":{"type":"object","properties":{"customer_id":{"type":"string"}}}
+          }]}, namespace="release-wheel-smoke"))
+          cid=inv["capabilities"][0]["id"]
+          capsule=kcc.compile_capsule(inv,{"task":"read only tenant-a-001",
+              "capabilities":[cid],"ttl_seconds":300,
+              "capability_constraints":{cid:{"operations":["read"],
+                "parameters":{"customer_id":"tenant-a-001"}}}},
+              {"default":"allow"},now=100)
+          guard=kcc.Guard.from_capsule(capsule,inventory=inv)
+          touched=[]
+          try:
+              guard.dispatch_sync(cid,lambda p:touched.append(dict(p)),operation="read",
+                                  parameters={},now=101)
+          except kcc.AuthorityDenied:
+              pass
+          else:
+              raise AssertionError("CRITICAL: missing constrained field reached dispatcher")
+          assert not touched
+          allowed=guard.dispatch_sync(cid,lambda p:touched.append(dict(p)),
+                 operation="read",parameters={"customer_id":"tenant-a-001"},now=101)
+          assert allowed["executed"] is True and touched==[{"customer_id":"tenant-a-001"}]
+          print("Installed v0.1.2 wheel: unsafe denied, valid read dispatched exactly once.")
+          PY
+
+      - name: Verify generated Simple Repository index
+        run: |
+          python scripts/build_simple_index.py dist site
+          python scripts/verify_simple_index.py site
+
+      - name: Preserve exact pre-release verification payload
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: kcc-v0.1.2-verified-release-payload
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+            dist/SHA256SUMS
+            site/**
+          retention-days: 7
+          if-no-files-found: error
+
+  publish-verified-release:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish && github.repository == 'kOs-tile/kavi-capability-compiler' && github.actor == 'kOs-tile' }}
+    needs: verified-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout exact stable SHA for release notes
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ inputs.target_sha }}
+          persist-credentials: false
+
+      - name: Validate stable branch still matches exact approved SHA
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ inputs.target_sha }}
+          CONFIRM_VERSION: ${{ inputs.confirm_version }}
+          CONFIRM_IMMUTABILITY: ${{ inputs.confirm_immutability }}
+          KCC_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_ACTOR" = "kOs-tile"
+          test "$GITHUB_REF" = "refs/heads/main"
+          test "$CONFIRM_VERSION" = "v0.1.2"
+          test "$CONFIRM_IMMUTABILITY" = "IMMUTABILITY_ENABLED"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(gh api "repos/$KCC_REPOSITORY/branches/stable/0.1" --jq .commit.sha)" = "$TARGET_SHA"
+          test "$(python scripts/release_version.py tag)" = "v0.1.2"
+          if gh api "repos/$KCC_REPOSITORY/git/ref/tags/v0.1.2" >/dev/null 2>&1; then
+            echo "The release tag exists; refusing to overwrite." >&2
+            exit 1
+          fi
+          if gh release view "v0.1.2" --repo "$KCC_REPOSITORY" >/dev/null 2>&1; then
+            echo "The release already exists; refusing to overwrite." >&2
+            exit 1
+          fi
+
+      - name: Download reviewed binary evidence from same run
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: kcc-v0.1.2-verified-release-payload
+          path: payload
+
+      - name: Reverify checksums before attaching any assets
+        run: |
+          set -euo pipefail
+          cd payload/dist
+          sha256sum --check SHA256SUMS
+          test "$(ls *.whl | wc -l)" -eq 1
+          test "$(ls *.tar.gz | wc -l)" -eq 1
+          test -f kavi_capability_compiler-0.1.2-py3-none-any.whl
+          test -f kavi_capability_compiler-0.1.2.tar.gz
+
+      - name: Draft release with exact assets, then publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          KCC_REPOSITORY: ${{ github.repository }}
+          TARGET_SHA: ${{ inputs.target_sha }}
+        run: |
+          set -euo pipefail
+          gh release create v0.1.2 --repo "$KCC_REPOSITORY" \
+            --target "$TARGET_SHA" --title "KAVI Capability Compiler v0.1.2" \
+            --notes-file docs/RELEASE_NOTES_V0.1.2.md --draft \
+            payload/dist/*.whl payload/dist/*.tar.gz payload/dist/SHA256SUMS
+          test "$(gh release view v0.1.2 --repo "$KCC_REPOSITORY" --json isDraft --jq .isDraft)" = "true"
+          gh release edit v0.1.2 --repo "$KCC_REPOSITORY" --draft=false
+          test "$(gh release view v0.1.2 --repo "$KCC_REPOSITORY" --json isDraft --jq .isDraft)" = "false"
+
+      - name: Verify post-publication immutable release and published checksums
+        env:
+          GH_TOKEN: ${{ github.token }}
+          KCC_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$KCC_REPOSITORY/releases/tags/v0.1.2" > /tmp/kcc-published-release.json
+          python - <<'PY'
+          import json
+          p=json.load(open("/tmp/kcc-published-release.json"))
+          assert p.get("tag_name")=="v0.1.2" and p.get("draft") is False
+          if p.get("immutable") is not True:
+              raise SystemExit("CRITICAL: release not immutable; check GitHub repository Releases setting")
+          print("Immutable v0.1.2 release verified.")
+          PY
+          mkdir -p published-assets
+          gh release download v0.1.2 --repo "$KCC_REPOSITORY" \
+            --pattern "*.whl" --pattern "*.tar.gz" --pattern SHA256SUMS \
+            --dir published-assets
+          (cd published-assets && sha256sum --check SHA256SUMS)
+          diff -q published-assets/SHA256SUMS payload/dist/SHA256SUMS
+          echo "Published wheel/sdist checksums match the approved build."
