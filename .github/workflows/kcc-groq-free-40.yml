@@ -1,0 +1,164 @@
+name: KCC Groq Free — 40-case manual benchmark
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: 'Type ISOLATED_FREE_ORG_40 after confirming Free plan, separated production quota, and approving at most 40 live model inferences'
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: kcc-groq-free-manual-only
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    if: ${{ github.repository == 'kOs-tile/kavi-capability-compiler' && github.ref == 'refs/heads/main' && github.actor == 'kOs-tile' && inputs.confirmation == 'ISOLATED_FREE_ORG_40' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: kcc-groq-free-eval
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout immutable reviewed experiment, not the run ref
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 176658cdd48e5cc24928c69a8d1a4d56ed5cb0f8
+          persist-credentials: false
+      - name: Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.11'
+      - name: Install only the published KCC stable wheel
+        run: |
+          python -m pip install --no-deps https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.1/kavi_capability_compiler-0.1.1-py3-none-any.whl
+          python - <<'PY'
+          import pathlib, kavi_capability_compiler as kcc
+          loc = pathlib.Path(kcc.__file__).resolve()
+          assert kcc.__version__ == '0.1.1'
+          assert 'site-packages' in loc.parts, loc
+          print('KCC stable v0.1.1 verified from site-packages.')
+          PY
+      - name: Preflight frozen dataset — NO key or network
+        run: |
+          umask 077
+          mkdir -p pilot-evidence
+          python -m evals.groq_chat_probe \
+            --model openai/gpt-oss-20b --ingress-mode tool_result \
+            --case-limit 40 --repeat 1 --max-requests 40 \
+            --max-completion-tokens 384 --min-interval-seconds 12 \
+            > pilot-evidence/preflight.json
+          python - <<'PY'
+          import json
+          p=json.load(open('pilot-evidence/preflight.json'))
+          assert p['dataset_sha256']=='bf2897b9f34ad3c885ee75453a0839ca4e5c7cedeb72a2d4be81a16e1ae11497'
+          assert p['request_count']==40 and p['max_requests']==40 and p['repetitions']==1 and p['network_called'] is False
+          assert p['ingress_mode']=='tool_result'
+          assert p['production_key_used'] is False and p['free_tier_required'] is True
+          assert len(p['case_ids'])==40 and len(set(p['case_ids']))==40
+          assert sum(x.startswith('ATK') for x in p['case_ids'])==30
+          assert sum(x.startswith('BEN') for x in p['case_ids'])==10
+          assert p['case_ids'][:8]==['ATK01','BEN01','ATK02','BEN02','ATK03','BEN03','ATK04','BEN04']
+          print('Frozen 40-case Free-tier experiment preflight: PASS. 30 attack + 10 benign; network: 0.')
+          PY
+      - name: Verify curl transport before loading the Groq secret
+        run: |
+          command -v curl
+          python - <<'PY'
+          from evals import groq_curl_transport as c
+          from evals import groq_chat_probe as p
+          from evals import groq_access_preflight as a
+          assert p.curl_request_json is c.request_json
+          assert a.curl_request_json is c.request_json
+          assert c.HOST == 'https://api.groq.com'
+          print('Both Groq clients use identical secret-safe curl transport.')
+          PY
+
+      - name: Inspect Groq model catalog and model metadata (NO inference)
+        env:
+          GROQ_KCC_API_KEY: ${{ secrets.GROQ_KCC_API_KEY }}
+        run: |
+          umask 077
+          if [[ -z "$GROQ_KCC_API_KEY" ]]; then
+            echo "::error::Missing environment secret GROQ_KCC_API_KEY. No metadata or model request sent."
+            exit 2
+          fi
+          python -m evals.groq_access_preflight \
+            --model openai/gpt-oss-20b \
+            --execute-free-readonly --confirm-isolated-free-org \
+            > pilot-evidence/access-diagnostic.json
+          python - <<'PY'
+          import json
+          p=json.load(open('pilot-evidence/access-diagnostic.json'))
+          assert p['model_checked']=='openai/gpt-oss-20b'
+          assert p['real_model_completions']==0 and p['external_tool_dispatches']==0
+          assert p['catalog_contains_target'] and p['model_detail_verified'], (
+              'Groq model metadata does not confirm the target is active; no inference sent.'
+          )
+          print('Groq key metadata access PASS; target model present, detail accessible.')
+          print('NOTE: This does not independently establish inference permission or Free billing tier.')
+          PY
+
+      - name: Execute at most 40 synthetic model proposals using isolated Free organization
+        env:
+          GROQ_KCC_API_KEY: ${{ secrets.GROQ_KCC_API_KEY }}
+        run: |
+          umask 077
+          if [[ -z "$GROQ_KCC_API_KEY" ]]; then
+            echo "::error::Missing environment secret GROQ_KCC_API_KEY. Nothing was sent."
+            exit 2
+          fi
+          python -m evals.groq_chat_probe \
+            --model openai/gpt-oss-20b --ingress-mode tool_result \
+            --case-limit 40 --repeat 1 --max-requests 40 \
+            --max-completion-tokens 384 --min-interval-seconds 12 \
+            --timeout 45 \
+            --execute-free --confirm-org-free-tier \
+            --expected-dataset-sha256 bf2897b9f34ad3c885ee75453a0839ca4e5c7cedeb72a2d4be81a16e1ae11497 \
+            --result-path pilot-evidence/groq-40.jsonl
+          unset GROQ_KCC_API_KEY
+      - name: Independently reconstruct scored calls from raw JSON
+        run: |
+          python -m evals.verify_groq_raw \
+            --raw pilot-evidence/groq-40.jsonl.raw-responses.jsonl \
+            --scored pilot-evidence/groq-40.jsonl \
+            --output pilot-evidence/reconciliation.json
+          python -m evals.summarize_groq_run \
+            --expected-repetitions 1 pilot-evidence/groq-40.jsonl \
+            --output pilot-evidence/summary.json
+          python - <<'PY'
+          import json
+          s=json.load(open('pilot-evidence/summary.json'))
+          r=json.load(open('pilot-evidence/reconciliation.json'))
+          assert len(s['models'])==1 and s['models'][0]['recorded_trials']==40
+          assert r['raw_records']==40 and r['reconstructed_scored_records']==40
+          assert r['unscorable_raw_records']==0
+          m=s['models'][0]
+          assert m['completed_trials']==40 and m['incomplete_trials']==0
+          assert m['complete_trial_capture'] is True and m['missing_trials']==[]
+          assert m['attack_completed']==30 and m['benign_completed']==10
+          assert m['actual_tool_dispatches']==0
+          print('Completed 40/40 client-captured proposals; no real tools dispatched.')
+          print('Attack cases with at least one risky model proposal:', m['attack_with_unsafe_proposal'], '/30')
+          print('Benign cases with a permitted read:', m['benign_with_permitted_read_proposal'], '/10')
+          print('KCC Guard denied proposals:', m['guard_denied_proposals'])
+          print('KCC Guard allowed proposals:', m['guard_allowed_proposals'])
+          print('This is a public synthetic dev dataset; NOT a blinded safety guarantee.')
+          with open(__import__('os').environ['GITHUB_STEP_SUMMARY'], 'a') as out:
+              out.write('## KCC Free Groq 40-case synthetic benchmark\n\n')
+              out.write('Model: openai/gpt-oss-20b — 30 attack + 10 benign; complete 40/40.\n\n')
+              out.write(f"Unsafe proposal in attack cases: {m['attack_with_unsafe_proposal']}/30.\n\n")
+              out.write(f"Benign permitted read cases: {m['benign_with_permitted_read_proposal']}/10.\n\n")
+              out.write(f"Guard denied proposals: {m['guard_denied_proposals']}; allowed: {m['guard_allowed_proposals']}.\n\n")
+              out.write('No actual tool dispatch. Public synthetic development results, not blinded proof.\n')
+          PY
+      - name: Upload strictly synthetic evidence, even for partial run
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: kcc-groq-free-40-${{ github.run_id }}
+          path: pilot-evidence/
+          retention-days: 3
+          if-no-files-found: ignore
