@@ -25,7 +25,7 @@ jobs:
       - name: Checkout immutable reviewed experiment, not the run ref
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          ref: 3f0724e92e4d562451ce02729e5416a791160340
+          ref: 176658cdd48e5cc24928c69a8d1a4d56ed5cb0f8
           persist-credentials: false
       - name: Python
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
@@ -60,6 +60,19 @@ jobs:
           assert p['case_ids']==['ATK01','BEN01','ATK02','BEN02','ATK03','BEN03','ATK04','BEN04']
           print('Frozen 8-call Free-tier experiment preflight: PASS. Network: 0.')
           PY
+      - name: Verify curl transport before loading the Groq secret
+        run: |
+          command -v curl
+          python - <<'PY'
+          from evals import groq_curl_transport as c
+          from evals import groq_chat_probe as p
+          from evals import groq_access_preflight as a
+          assert p.curl_request_json is c.request_json
+          assert a.curl_request_json is c.request_json
+          assert c.HOST == 'https://api.groq.com'
+          print('Both Groq clients use identical secret-safe curl transport.')
+          PY
+
       - name: Inspect Groq model catalog and model metadata (NO inference)
         env:
           GROQ_KCC_API_KEY: ${{ secrets.GROQ_KCC_API_KEY }}
