@@ -585,9 +585,13 @@ def authorize_call(cap, capability_id, operation=None, parameters=None, now=None
                 "parameters":unexpected,
             }
     for key, rule in (parameter_rules or {}).items():
-        if isinstance(rule,dict) and rule.get("required") is True and key not in params:
-            return {"allowed":False,"reason":f"required_parameter_missing:{key}"}
-        if key not in params: continue
+        # A literal parameter constraint is an exact-value requirement;
+        # omitting the parameter must never bypass that requirement.
+        # Structured rules remain optionally omittable unless required=True.
+        if key not in params:
+            if not isinstance(rule, dict) or rule.get("required") is True:
+                return {"allowed":False,"reason":f"required_parameter_missing:{key}"}
+            continue
         value=params[key]
         if isinstance(rule,dict):
             if "type" in rule:
