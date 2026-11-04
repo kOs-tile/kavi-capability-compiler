@@ -1,0 +1,88 @@
+name: Groq transport diagnosis — keyless and no inference
+on:
+  pull_request:
+    branches: [main]
+    paths: [.github/workflows/groq-keyless-edge-diagnostic.yml]
+permissions:
+  contents: read
+jobs:
+  keyless-probe:
+    # Only same-repo branches. No secrets, tokens or GitHub Actions write permission.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Compare default Python urllib and curl unauthenticated metadata GET
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, tempfile, pathlib, urllib.error, urllib.request
+          from email.parser import Parser
+          from pathlib import Path
+
+          URL = "https://api.groq.com/openai/v1/models"  # No inference endpoint.
+          BODY_MAX = 16384
+
+          def classify(body):
+              small = body.lower()
+              return {
+                  "html_like": b"<html" in small or b"<!doctype html" in small,
+                  "cf_challenge_or_1010_marker": (
+                      b"browser_signature_banned" in small or
+                      b"error 1010" in small or
+                      (b"cloudflare" in small and
+                       (b"attention required" in small or b"blocked" in small))),
+                  "json_error_like": (
+                      small.lstrip().startswith(b"{") and b'"error"' in small),
+              }
+
+          def sanitize(status, headers, body):
+              return {
+                  "http_status": status,
+                  "server_cloudflare_header": "cloudflare" in
+                      (headers.get("Server", "").lower()),
+                  "cf_mitigated_challenge": (
+                      headers.get("cf-mitigated", "").lower() == "challenge"),
+                  "www_authenticate_present": "WWW-Authenticate" in headers,
+                  **classify(body),
+                  "NOTE": "No auth header or model inference was sent. 403 alone is inconclusive.",
+              }
+
+          # Match the runner's existing stdlib HTTP transport (keyless).
+          req = urllib.request.Request(URL, method="GET")
+          try:
+              with urllib.request.urlopen(req, timeout=12) as response:
+                  ur = sanitize(response.status, response.headers,
+                                response.read(BODY_MAX))
+          except urllib.error.HTTPError as err:
+              ur = sanitize(err.code, err.headers, err.read(BODY_MAX))
+          except urllib.error.URLError:
+              ur = {"transport_error": "urllib_network_error"}
+
+          # curl uses a different TLS stack/user agent. No secrets, no auth.
+          with tempfile.TemporaryDirectory() as directory:
+              headers_path = str(Path(directory) / "headers")
+              body_path = str(Path(directory) / "body")
+              run = subprocess.run([
+                  "curl", "--silent", "--show-error",
+                  "--max-time", "12", "--max-redirs", "0",
+                  "--dump-header", headers_path,
+                  "--output", body_path, URL,
+              ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                  timeout=15, check=False)
+              if run.returncode != 0:
+                  cu = {"transport_error": "curl_network_error"}
+              else:
+                  header_text = Path(headers_path).read_text(errors="replace")
+                  blocks = header_text.replace("\r\n", "\n").strip().split("\n\n")
+                  last = blocks[-1].split("\n")
+                  status = int(last[0].split()[1]) if len(last[0].split()) >= 2 else 0
+                  h = Parser().parsestr("\n".join(last[1:]))
+                  cu = sanitize(status, h, Path(body_path).read_bytes()[:BODY_MAX])
+
+          print("GROQ_KEYLESS_TRANSPORT_DIAGNOSTIC:")
+          print(json.dumps({"python_urllib": ur, "curl": cu}, sort_keys=True))
+          assert ur.get("http_status") in range(100, 600) or "transport_error" in ur
+          assert cu.get("http_status") in range(100, 600) or "transport_error" in cu
+          print("Both operations used anonymous GET /models; no model completions or API keys.")
+          PY
