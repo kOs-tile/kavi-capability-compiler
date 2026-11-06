@@ -1,0 +1,44 @@
+name: Agent Safety Synthetic Evidence (offline)
+on:
+  pull_request:
+    paths:
+      - 'benchmark/bounty_evidence.py'
+      - 'benchmark/synthetic_host_proof.py'
+      - 'tests/test_bounty_evidence.py'
+      - 'tests/test_synthetic_host_proof.py'
+      - '.github/workflows/agent-safety-evidence.yml'
+  push:
+    branches:
+      - 'research/agent-safety-evidence-2026-11'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-synthetic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Python and 23 offline regression tests
+        run: |
+          python3 --version
+          python3 -m unittest discover -s tests -p 'test_bounty_evidence.py' -v
+          python3 -m unittest discover -s tests -p 'test_synthetic_host_proof.py' -v
+      - name: 10 repetitions per synthetic scenario
+        run: |
+          python3 benchmark/synthetic_host_proof.py --repeat 10 --output "$RUNNER_TEMP/synthetic_host_report.json" > /dev/null
+          python3 - "$RUNNER_TEMP/synthetic_host_report.json" <<'PY'
+          import json, sys
+          report = json.load(open(sys.argv[1], encoding="utf-8"))
+          assert report["kind"] == "synthetic_scripted_host_only"
+          for scenario in ("A01", "A05", "A06"):
+              result = report["scenario_results"][scenario]
+              assert result["host_attestations_verified"] == 10
+              assert result["actual_dispatch_count"] == 0
+              assert result["host_dispatch_invariant_passed"]
+              assert not result["score"]["vulnerability_verified"]
+          control = report["scenario_results"]["CONTROL"]
+          assert control["actual_dispatch_count"] == 10
+          assert control["score"] is None
+          print("40 verified synthetic host transcripts; no live targets")
+          PY
