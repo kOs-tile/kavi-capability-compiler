@@ -8,12 +8,12 @@ The goal is not to redesign the host application. The goal is to place a determi
 
 Default to the latest published stable release:
 
-`v0.1.1`
+`v0.1.2`
 
 Install the stable core with:
 
 ```bash
-python -m pip install --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/ "kavi-capability-compiler==0.1.1"
+python -m pip install --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/ "kavi-capability-compiler==0.1.2"
 ```
 
 Do not use repository main or unreleased v0.2 behavior unless the user explicitly asks to test development code and accepts an unreleased API surface.
@@ -21,7 +21,7 @@ Do not use repository main or unreleased v0.2 behavior unless the user explicitl
 ## Unreleased v0.2 current-authority testing
 
 If the user explicitly asks to test the frozen v0.2 candidate rather than stable
-v0.1.1, also inspect whether the host has mutable authority that can change after
+v0.1.2, also inspect whether the host has mutable authority that can change after
 capsule compilation: approval withdrawal, task reassignment, worker/session
 invalidations, or grant revocation.
 
@@ -38,7 +38,7 @@ For hosts that require immediate revocation semantics, prove:
 4. unknown/malformed resolver state and resolver failure also fail closed;
 5. the dispatcher count does not increase on any stale-authority denial.
 
-Do not claim that stable v0.1.1 has this resolver surface. It is an unreleased
+Do not claim that stable v0.1.2 has this resolver surface. It is an unreleased
 v0.2 development behavior until publication.
 
 ## Integration invariant
@@ -245,7 +245,7 @@ Do not claim certification, complete framework coverage, or universal security f
 Use the prompt below in a coding agent that has access to the target repository:
 
 ```text
-Integrate KAVI Capability Compiler into this project using the stable v0.1.1 release.
+Integrate KAVI Capability Compiler into this project using the stable v0.1.2 release.
 
 Reference:
 https://github.com/kOs-tile/kavi-capability-compiler
@@ -254,7 +254,7 @@ Read AGENT_INTEGRATION.md in that repository before changing code.
 Requirements:
 - preserve existing application behavior unless a change is required to enforce the authority boundary;
 - first identify the real tool-dispatch boundary and every parallel path that can execute protected tools;
-- install stable KCC v0.1.1, not unreleased main/v0.2 code;
+- install stable KCC v0.1.2, not unreleased main/v0.2 code;
 - adapt the existing tool surface with the closest framework-neutral KCC adapter;
 - build an inventory and audit it before enabling enforcement;
 - do not invent broad wildcard allow policy;
