@@ -17,11 +17,11 @@ From the [KCC repository](https://github.com/kOs-tile/kavi-capability-compiler),
 ```bash
 python -m venv .demo-venv
 source .demo-venv/bin/activate  # Windows PowerShell: .demo-venv\Scripts\Activate.ps1
-python -m pip install https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.1/kavi_capability_compiler-0.1.1-py3-none-any.whl
+python -m pip install https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.2/kavi_capability_compiler-0.1.2-py3-none-any.whl#sha256=bdfa14efd81d4474120a4b9a7f9104084083ff0f4a979f62af1e3f01bd26ef49
 python examples/recruiter_demo.py
 ```
 
-The pinned wheel is the **published stable v0.1.1**. `main` contains unreleased v0.2 development code, which is intentionally **not required**. For a clean-install verification, run the final command from the checked-out repository with that new virtualenv active, without installing the repository in editable mode. The demo itself makes no requests; the one-time wheel installation downloads the public package.
+The pinned wheel is the **published stable v0.1.2**. `main` contains unreleased v0.2 development code, which is intentionally **not required**. For a clean-install verification, run the final command from the checked-out repository with that new virtualenv active, without installing the repository in editable mode. The demo itself makes no requests; the one-time wheel installation downloads the public package.
 
 A successful run ends with `KCC_5_MIN_DEMO: PASS` and a machine-readable `EVIDENCE_JSON=` line. Assertions fail with a nonzero exit status if an unauthorized call invokes the host dispatcher.
 
@@ -55,7 +55,7 @@ This is deterministic functional verification of the intended in-process KCC bou
 - KCC does not intercept host code that bypasses `Guard` entirely. The host must mediate protected paths.
 - The unsigned capsule is suitable for a trusted in-process demonstration. Cross-boundary execution needs independently authenticated transport or signed capsules.
 - A compiled `approval_required` state does not implement an approval workflow; the host owns it.
-- This demo uses **v0.1.1** and does not demonstrate the **unreleased v0.2 current-authority revocation resolver**.
+- This demo uses **v0.1.2** and does not demonstrate the **unreleased v0.2 current-authority revocation resolver**.
 - No real business/customer system, production tenant, external service, or durability guarantee is tested.
 
 **Technical context:** [KCC SDK contracts](SDK_COMPATIBILITY.md) · [Integration recipes](INTEGRATION_RECIPES.md) · [Benchmark boundaries](BENCHMARK_REPORT_V0.1.md) · [External revocation case study](https://github.com/kOs-tile/kOs-tile/blob/main/case-studies/kcc-dispatch-time-revocation.md).
