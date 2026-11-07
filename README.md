@@ -1,8 +1,8 @@
 # KAVI Capability Compiler
 
-> **Stable release — v0.1.1 published.** The GitHub Release is live at tag `v0.1.1`, bound to commit `3b49a4c05069bbad5bb192451642e63b1e8a5110`. Wheel and source-distribution digests are published in `SHA256SUMS`. PyPI remains an optional later mirror.
+> **Stable release — v0.1.2 security patch published.** The immutable [GitHub Release](https://github.com/kOs-tile/kavi-capability-compiler/releases/tag/v0.1.2) is bound to stable maintenance commit `a94c330ee137090b33ba9d5daf2691166e4704d2`. Wheel and source-distribution digests are published in `SHA256SUMS`. PyPI remains an optional later mirror.
 >
-> **Main branch — v0.2.0 development.** Main contains unreleased additive delegation/attenuation work. Public install commands below intentionally continue to target the verified v0.1.1 release until v0.2.0 is explicitly published.
+> **Main branch — v0.2.0 development.** Main contains unreleased additive delegation/attenuation work. Public install commands below target the security-patched v0.1.2 release until v0.2.0 is explicitly published.
 
 KCC is a framework-agnostic **least-authority compiler for AI agents**.
 
@@ -90,29 +90,29 @@ Uncertain authority fails closed into denial/approval behavior rather than becom
 
 Python 3.11+.
 
-Default install is the embedded core SDK and has no required third-party runtime dependencies.
+Default install is the embedded core SDK and has no required third-party runtime dependencies. Previous v0.1.0/v0.1.1 installs must be upgraded to v0.1.2 when relying on literal parameter constraints; older versions can accept calls that omit a constrained field.
 
-For v0.1.1, the GitHub Pages Simple Repository is live. Install the zero-dependency core by project name:
+For v0.1.2, the GitHub Pages Simple Repository is live. Install the zero-dependency core by project name:
 
 ```bash
-python -m pip install --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/ kavi-capability-compiler
+python -m pip install --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/ kavi-capability-compiler==0.1.2
 ```
 
 Or install the exact versioned GitHub Release wheel directly:
 
 ```bash
-python -m pip install https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.1/kavi_capability_compiler-0.1.1-py3-none-any.whl
+python -m pip install https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.2/kavi_capability_compiler-0.1.2-py3-none-any.whl#sha256=bdfa14efd81d4474120a4b9a7f9104084083ff0f4a979f62af1e3f01bd26ef49
 ```
 
 Optional extras use the exact same published wheel while pip resolves their third-party dependencies from the normal package index:
 
 ```bash
-python -m pip install "kavi-capability-compiler[mcp] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.1/kavi_capability_compiler-0.1.1-py3-none-any.whl"
-python -m pip install "kavi-capability-compiler[signing] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.1/kavi_capability_compiler-0.1.1-py3-none-any.whl"
-python -m pip install "kavi-capability-compiler[all] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.1/kavi_capability_compiler-0.1.1-py3-none-any.whl"
+python -m pip install "kavi-capability-compiler[mcp] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.2/kavi_capability_compiler-0.1.2-py3-none-any.whl#sha256=bdfa14efd81d4474120a4b9a7f9104084083ff0f4a979f62af1e3f01bd26ef49"
+python -m pip install "kavi-capability-compiler[signing] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.2/kavi_capability_compiler-0.1.2-py3-none-any.whl#sha256=bdfa14efd81d4474120a4b9a7f9104084083ff0f4a979f62af1e3f01bd26ef49"
+python -m pip install "kavi-capability-compiler[all] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.2/kavi_capability_compiler-0.1.2-py3-none-any.whl#sha256=bdfa14efd81d4474120a4b9a7f9104084083ff0f4a979f62af1e3f01bd26ef49"
 ```
 
-PyPI may be added later as a mirror of the exact same verified v0.1.1 artifacts; v0.1.1 will not be rebuilt for PyPI.
+PyPI may be added later as a mirror of the exact same verified v0.1.2 artifacts; v0.1.2 will not be rebuilt for PyPI.
 
 For repository development:
 
@@ -139,12 +139,12 @@ kcc discover-config mcp.json my-server \
 
 You can hand this repository to a coding agent and ask it to integrate KCC into an existing agent project.
 
-Use the stable published `v0.1.1` release by default. Main is the unreleased v0.2 development line.
+Use the security-patched stable published `v0.1.2` release by default. Main is the unreleased v0.2 development line.
 
 Copy/paste:
 
 ```text
-Integrate KAVI Capability Compiler into this project using stable v0.1.1.
+Integrate KAVI Capability Compiler into this project using stable v0.1.2.
 Reference: https://github.com/kOs-tile/kavi-capability-compiler
 Read AGENT_INTEGRATION.md before changing code.
 
@@ -171,7 +171,7 @@ See `docs/FEEDBACK_V0.2.md` for the minimum reproduction bundle.
 
 KCC is not a hosted gateway, desktop service, local daemon, IAM replacement, secret manager, or autonomous remediation system. Live discovery does not automatically execute discovered tools. Runtime enforcement is intentionally a small portable primitive.
 
-M0–M11 engineering is complete and v0.1.1 is published through GitHub Release. The release artifacts were reproduced, checksummed, clean-installed, and matched against the public GitHub asset digests. The standards-compliant Simple Repository index is live on GitHub Pages; PyPI remains an optional later mirror.
+M0–M11 engineering is complete and v0.1.2 is published through an immutable GitHub Release. The release artifacts were reproduced, checksummed, clean-installed, and matched against the public GitHub asset digests. The standards-compliant Simple Repository index is live on GitHub Pages; PyPI remains an optional later mirror.
 
 See `docs/EMBEDDED_SDK.md`, `docs/SDK_COMPATIBILITY.md`, `docs/ADVERSARIAL_SDK.md`, `docs/UNIVERSAL_MANIFEST.md`, `docs/INTEGRATION_RECIPES.md`, `docs/OPENAI_AGENTS_VALIDATION.md`, `docs/ANTHROPIC_SDK_VALIDATION.md`, `docs/LANGGRAPH_TOOLNODE_VALIDATION.md`, `docs/EXTERNAL_VALIDATION_V0.1.md`, and `docs/BENCHMARK_REPORT_V0.1.md`.
 
