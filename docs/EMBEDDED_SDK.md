@@ -41,26 +41,26 @@ Guard
 
 ## Minimal install
 
-The v0.1.0 core package is available through KCC's live GitHub Pages Simple Repository:
+The stable v0.1.2 security-patched core package is available through KCC's live GitHub Pages Simple Repository:
 
 ```bash
-python -m pip install --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/ kavi-capability-compiler
+python -m pip install --index-url https://kos-tile.github.io/kavi-capability-compiler/simple/ kavi-capability-compiler==0.1.2
 ```
 
 You can also install the exact versioned GitHub Release wheel directly:
 
 ```bash
-python -m pip install https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl
+python -m pip install https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.2/kavi_capability_compiler-0.1.2-py3-none-any.whl#sha256=bdfa14efd81d4474120a4b9a7f9104084083ff0f4a979f62af1e3f01bd26ef49
 ```
 
-The default package has no required runtime dependencies outside the Python standard library.
+The default package has no required runtime dependencies outside the Python standard library. For security-sensitive, tenant-scoped authorization, upgrade any older v0.1.0/v0.1.1 installed wheel to v0.1.2; previous releases could accept omission of a literal-constrained field.
 
 Optional integrations use the exact published wheel with PEP 508 extras metadata:
 
 ```bash
-python -m pip install "kavi-capability-compiler[mcp] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
-python -m pip install "kavi-capability-compiler[signing] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
-python -m pip install "kavi-capability-compiler[all] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
+python -m pip install "kavi-capability-compiler[mcp] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.2/kavi_capability_compiler-0.1.2-py3-none-any.whl#sha256=bdfa14efd81d4474120a4b9a7f9104084083ff0f4a979f62af1e3f01bd26ef49"
+python -m pip install "kavi-capability-compiler[signing] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.2/kavi_capability_compiler-0.1.2-py3-none-any.whl#sha256=bdfa14efd81d4474120a4b9a7f9104084083ff0f4a979f62af1e3f01bd26ef49"
+python -m pip install "kavi-capability-compiler[all] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.2/kavi_capability_compiler-0.1.2-py3-none-any.whl#sha256=bdfa14efd81d4474120a4b9a7f9104084083ff0f4a979f62af1e3f01bd26ef49"
 ```
 
 The KCC Pages index intentionally contains KCC artifacts only. When an optional extra is installed from the direct wheel URL, pip resolves that extra's third-party dependencies from the normal package index.
@@ -140,7 +140,7 @@ See `SDK_COMPATIBILITY.md` for the frozen v0.1 contracts and exception semantics
 For distributed stacks where the compiler and executor are separate processes or services, install the optional signing extra from the exact published wheel:
 
 ```bash
-python -m pip install "kavi-capability-compiler[signing] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.0/kavi_capability_compiler-0.1.0-py3-none-any.whl"
+python -m pip install "kavi-capability-compiler[signing] @ https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.2/kavi_capability_compiler-0.1.2-py3-none-any.whl#sha256=bdfa14efd81d4474120a4b9a7f9104084083ff0f4a979f62af1e3f01bd26ef49"
 ```
 
 KCC signs the exact capsule with Ed25519.
